@@ -374,6 +374,20 @@
       ]
     },
 
+    "oshiColors": [
+      { "name": "赤", "color": "#E5484D" },
+      { "name": "ピンク", "color": "#F06595" },
+      { "name": "オレンジ", "color": "#F76707" },
+      { "name": "黄", "color": "#FAB005" },
+      { "name": "黄緑", "color": "#82C91E" },
+      { "name": "緑", "color": "#2B9A66" },
+      { "name": "水色", "color": "#22B8CF" },
+      { "name": "青", "color": "#3B5BDB" },
+      { "name": "紫", "color": "#7950F2" },
+      { "name": "白", "color": "#F8F9FA" },
+      { "name": "黒", "color": "#212529" }
+    ],
+
     "skins": [
       { "id": "stage", "name": "ステージ" },
       { "id": "confetti", "name": "紙吹雪" }
@@ -660,7 +674,7 @@ img, svg { max-width: 100%; }
 .pcard { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 16px; align-items: center; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 16px; box-shadow: 6px 6px 0 var(--accent); }
 .pcard-char svg { width: 100%; height: auto; display: block; }
 .pcard-char.empty { aspect-ratio: 1; display: grid; place-items: center; font-size: 44px; font-weight: 900; border: 2px dashed var(--hair); color: var(--muted); }
-.pcard-title { margin: 0; display: inline-block; font-size: 12px; font-weight: 900; background: var(--accent); color: var(--on-accent); padding: 2px 8px; }
+.pcard-title { margin: 0; display: inline-block; font-size: 12px; font-weight: 900; background: var(--oshi, var(--accent)); color: var(--oshi-fg, var(--on-accent)); padding: 2px 8px; border: 2px solid var(--line); }
 .pcard-type { margin: 4px 0 8px; font-size: 20px; font-weight: 900; line-height: 1.3; }
 .pcard-stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 14px; margin: 0; }
 .pcard-stats dt { font-size: 11px; font-weight: 700; opacity: .7; }
@@ -687,7 +701,7 @@ img, svg { max-width: 100%; }
 @media (min-width: 600px) { .badges { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .badge { padding: 14px; border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); }
 .badge .medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--line); background: var(--hair); color: var(--muted); font-size: 18px; font-weight: 900; }
-.badge.on .medal { background: var(--brand-2); color: #1C1A22; }
+.badge.on .medal { background: var(--oshi, var(--brand-2)); color: var(--oshi-fg, #1C1A22); }
 .badge b { display: block; font-size: 15px; line-height: 1.4; margin-top: 8px; }
 .badge small { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .badge .n { font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -899,6 +913,21 @@ body.intro-open { overflow: hidden; }
   .intro { max-width: none; max-height: none; height: 100dvh; padding: 20px 16px 28px; border: 0; box-shadow: none; }
   .intro h2 { font-size: 22px; }
 }
+
+/* ---- 推しカラー ---- */
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.sw { position: relative; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 2px solid var(--line); background: var(--sw); color: var(--sw-fg, #1C1A22); cursor: pointer; }
+.sw .ic { width: 18px; height: 18px; stroke-width: 2.6; }
+.sw[aria-pressed="true"] { outline: 3px solid var(--text); outline-offset: 2px; }
+.sw:disabled { opacity: .35; cursor: not-allowed; }
+.sw.none { background: repeating-linear-gradient(45deg, var(--bg) 0 5px, var(--hair) 5px 8px); color: var(--text); }
+.sw.custom { overflow: hidden; background: conic-gradient(#E5484D, #FAB005, #82C91E, #22B8CF, #3B5BDB, #7950F2, #F06595, #E5484D); color: #FFFFFF; }
+.sw.custom input { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+.sw.oshi { width: auto; padding: 0 10px; gap: 4px; grid-auto-flow: column; font-size: 12px; font-weight: 900; }
+.oshi-preview { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 18px 0 0; padding: 14px; border: 2px dashed var(--hair); }
+.oshi-preview svg { display: block; height: 64px; width: auto; }
+.bt-colors { grid-column: 1 / -1; display: grid; gap: 6px; }
+.bt-l { font-size: 12px; font-weight: 800; }
 
 [hidden] { display: none !important; }
 </style>
@@ -1134,8 +1163,8 @@ body.intro-open { overflow: hidden; }
 
   function charSVG(code, opts) {
     const t = TYPES[code];
-    const c = t.color;
     const o = opts || {};
+    const c = o.color || t.color;
     const acc = (ACCESSORIES[t.illust] || (() => ({})))(c);
     const eyes = acc.eyes || `<circle cx="82" cy="108" r="6" fill="${INK}"/><circle cx="118" cy="108" r="6" fill="${INK}"/>
       <circle cx="84" cy="106" r="2" fill="#fff"/><circle cx="120" cy="106" r="2" fill="#fff"/>`;
@@ -1525,7 +1554,7 @@ body.intro-open { overflow: hidden; }
   function blankProfile() {
     return {
       v: 1, type: null, events: [], genres: {}, earned: [], spent: [], shows: {},
-      book: { fields: {}, items: [], paper: '' },
+      book: { fields: {}, items: [], paper: '' }, oshi: '',
       owned: { stickers: [], skins: [], titles: [], perks: {} },
       done: { missions: [], achievements: [] },
       equip: { title: '', skin: '' }
@@ -1723,12 +1752,14 @@ body.intro-open { overflow: hidden; }
     note: c => '<path d="M26 44V18l18-4v26" stroke="#fff" stroke-width="4" fill="none" stroke-linejoin="round"/><circle cx="21" cy="44" r="6" fill="#fff"/><circle cx="39" cy="40" r="6" fill="#fff"/>',
     ball: c => `<circle cx="32" cy="32" r="15" fill="#fff"/><path d="M21 22q9 10 0 20M43 22q-9 10 0 20" stroke="${c}" stroke-width="2.5" fill="none"/>`
   };
-  function stickerSVG(id, locked) {
+  function stickerSVG(id, locked, color) {
     const st = findSticker(id) || { id: id, name: id, color: '#888888' };
-    const col = locked ? '#C9C2B8' : st.color;
+    const col = locked ? '#C9C2B8' : (color || st.color);
     const art = locked
       ? '<text x="32" y="42" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" font-family="system-ui, sans-serif">?</text>'
-      : (STICKER_ART[id] ? STICKER_ART[id](col) : `<text x="32" y="41" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="system-ui, sans-serif">${esc(st.name.charAt(0))}</text>`);
+      : (STICKER_ART[id] ? STICKER_ART[id](col) : `<text x="32" y="41" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="system-ui, sans-serif">${esc(st.name.charAt(0))}</text>`)
+        // 色を変えて明るい色になったときは、白い絵柄を濃い色に
+        .replace(/#fff(?![0-9a-f])/gi, color && !locked ? onColor(col) : '#fff');
     return `<svg viewBox="0 0 64 64" role="img" aria-label="${esc(locked ? '未入手' : st.name)}" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="29" fill="${col}" stroke="#1C1A22" stroke-width="3"/>${art}</svg>`;
   }
 
@@ -1815,7 +1846,7 @@ body.intro-open { overflow: hidden; }
       .sort((a, b) => b.ts - a.ts).slice(0, 10);
 
     app.innerHTML = `${subNav('me')}
-      <div class="fade-in" data-page="me">
+      <div class="fade-in" data-page="me"${profile.oshi ? ` style="--oshi:${esc(profile.oshi)};--oshi-fg:${onColor(profile.oshi)}"` : ''}>
         <section class="r-sec">
           <div class="inner narrow">
             <div class="pcard${skin ? ' skin-' + esc(skin) : ''}">
@@ -1850,6 +1881,20 @@ body.intro-open { overflow: hidden; }
 
         <section class="r-sec alt">
           <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">${icon('heart')}OSHI COLOR</span>推しカラー</h2>
+            <div data-oshi-colors>${swatchesHTML(profile.oshi, { noneLabel: 'なし' })}</div>
+            <div class="oshi-preview" aria-label="推しカラーの見本">
+              ${badgeSVG(profile.done.achievements[0] || (GAME.achievements || [])[0].id, profile.oshi)}
+              ${titleSVG(cur || '推し活中', profile.oshi)}
+              ${stickerSVG('star', false, profile.oshi)}
+              ${profile.type ? charSVG(profile.type, { noHalo: true, color: profile.oshi }) : ''}
+            </div>
+            <p class="empty-note" style="margin-top:10px">プロフ帳で「推し」を選んだバッジ・称号・シールなども、この色に変わります。</p>
+          </div>
+        </section>
+
+        <section class="r-sec">
+          <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('compass')}EXPLORE</span>開拓タイプ</h2>
             ${explore.length
               ? `<div class="chips">${explore.map(x => `<span class="chip${x.level >= 3 ? ' lv3' : x.level >= 1 ? ' lv1' : ''}">${esc(x.label)}</span>`).join('')}</div>`
@@ -1857,7 +1902,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec">
+        <section class="r-sec alt">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('medal')}BADGES</span>体験実績</h2>
             <div class="badges">
@@ -1874,7 +1919,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec alt">
+        <section class="r-sec">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('sticker')}STICKERS</span>ステッカー帳</h2>
             <div class="sticker-book">
@@ -1886,7 +1931,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec">
+        <section class="r-sec alt">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('coin')}HISTORY</span>ポイント履歴</h2>
             ${history.length
@@ -1904,6 +1949,10 @@ body.intro-open { overflow: hidden; }
       });
     });
     app.querySelector('[data-share-profile-x]').addEventListener('click', () => { track('shareProfile'); refreshMeStats(); });
+    const oshiBox = app.querySelector('[data-oshi-colors]');
+    const setOshi = v => { profile.oshi = v; saveProfile(); viewMe(); };
+    oshiBox.addEventListener('click', e => { const b = e.target.closest('[data-sw]'); if (b) setOshi(b.dataset.sw); });
+    oshiBox.addEventListener('change', e => { if (e.target.matches('[data-sw-custom]')) setOshi(e.target.value); });
     app.querySelectorAll('[data-equip]').forEach(sel => sel.addEventListener('change', () => {
       profile.equip[sel.dataset.equip] = sel.value;
       saveProfile();
@@ -2109,52 +2158,77 @@ body.intro-open { overflow: hidden; }
   }
 
   // 公演ロゴ（サンプル公演用に、公演ごとの形と色で自動生成）
-  function showLogoSVG(id) {
+  function showLogoSVG(id, color) {
     const o = eventById(id);
     if (!o) return '';
-    const c = o.type.color, e = o.ev, letter = e.title.slice(-1);
+    const c = color || o.type.color, e = o.ev, letter = e.title.slice(-1), fg = onColor(c);
     const open = `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(e.title + ' ' + e.genre)}" xmlns="http://www.w3.org/2000/svg">`;
     if (o.k % 3 === 1) {
       return open + `<path d="M6 24h88v16a8 8 0 0 0 0 20v16H6V60a8 8 0 0 0 0-20z" fill="#fff" stroke="${INK}" stroke-width="4"/>
         <path d="M8 26h20v48H8V60a8 8 0 0 0 0-20z" fill="${c}"/><path d="M28 26v48" stroke="${INK}" stroke-width="2" stroke-dasharray="3 3"/>`
-        + svgText(17, 56, 16, letter, '#fff') + svgText(61, 44, 7, 'ADMIT ONE', INK, 800) + svgText(61, 63, fitFont(e.genre, 10, 58), e.genre, INK) + '</svg>';
+        + svgText(17, 56, 16, letter, fg) + svgText(61, 44, 7, 'ADMIT ONE', INK, 800) + svgText(61, 63, fitFont(e.genre, 10, 58), e.genre, INK) + '</svg>';
     }
     if (o.k % 3 === 2) {
       return open + `<path d="M50 5L90 17v33c0 24-18 40-40 46C28 90 10 74 10 50V17z" fill="${c}" stroke="${INK}" stroke-width="4"/>
-        <path d="M50 17l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="#fff"/>`
-        + svgText(50, 67, 22, letter, '#fff') + svgText(50, 81, fitFont(e.genre, 8, 50), e.genre, '#fff', 800) + '</svg>';
+        <path d="M50 17l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="${fg}"/>`
+        + svgText(50, 67, 22, letter, fg) + svgText(50, 81, fitFont(e.genre, 8, 50), e.genre, fg, 800) + '</svg>';
     }
     return open + `<circle cx="50" cy="50" r="46" fill="${c}" stroke="${INK}" stroke-width="4"/>
-      <circle cx="50" cy="50" r="38" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>`
-      + svgText(50, 32, 8, 'SAMPLE LIVE', '#fff', 800) + svgText(50, 64, 32, letter, '#fff') + svgText(50, 79, fitFont(e.genre, 9, 62), e.genre, '#fff', 800) + '</svg>';
+      <circle cx="50" cy="50" r="38" fill="none" stroke="${fg}" stroke-width="2" stroke-dasharray="4 3"/>`
+      + svgText(50, 32, 8, 'SAMPLE LIVE', fg, 800) + svgText(50, 64, 32, letter, fg) + svgText(50, 79, fitFont(e.genre, 9, 62), e.genre, fg, 800) + '</svg>';
   }
 
-  function badgeSVG(id) {
+  function badgeSVG(id, color) {
     const a = (GAME.achievements || []).find(x => x.id === id);
     if (!a) return '';
     return `<svg viewBox="0 0 100 110" role="img" aria-label="${esc(a.title)}" xmlns="http://www.w3.org/2000/svg">
       <path d="M32 58L20 102l13-7 10 11 7-40M68 58l12 44-13-7-10 11-7-40" fill="#E5484D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
-      <circle cx="50" cy="42" r="35" fill="#FFC53D" stroke="${INK}" stroke-width="4"/>
+      <circle cx="50" cy="42" r="35" fill="${color || '#FFC53D'}" stroke="${INK}" stroke-width="4"/>
       <circle cx="50" cy="42" r="26" fill="none" stroke="${INK}" stroke-width="2"/>
-      <path d="M50 25l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="${INK}"/>
+      <path d="M50 25l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="${color ? onColor(color) : INK}"/>
       <rect x="6" y="74" width="88" height="22" fill="#fff" stroke="${INK}" stroke-width="3"/>`
       + svgText(50, 90, fitFont(a.title, 12, 80), a.title, INK) + '</svg>';
   }
 
-  function titleSVG(text) {
+  function titleSVG(text, color) {
     const w = Math.max(64, Array.from(text).length * 15 + 26);
     return `<svg viewBox="0 0 ${w} 40" role="img" aria-label="${esc(text)}" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="${w - 4}" height="36" fill="#FFC53D" stroke="${INK}" stroke-width="3"/>`
-      + svgText(w / 2, 27, 15, text, INK) + '</svg>';
+      <rect x="2" y="2" width="${w - 4}" height="36" fill="${color || '#FFC53D'}" stroke="${INK}" stroke-width="3"/>`
+      + svgText(w / 2, 27, 15, text, color ? onColor(color) : INK) + '</svg>';
   }
 
+  // it.color：'' = 元の色、'oshi' = 推しカラー（あとから推しカラーを変えると追従）、'#RRGGBB' = その色
+  const resolveColor = c => c === 'oshi' ? (profile.oshi || '') : (c || '');
   function itemSVG(it) {
-    if (it.kind === 'char') return TYPES[it.ref] ? charSVG(it.ref, { noHalo: true }) : '';
-    if (it.kind === 'sticker') return stickerSVG(it.ref);
-    if (it.kind === 'show') return showLogoSVG(it.ref);
-    if (it.kind === 'badge') return badgeSVG(it.ref);
-    if (it.kind === 'title') return titleSVG(it.ref);
+    const col = resolveColor(it.color);
+    if (it.kind === 'char') return TYPES[it.ref] ? charSVG(it.ref, { noHalo: true, color: col }) : '';
+    if (it.kind === 'sticker') return stickerSVG(it.ref, false, col);
+    if (it.kind === 'show') return showLogoSVG(it.ref, col);
+    if (it.kind === 'badge') return badgeSVG(it.ref, col);
+    if (it.kind === 'title') return titleSVG(it.ref, col);
     return '';
+  }
+
+  const OSHI_COLORS = GAME.oshiColors || [];
+  const isHex = v => /^#[0-9a-f]{6}$/i.test(v || '');
+  // 色の選択ボタン一式。current は今の値、withOshi で「推し」ボタンを入れる
+  function swatchesHTML(current, opts) {
+    const o = opts || {};
+    const sw = (value, bg, label, cls, inner) => {
+      const on = (current || '') === value;
+      return `<button type="button" class="sw${cls ? ' ' + cls : ''}" data-sw="${esc(value)}" aria-pressed="${on}" aria-label="${esc(label)}" title="${esc(label)}"
+        style="--sw:${bg};--sw-fg:${isHex(bg) ? onColor(bg) : '#1C1A22'}">${inner || (on ? icon('check') : '')}</button>`;
+    };
+    let html = sw('', 'transparent', o.noneLabel || '元の色', 'none', (current || '') === '' ? icon('check') : '');
+    if (o.withOshi) {
+      html += profile.oshi
+        ? sw('oshi', profile.oshi, '推しカラー', 'oshi', icon(current === 'oshi' ? 'check' : 'heart') + '推し')
+        : `<button type="button" class="sw oshi" disabled title="マイページで推しカラーを設定すると使えます" style="--sw:var(--bg)">${icon('heart')}推し</button>`;
+    }
+    html += OSHI_COLORS.map(c => sw(c.color, c.color, c.name)).join('');
+    const custom = isHex(current) && !OSHI_COLORS.some(c => c.color.toLowerCase() === current.toLowerCase());
+    html += `<label class="sw custom" title="好きな色" aria-pressed="${custom}"${custom ? ` style="background:${current}"` : ''}>${icon('palette')}<input type="color" data-sw-custom value="${isHex(current) ? current : '#ff6699'}" aria-label="好きな色を選ぶ"></label>`;
+    return `<div class="swatches">${html}</div>`;
   }
 
   function trayGroups() {
@@ -2214,6 +2288,10 @@ body.intro-open { overflow: hidden; }
             <div class="book-tools" data-tools hidden>
               <label>サイズ<input type="range" min="6" max="100" data-tool="w"></label>
               <label>回転<input type="range" min="-180" max="180" data-tool="r"></label>
+              <div class="bt-colors">
+                <span class="bt-l">色</span>
+                <div data-item-colors></div>
+              </div>
               <div class="bt-btns">
                 <button type="button" class="act" data-tool-act="front">${icon('layers')}前面へ</button>
                 <button type="button" class="act" data-tool-act="del">${icon('trash')}はがす</button>
@@ -2262,6 +2340,12 @@ body.intro-open { overflow: hidden; }
       if (it) {
         tools.querySelector('[data-tool="w"]').value = Math.round(it.w);
         tools.querySelector('[data-tool="r"]').value = Math.round(it.r);
+        // 色ボタンは、選択や色が変わったときだけ描き直す
+        const key = it.id + '|' + (it.color || '');
+        if (tools.dataset.colorsFor !== key) {
+          tools.dataset.colorsFor = key;
+          tools.querySelector('[data-item-colors]').innerHTML = swatchesHTML(it.color, { withOshi: true });
+        }
       }
       deco.querySelectorAll('.it').forEach(el => el.classList.toggle('sel', !!it && el.dataset.id === it.id));
     }
@@ -2318,6 +2402,22 @@ body.intro-open { overflow: hidden; }
         place(it);
       });
       inp.addEventListener('change', saveProfile);
+    });
+    function setItemColor(value) {
+      const it = byId(bookSel);
+      if (!it) return;
+      it.color = value;
+      const el = deco.querySelector(`[data-id="${it.id}"]`);
+      if (el) el.innerHTML = itemSVG(it) + '<span class="it-h" data-handle aria-hidden="true"></span>';
+      syncTools();
+      saveProfile();
+    }
+    tools.querySelector('[data-item-colors]').addEventListener('click', e => {
+      const b = e.target.closest('[data-sw]');
+      if (b && !b.disabled) setItemColor(b.dataset.sw);
+    });
+    tools.querySelector('[data-item-colors]').addEventListener('input', e => {
+      if (e.target.matches('[data-sw-custom]')) setItemColor(e.target.value);
     });
     tools.querySelectorAll('[data-tool-act]').forEach(b => b.addEventListener('click', () => {
       const it = byId(bookSel);
@@ -2541,6 +2641,9 @@ body.intro-open { overflow: hidden; }
     if (profile.owned.stickers[0]) items.push({ kind: 'sticker', ref: profile.owned.stickers[0], x: 89, y: 93, w: 12, r: 0 });
     profile.book.items = items.map((it, i) => Object.assign({ id: 'd' + i + Math.random().toString(36).slice(2, 6), z: i + 1 }, it));
     profile.book.paper = pick(['note', 'grid', 'dot']);
+    profile.oshi = pick(OSHI_COLORS.filter(c => c.color !== '#F8F9FA')).color;
+    const stk = profile.book.items.find(x => x.kind === 'sticker');
+    if (stk) stk.color = 'oshi';
     checkProgress([], now);
   }
 
