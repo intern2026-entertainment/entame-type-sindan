@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エンタメタイプ診断</title>
+
+<!--
+  ===== 診断データ（ここだけ編集すればOK） =====
+  質問・タイプ・推薦ジャンル・公演カードはすべてこのJSONにあります。
+  JSONなのでコメントは書けません。編集方法は README.md を参照してください。
+-->
+<script id="quiz-data" type="application/json">
+{
+  "meta": {
+    "title": "エンタメタイプ診断",
+    "lead": "あなたの「楽しみ方」を8タイプで診断。いつものジャンルとは違う、でも同じように楽しめるジャンルを見つけます。",
+    "hashtag": "エンタメタイプ診断",
+    "duration": "9問・1分半"
+  },
+
+  "axes": [
+    {
+      "id": "place",
+      "name": "場",
+      "sides": [
+        { "code": "L", "label": "現場", "desc": "その場の空気を味わう" },
+        { "code": "W", "label": "作品", "desc": "作品そのものを味わう" }
+      ]
+    },
+    {
+      "id": "people",
+      "name": "人",
+      "sides": [
+        { "code": "S", "label": "共有", "desc": "誰かと盛り上がる" },
+        { "code": "I", "label": "没入", "desc": "一人で深く浸る" }
+      ]
+    },
+    {
+      "id": "target",
+      "name": "対象",
+      "sides": [
+        { "code": "F", "label": "推し", "desc": "特定の人・作品を追う" },
+        { "code": "E", "label": "探索", "desc": "新しい体験を探す" }
+      ]
+    }
+  ],
+
+  "questions": [
+    {
+      "axis": "people",
+      "text": "終わった直後、どっち？",
+      "a": { "text": "誰かに感想を送る", "value": "S" },
+      "b": { "text": "一人で余韻に浸る", "value": "I" }
+    },
+    {
+      "axis": "place",
+      "text": "後から思い出すのは？",
+      "a": { "text": "印象に残った場面やセリフ", "value": "W" },
+      "b": { "text": "その日の空気や周りの反応", "value": "L" }
+    },
+    {
+      "axis": "target",
+      "text": "ごはんを食べに行くなら？",
+      "a": { "text": "いつものお気に入りの店", "value": "F" },
+      "b": { "text": "まだ行ったことのない店", "value": "E" }
+    },
+    {
+      "axis": "place",
+      "text": "同じ内容が配信でも見られるなら？",
+      "a": { "text": "それでも現地に行きたい", "value": "L" },
+      "b": { "text": "配信で細部までじっくり見たい", "value": "W" }
+    },
+    {
+      "axis": "people",
+      "text": "気になるイベントを見つけたら？",
+      "a": { "text": "一人でふらっと行く", "value": "I" },
+      "b": { "text": "誰かを誘って行く", "value": "S" }
+    },
+    {
+      "axis": "target",
+      "text": "何かにハマったら？",
+      "a": { "text": "次の新しいものを探しはじめる", "value": "E" },
+      "b": { "text": "関連するものを全部追いかける", "value": "F" }
+    },
+    {
+      "axis": "target",
+      "text": "おすすめしてもらうなら？",
+      "a": { "text": "好きなものの新作や続編", "value": "F" },
+      "b": { "text": "自分では選ばない意外なもの", "value": "E" }
+    },
+    {
+      "axis": "people",
+      "text": "自由に使える休日、どう過ごす？",
+      "a": { "text": "友達と予定を合わせる", "value": "S" },
+      "b": { "text": "一人で好きなことに没頭する", "value": "I" }
+    },
+    {
+      "axis": "place",
+      "text": "いちばん心が動くのは？",
+      "a": { "text": "まわりが一斉にわいた瞬間", "value": "L" },
+      "b": { "text": "物語や表現がぐっと刺さった瞬間", "value": "W" }
+    }
+  ],
+
+  "types": {
+    "LIE": {
+      "name": "熱狂型",
+      "nickname": "一人でも最前で跳ねる人",
+      "color": "#E5484D",
+      "illust": "hands-up",
+      "summary": "その場の盛り上がりに乗りたい。一体感が報酬。",
+      "description": "その場の盛り上がりに飛び込むのが、いちばんの楽しみ。会場が一つになる瞬間が、あなたにとって最高の報酬です。誰と行くかより、その場がどれだけ熱いかを大事にします。",
+      "reason": "作品そのもの以上に、会場の熱が一気に上がる瞬間に身をまかせられるから。その瞬間さえあれば、ジャンルが変わっても同じ高揚が味わえます。",
+      "genres": [
+        { "name": "プロレス", "why": "技が決まるたびに歓声がそろい、初めてでも会場のうねりに乗れるから。" },
+        { "name": "サーカス", "why": "大技の一瞬に客席全体が息をのみ、拍手が一斉に爆発するから。" },
+        { "name": "和太鼓", "why": "全身に響く音で、客席ごと同じリズムに巻き込まれるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "プロレス", "date": "2026年12月5日（土）", "venue": "サンプルホール", "price": "4,500円〜" },
+        { "title": "サンプル公演B", "genre": "サーカス", "date": "2026年12月19日（土）", "venue": "サンプルホール", "price": "6,800円〜" },
+        { "title": "サンプル公演C", "genre": "和太鼓", "date": "2027年1月10日（日）", "venue": "サンプルホール", "price": "5,000円" }
+      ]
+    },
+    "LSE": {
+      "name": "仲間型",
+      "nickname": "終演後すぐ感想を送る人",
+      "color": "#E8590C",
+      "illust": "bubble",
+      "summary": "誰かと一緒に行って感想を言い合うのが楽しい。",
+      "description": "誰かと一緒に体験して、感想を言い合うまでが楽しみのセット。同じものを見ても受け取り方が違うことを、面白がれるタイプです。初めての場所でも、仲間がいれば気軽に飛び込めます。",
+      "reason": "体験そのものに加えて、「ねえ、あそこ見た？」と話せる時間が楽しいから。語り合える余白が多いものほど、あなたの満足度は上がります。",
+      "genres": [
+        { "name": "お笑いライブ", "why": "笑ったポイントの違いで、帰り道の会話がいちばん盛り上がるから。" },
+        { "name": "謎解きイベント", "why": "仲間と相談しながら進むので、体験そのものが会話になるから。" },
+        { "name": "スポーツ観戦", "why": "一緒に一喜一憂した分だけ、試合後の話が尽きないから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "お笑いライブ", "date": "2026年11月28日（土）", "venue": "サンプルホール", "price": "3,000円" },
+        { "title": "サンプル公演B", "genre": "謎解きイベント", "date": "2026年12月12日（土）", "venue": "サンプルホール", "price": "3,800円" },
+        { "title": "サンプル公演C", "genre": "スポーツ観戦", "date": "2027年1月17日（日）", "venue": "サンプルホール", "price": "2,500円〜" }
+      ]
+    },
+    "LSF": {
+      "name": "追っかけ型",
+      "nickname": "遠征の予定で一年が決まる人",
+      "color": "#D6336C",
+      "illust": "penlight",
+      "summary": "特定の人・作品を長く応援したい。",
+      "description": "特定の人や作品を、長い時間をかけて応援するのが喜び。成長や変化を見届けることに、ほかでは得られない手応えを感じます。同じ推しを持つ仲間とのつながりも大切にします。",
+      "reason": "一回きりの体験より、積み重ねた時間ごと楽しめるから。「前回よりここが良くなった」と気づける瞬間が、何よりのごほうびです。",
+      "genres": [
+        { "name": "2.5次元舞台", "why": "シリーズを重ねるごとに、キャストの成長を客席から見届けられるから。" },
+        { "name": "落語会", "why": "若手の噺家を前座から追いかけ、出世の節目に立ち会えるから。" },
+        { "name": "歌舞伎", "why": "同じ役者を何年も追い、襲名などの晴れ舞台を一緒に迎えられるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "2.5次元舞台", "date": "2026年12月3日（木）", "venue": "サンプルホール", "price": "9,800円" },
+        { "title": "サンプル公演B", "genre": "落語会", "date": "2026年12月20日（日）", "venue": "サンプルホール", "price": "2,800円" },
+        { "title": "サンプル公演C", "genre": "歌舞伎", "date": "2027年1月6日（火）", "venue": "サンプルホール", "price": "6,000円〜" }
+      ]
+    },
+    "LIF": {
+      "name": "常連型",
+      "nickname": "気づいたらまた来てる人",
+      "color": "#B7791F",
+      "illust": "stamp",
+      "summary": "気に入ったものに何度も通う。",
+      "description": "気に入ったものに何度も通い、そのたびに新しい良さを見つけるタイプ。一人でふらっと行ける「自分の場所」があると落ち着きます。回数を重ねるほど楽しみが深くなることを知っています。",
+      "reason": "同じ場所に通うほど、前回は気づかなかった変化が見えてくるから。くり返しの中にある小さな違いを味わえるのが、あなたの強みです。",
+      "genres": [
+        { "name": "寄席", "why": "毎日ちがう顔ぶれと演目で、通うほど楽しみ方が増えていくから。" },
+        { "name": "ジャズライブ", "why": "同じ曲でも夜ごとに演奏が変わり、通う理由が尽きないから。" },
+        { "name": "ロングラン・ミュージカル", "why": "同じ演目でもキャストや回ごとの違いを見つける楽しみがあるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "寄席", "date": "2026年11月30日（月）", "venue": "サンプルホール", "price": "3,000円" },
+        { "title": "サンプル公演B", "genre": "ジャズライブ", "date": "2026年12月11日（金）", "venue": "サンプルホール", "price": "4,200円" },
+        { "title": "サンプル公演C", "genre": "ミュージカル", "date": "2027年1月23日（土）", "venue": "サンプルホール", "price": "8,500円〜" }
+      ]
+    },
+    "WIF": {
+      "name": "没入型",
+      "nickname": "エンドロールで立てない人",
+      "color": "#8E4EC6",
+      "illust": "headphones",
+      "summary": "物語や世界観に入り込み、余韻まで楽しむ。",
+      "description": "物語や世界観の中に入り込み、終わったあとの余韻まで味わうタイプ。好きな作品の世界には、何度でも帰りたくなります。一人で静かに浸る時間を大切にします。",
+      "reason": "物語の世界に入り込んで、しばらく戻ってこられない感覚が好きだから。余韻が長く続くものほど、あなたの中で特別な作品になります。",
+      "genres": [
+        { "name": "朗読劇", "why": "声だけで描かれる世界を、自分の想像で満たして浸れるから。" },
+        { "name": "イマーシブシアター", "why": "物語の中を自分の足で歩き、世界観の内側に入り込めるから。" },
+        { "name": "バレエ", "why": "言葉のない物語に、音楽と身体だけで深く引き込まれるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "朗読劇", "date": "2026年12月6日（日）", "venue": "サンプルホール", "price": "5,500円" },
+        { "title": "サンプル公演B", "genre": "イマーシブシアター", "date": "2026年12月26日（土）", "venue": "サンプルホール", "price": "7,000円" },
+        { "title": "サンプル公演C", "genre": "バレエ", "date": "2027年1月30日（土）", "venue": "サンプルホール", "price": "6,500円〜" }
+      ]
+    },
+    "WIE": {
+      "name": "考察型",
+      "nickname": "帰り道に伏線を回収する人",
+      "color": "#3E63DD",
+      "illust": "glasses",
+      "summary": "作品の意味や作り手の意図を読み解きたい。",
+      "description": "作品の意味や作り手の意図を読み解くのが楽しいタイプ。細部に隠された仕掛けを見つけると、作品がもう一段おもしろくなります。見終わってからが本番です。",
+      "reason": "「なぜこうなっているのか」を考えるほど、作品が深く見えてくるから。答えを自分で組み立てていく過程そのものが、あなたの楽しみです。",
+      "genres": [
+        { "name": "現代アート展", "why": "背景や意図を読み解くほど、作品の見え方が変わっていくから。" },
+        { "name": "小劇場演劇", "why": "説明されない余白が多く、自分なりの解釈を持ち帰れるから。" },
+        { "name": "能", "why": "少ない動きと象徴的な演出に、読み解く手がかりが詰まっているから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "現代アート展", "date": "2026年12月1日（火）〜", "venue": "サンプルホール", "price": "1,800円" },
+        { "title": "サンプル公演B", "genre": "小劇場演劇", "date": "2026年12月17日（木）", "venue": "サンプルホール", "price": "3,500円" },
+        { "title": "サンプル公演C", "genre": "能", "date": "2027年1月16日（土）", "venue": "サンプルホール", "price": "4,000円〜" }
+      ]
+    },
+    "WSE": {
+      "name": "開拓型",
+      "nickname": "『はじめて』を集めている人",
+      "color": "#2B9A66",
+      "illust": "flag",
+      "summary": "知らないジャンルを試すこと自体が楽しい。",
+      "description": "知らないジャンルを試すこと自体が楽しいタイプ。新しい体験は、それだけで誰かに話したくなるネタになります。友達を誘って未知の場所へ行くのも得意です。",
+      "reason": "まだ知らない作品に触れて、自分の「好き」が広がっていく感覚が好きだから。新しく見つけたものを誰かと分け合えると、楽しさが倍になります。",
+      "genres": [
+        { "name": "映画祭", "why": "普段は出会えない国や作り手の作品を、まとめて試せるから。" },
+        { "name": "大道芸フェス", "why": "歩くだけで次々と知らない芸に出会い、その場で感想を言い合えるから。" },
+        { "name": "ワールドミュージック公演", "why": "聴いたことのない音に出会う体験そのものが、新しい発見になるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "映画祭", "date": "2026年11月21日（土）〜", "venue": "サンプルホール", "price": "1,500円〜" },
+        { "title": "サンプル公演B", "genre": "大道芸フェス", "date": "2026年12月13日（日）", "venue": "サンプルホール", "price": "無料" },
+        { "title": "サンプル公演C", "genre": "ワールドミュージック", "date": "2027年1月24日（日）", "venue": "サンプルホール", "price": "4,800円" }
+      ]
+    },
+    "WSF": {
+      "name": "発掘型",
+      "nickname": "『この人来る』が当たる人",
+      "color": "#0C8599",
+      "illust": "magnifier",
+      "summary": "有名になる前のものを先に見つけたい。",
+      "description": "有名になる前のものを、いち早く見つけるのが楽しいタイプ。自分の目で選んだものが広まっていく過程に、大きな喜びを感じます。見つけたら、つい誰かに教えたくなります。",
+      "reason": "自分の感覚で「これはいい」と見抜けたとき、作品との特別なつながりが生まれるから。見つけたものを人に勧めて、広がっていくところまでがあなたの楽しみです。",
+      "genres": [
+        { "name": "インディーズ映画", "why": "次に話題になる監督を、小さな上映会で先に見つけられるから。" },
+        { "name": "若手劇団の公演", "why": "数年後の人気劇団の「最初のころ」に立ち会えるから。" },
+        { "name": "新人お笑いライブ", "why": "未来の売れっ子を、近い距離で誰よりも早く見つけられるから。" }
+      ],
+      "events": [
+        { "title": "サンプル公演A", "genre": "インディーズ映画", "date": "2026年12月4日（金）", "venue": "サンプルホール", "price": "1,200円" },
+        { "title": "サンプル公演B", "genre": "若手劇団の公演", "date": "2026年12月18日（金）", "venue": "サンプルホール", "price": "2,500円" },
+        { "title": "サンプル公演C", "genre": "新人お笑いライブ", "date": "2027年1月9日（土）", "venue": "サンプルホール", "price": "1,000円" }
+      ]
+    }
+  },
+
+  "typeOrder": ["LIE", "LSE", "LSF", "LIF", "WIF", "WIE", "WSE", "WSF"]
+}
+</script>
+
+<style>
+:root {
+  --bg: #FFF9F2;
+  --surface: #FFFFFF;
+  --surface-2: #FFF1E3;
+  --text: #24212B;
+  --muted: #6B6577;
+  --line: #EDE3D8;
+  --brand: #F2545B;
+  --accent: var(--brand);
+  --on-accent: #FFFFFF;
+  --tint: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17151C;
+    --surface: #221F29;
+    --surface-2: #2C2834;
+    --text: #F3EFF7;
+    --muted: #ABA4B6;
+    --line: #38333F;
+    --tint: color-mix(in srgb, var(--accent) 18%, var(--bg));
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--tint);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", Meiryo, "Segoe UI", sans-serif;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  transition: background-color .3s ease;
+}
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+
+.wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 48px; }
+
+.site-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; }
+.logo { font-weight: 800; font-size: 15px; text-decoration: none; letter-spacing: .02em; }
+.logo span { color: var(--accent); }
+.head-link { font-size: 13px; color: var(--muted); text-decoration: none; padding: 6px 10px;  }
+.head-link:hover { background: var(--surface); }
+
+.card { padding: 24px 0; border-top: 1px solid var(--line); }
+.stack > .card:first-child, main > .card:first-child { border-top: 0; padding-top: 8px; }
+.stack > * + * { margin-top: 16px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 12px 24px; border: 0; 
+  background: var(--accent); color: var(--on-accent);
+  font-weight: 700; font-size: 16px; text-decoration: none; cursor: pointer;
+  transition: transform .1s ease, filter .15s ease;
+}
+.btn:hover { filter: brightness(1.05); }
+.btn:active { transform: scale(.97); }
+.btn.block { display: flex; width: 100%; }
+.btn.ghost { background: transparent; color: var(--text); box-shadow: inset 0 0 0 2px var(--line); }
+.btn.sub { background: var(--surface-2); color: var(--text); }
+.btn:focus-visible, .choice:focus-visible, .type-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* ---- Top ---- */
+.hero { text-align: center; }
+.hero h1 { font-size: clamp(28px, 8vw, 40px); line-height: 1.25; margin: 8px 0 12px; font-weight: 900; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p { margin: 0 auto; color: var(--muted); max-width: 26em; }
+.pill { display: inline-block; background: var(--accent); color: var(--on-accent); font-weight: 800; padding: 6px 16px;  font-size: 15px; }
+.mini-chars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 20px 0; }
+.mini-chars svg { width: 100%; height: auto; display: block; }
+.note { font-size: 12px; color: var(--muted); text-align: center; margin: 12px 0 0; }
+.axes-intro { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.axes-intro li { padding: 4px 0; font-size: 14px; }
+.axes-intro b { display: inline-block; min-width: 2.5em; }
+
+/* ---- Quiz ---- */
+.progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.progress { flex: 1; height: 10px; background: var(--surface);  overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
+.progress > i { display: block; height: 100%; background: var(--accent);  transition: width .25s ease; }
+.progress-num { font-size: 14px; font-weight: 700; color: var(--muted); min-width: 3.5em; text-align: right; font-variant-numeric: tabular-nums; }
+.q-label { font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: .08em; margin: 24px 0 4px; }
+.q-text { font-size: clamp(22px, 6.4vw, 28px); font-weight: 800; line-height: 1.4; margin: 0 0 24px; }
+.choices { display: grid; gap: 12px; }
+.choice {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 72px;
+  padding: 14px 18px; text-align: left; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--line);
+  font-size: 17px; font-weight: 700; line-height: 1.45;
+  transition: border-color .12s ease, background-color .12s ease, transform .1s ease;
+}
+.choice:hover { border-color: var(--accent); }
+.choice:active { transform: scale(.98); }
+.choice .tag { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); font-weight: 900; font-size: 15px; }
+.choice.picked { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.choice.picked .tag { background: var(--accent); color: var(--on-accent); }
+.back-link { margin-top: 20px; background: none; border: 0; color: var(--muted); font-size: 14px; cursor: pointer; padding: 8px 4px; }
+.back-link:disabled { visibility: hidden; }
+
+/* ---- Result ---- */
+.fade-in { animation: fadeIn .5s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fade-in { animation: none; } * { transition: none !important; } }
+
+.result-hero { text-align: center; padding-top: 8px; }
+.result-hero .eyebrow { font-size: 13px; font-weight: 700; color: var(--muted); margin: 0; }
+.result-illust { width: min(200px, 55vw); margin: 12px auto 0; }
+.result-illust svg { width: 100%; height: auto; display: block; }
+.type-title { font-size: clamp(36px, 11vw, 52px); font-weight: 900; line-height: 1.2; margin: 4px 0 0; color: var(--accent); }
+.code-badges { display: inline-flex; gap: 6px; margin-top: 10px; }
+.code-badges span { display: grid; place-items: center; width: 40px; height: 40px; background: var(--accent); color: var(--on-accent); font-weight: 900; font-size: 20px; }
+
+.sec-title { font-size: 15px; font-weight: 800; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+.sec-title::before { content: ""; width: 6px; height: 18px; background: var(--accent); flex: none; }
+
+.axis-row + .axis-row { margin-top: 14px; }
+.axis-labels { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px; gap: 8px; }
+.axis-labels .on { color: var(--accent); }
+.axis-labels .off { color: var(--muted); font-weight: 500; }
+.axis-track { position: relative; height: 12px; background: var(--surface-2); margin: 0 9px; }
+.axis-track::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--line); }
+.axis-track i { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--accent) 45%, transparent); }
+.axis-track b { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.2); z-index: 1; }
+.axis-ratio { text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+.desc { margin: 0; }
+.why-box { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; }
+.why-box p { margin: 0; }
+.why-box .why-lead { font-size: 13px; font-weight: 800; color: var(--accent); margin-bottom: 6px; }
+
+.genres { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.genres li { display: flex; gap: 12px; align-items: flex-start; padding: 4px 0; }
+.genres .num { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--on-accent); font-weight: 800; font-size: 14px; }
+.genres b { display: block; font-size: 16px; }
+.genres span.w { font-size: 14px; color: var(--muted); }
+
+.events { display: grid; }
+.event { padding: 12px 0; border-top: 1px solid var(--line); }
+.event:first-child { border-top: 0; padding-top: 0; }
+.event .g { font-size: 12px; font-weight: 800; color: var(--accent); }
+.event h4 { margin: 6px 0 4px; font-size: 16px; }
+.event dl { margin: 0; font-size: 13px; color: var(--muted); display: grid; grid-template-columns: auto 1fr; gap: 0 8px; }
+.event dt { font-weight: 700; }
+.event dd { margin: 0; }
+.event .price { color: var(--text); font-weight: 800; }
+.dummy-note { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+
+.share-row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+.share-row .btn { padding: 12px 10px; font-size: 15px; }
+.copied { font-size: 13px; text-align: center; color: var(--accent); min-height: 1.5em; margin: 6px 0 0; font-weight: 700; }
+.end-row { display: grid; gap: 10px; }
+
+/* ---- Types ---- */
+.page-title { font-size: 24px; font-weight: 900; margin: 0 0 4px; }
+.page-lead { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
+.type-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.type-card {
+  --c: var(--brand);
+  display: block; text-decoration: none;
+  padding: 12px 0 14px; border-top: 3px solid var(--c);
+  transition: transform .12s ease;
+}
+.type-card:hover { transform: translateY(-2px); }
+.type-card svg { width: 72%; height: auto; display: block; margin: 0 auto 4px; }
+.type-card .tc-code { font-size: 12px; font-weight: 900; color: var(--c); letter-spacing: .08em; }
+.type-card .tc-name { font-size: 17px; font-weight: 900; line-height: 1.3; }
+.type-card .tc-sum { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
+@media (min-width: 520px) { .type-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.center { text-align: center; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site-head">
+    <a class="logo" href="#/">🎭 <span>エンタメ</span>タイプ診断</a>
+    <a class="head-link" href="#/types">8タイプ一覧</a>
+  </header>
+  <main id="app" aria-live="polite"></main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const DATA = JSON.parse(document.getElementById('quiz-data').textContent);
+  const app = document.getElementById('app');
+  const root = document.documentElement;
+  const AXES = DATA.axes;
+  const QUESTIONS = DATA.questions;
+  const TYPES = DATA.types;
+  const TYPE_ORDER = DATA.typeOrder && DATA.typeOrder.length ? DATA.typeOrder : Object.keys(TYPES);
+
+  // 回答はメモリ上だけに保持（保存・送信はしない）
+  const state = { answers: [], index: 0, result: null, locked: false };
+
+  validateData();
+
+  // ---------- utils ----------
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function axisById(id) { return AXES.find(a => a.id === id); }
+
+  function sideOf(code) {
+    for (const a of AXES) for (const s of a.sides) if (s.code === code) return { axis: a, side: s };
+    return null;
+  }
+
+  // 背景色に対して読みやすい文字色（白 or 濃色）を返す
+  function onColor(hex) {
+    const n = parseInt(hex.replace('#', ''), 16);
+    const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    const L = 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+    return (1.05) / (L + 0.05) >= 3 ? '#FFFFFF' : '#1B1A1F';
+  }
+
+  function setTheme(color) {
+    if (color) {
+      root.style.setProperty('--accent', color);
+      root.style.setProperty('--on-accent', onColor(color));
+    } else {
+      root.style.removeProperty('--accent');
+      root.style.removeProperty('--on-accent');
+    }
+  }
+
+  function validateData() {
+    AXES.forEach(a => {
+      const n = QUESTIONS.filter(q => q.axis === a.id).length;
+      if (n % 2 === 0) console.warn('[診断データ] 軸「' + a.name + '」の質問数が偶数です（同点が起きる可能性があります）');
+    });
+    QUESTIONS.forEach((q, i) => {
+      const a = axisById(q.axis);
+      const codes = a ? a.sides.map(s => s.code) : [];
+      if (!a || !codes.includes(q.a.value) || !codes.includes(q.b.value) || q.a.value === q.b.value) {
+        console.warn('[診断データ] 質問' + (i + 1) + 'の axis / value が正しくありません');
+      }
+    });
+  }
+
+  // ---------- illustration ----------
+  const INK = '#2B2733';
+  const ACCESSORIES = {
+    'hands-up': c => ({
+      back: `<path d="M48 120 L22 62" stroke="${c}" stroke-width="14" stroke-linecap="round"/>
+             <path d="M152 120 L178 62" stroke="${c}" stroke-width="14" stroke-linecap="round"/>
+             <circle cx="22" cy="58" r="10" fill="${c}"/><circle cx="178" cy="58" r="10" fill="${c}"/>
+             <path d="M8 40l8 6M30 30l-2 10M192 40l-8 6M170 30l2 10" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>`,
+      mouth: `<path d="M86 132 Q100 156 114 132 Z" fill="${INK}"/><path d="M93 142 Q100 150 107 142" fill="#F37C8E"/>`
+    }),
+    'bubble': c => ({
+      front: `<g transform="translate(122 20)"><path d="M6 0h56a12 12 0 0 1 12 12v22a12 12 0 0 1-12 12H26l-14 12 2-12H6A12 12 0 0 1-6 34V12A12 12 0 0 1 6 0z" fill="#fff" stroke="${INK}" stroke-width="4"/>
+              <circle cx="18" cy="23" r="5" fill="${c}"/><circle cx="34" cy="23" r="5" fill="${c}"/><circle cx="50" cy="23" r="5" fill="${c}"/></g>`
+    }),
+    'penlight': c => ({
+      front: `<path d="M150 138 L174 70" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+              <path d="M174 70 L186 34" stroke="${c}" stroke-width="12" stroke-linecap="round"/>
+              <path d="M174 70 L186 34" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+              <circle cx="150" cy="138" r="11" fill="${c}" stroke="${INK}" stroke-width="3"/>
+              <path d="M30 48c0-7 10-9 12-2 2-7 12-5 12 2 0 8-12 14-12 14s-12-6-12-14z" fill="${c}"/>`
+    }),
+    'stamp': c => ({
+      front: `<g transform="translate(118 116) rotate(-8)"><rect x="0" y="0" width="70" height="46" rx="8" fill="#fff" stroke="${INK}" stroke-width="4"/>
+              <circle cx="16" cy="16" r="7" fill="${c}"/><circle cx="35" cy="16" r="7" fill="${c}"/><circle cx="54" cy="16" r="7" fill="${c}"/>
+              <circle cx="16" cy="32" r="7" fill="${c}"/><circle cx="35" cy="32" r="7" fill="none" stroke="${c}" stroke-width="2.5" stroke-dasharray="3 3"/><circle cx="54" cy="32" r="7" fill="none" stroke="${c}" stroke-width="2.5" stroke-dasharray="3 3"/></g>`
+    }),
+    'headphones': c => ({
+      front: `<path d="M44 104 C44 40 156 40 156 104" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+              <rect x="30" y="94" width="24" height="40" rx="11" fill="${INK}"/><rect x="146" y="94" width="24" height="40" rx="11" fill="${INK}"/>
+              <path d="M172 40v-18l14-4v18" fill="none" stroke="${c}" stroke-width="4"/><circle cx="168" cy="40" r="5" fill="${c}"/><circle cx="182" cy="36" r="5" fill="${c}"/>`,
+      eyes: `<path d="M74 110 Q82 118 90 110" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>
+             <path d="M110 110 Q118 118 126 110" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    }),
+    'glasses': c => ({
+      eyes: `<circle cx="82" cy="108" r="5" fill="${INK}"/><circle cx="118" cy="108" r="5" fill="${INK}"/>
+             <circle cx="82" cy="108" r="15" fill="#fff" fill-opacity=".25" stroke="${INK}" stroke-width="4"/>
+             <circle cx="118" cy="108" r="15" fill="#fff" fill-opacity=".25" stroke="${INK}" stroke-width="4"/>
+             <path d="M97 106h6" stroke="${INK}" stroke-width="4"/>`,
+      front: `<text x="160" y="56" font-size="40" font-weight="900" fill="${c}" font-family="system-ui, sans-serif">?</text>
+              <circle cx="38" cy="44" r="5" fill="${c}"/><circle cx="26" cy="62" r="3" fill="${c}"/>`
+    }),
+    'flag': c => ({
+      back: `<path d="M150 150 L166 30" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>
+             <path d="M166 32 L196 44 L163 58 Z" fill="${c}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`,
+      front: `<circle cx="150" cy="150" r="11" fill="${c}" stroke="${INK}" stroke-width="3"/>
+              <path d="M26 54l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="${c}"/>`
+    }),
+    'magnifier': c => ({
+      front: `<path d="M150 150 L176 176" stroke="${INK}" stroke-width="10" stroke-linecap="round"/>
+              <circle cx="138" cy="138" r="22" fill="#fff" fill-opacity=".5" stroke="${INK}" stroke-width="7"/>
+              <path d="M30 40l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="${c}"/>
+              <path d="M170 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="${c}"/>`
+    })
+  };
+
+  function charSVG(code, label) {
+    const t = TYPES[code];
+    const c = t.color;
+    const acc = (ACCESSORIES[t.illust] || (() => ({})))(c);
+    const eyes = acc.eyes || `<circle cx="82" cy="108" r="6" fill="${INK}"/><circle cx="118" cy="108" r="6" fill="${INK}"/>
+      <circle cx="84" cy="106" r="2" fill="#fff"/><circle cx="120" cy="106" r="2" fill="#fff"/>`;
+    const mouth = acc.mouth || `<path d="M90 130 Q100 140 110 130" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    return `<svg viewBox="0 0 200 200" role="img" aria-label="${esc(label || (t.name + 'のキャラクター'))}" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="104" r="92" fill="${c}" fill-opacity=".14"/>
+      ${acc.back || ''}
+      <ellipse cx="100" cy="182" rx="48" ry="7" fill="${INK}" opacity=".12"/>
+      <path d="M100 46c38 0 60 32 60 72 0 38-26 60-60 60s-60-22-60-60c0-40 22-72 60-72z" fill="${c}"/>
+      <ellipse cx="80" cy="72" rx="15" ry="9" fill="#fff" opacity=".28" transform="rotate(-20 80 72)"/>
+      <circle cx="68" cy="126" r="8" fill="#FF8FA3" opacity=".55"/><circle cx="132" cy="126" r="8" fill="#FF8FA3" opacity=".55"/>
+      ${eyes}${mouth}
+      ${acc.front || ''}
+    </svg>`;
+  }
+
+  // ---------- scoring ----------
+  function computeResult(answers) {
+    const counts = {};
+    AXES.forEach(a => a.sides.forEach(s => { counts[s.code] = 0; }));
+    answers.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+    const axes = AXES.map(a => {
+      const [s0, s1] = a.sides;
+      const n0 = counts[s0.code], n1 = counts[s1.code];
+      const win = n0 >= n1 ? s0 : s1;
+      return { axis: a, win: win, counts: [n0, n1] };
+    });
+    return { code: axes.map(x => x.win.code).join(''), axes: axes };
+  }
+
+  // ---------- views ----------
+  function viewTop() {
+    setTheme(null);
+    const m = DATA.meta;
+    app.innerHTML = `
+      <section class="card hero stack fade-in">
+        <span class="pill">${esc(m.duration)}で診断</span>
+        <h1>あなたは<br>どう<em>楽しむ</em>人？</h1>
+        <p>${esc(m.lead)}</p>
+        <div class="mini-chars" aria-hidden="true">${TYPE_ORDER.map(c => charSVG(c)).join('')}</div>
+        <a class="btn block" href="#/quiz" data-start>診断をはじめる（${esc(m.duration)}）</a>
+        <a class="btn ghost block" href="#/types">8タイプ一覧を見る</a>
+        <p class="note">名前などの個人情報は入力不要です。回答はどこにも送信・保存されません。</p>
+      </section>
+      <section class="card stack" style="margin-top:16px">
+        <h2 class="sec-title">3つの軸で8タイプに分かれます</h2>
+        <ul class="axes-intro">
+          ${AXES.map(a => `<li><b>${esc(a.name)}</b>${a.sides.map(s => `<strong>${esc(s.code)}</strong>＝${esc(s.label)}（${esc(s.desc)}）`).join(' ／ ')}</li>`).join('')}
+        </ul>
+        <p class="note" style="text-align:left">性格を当てるための診断ではありません。あなたの「楽しみ方」から、まだ試していないジャンルを見つけるための診断です。</p>
+      </section>`;
+    const start = app.querySelector('[data-start]');
+    start.addEventListener('click', () => { state.answers = []; state.index = 0; state.result = null; });
+  }
+
+  function viewQuiz() {
+    setTheme(null);
+    if (state.index >= QUESTIONS.length) state.index = 0;
+    const i = state.index;
+    const q = QUESTIONS[i];
+    const total = QUESTIONS.length;
+    const picked = state.answers[i];
+    app.innerHTML = `
+      <section class="fade-in" style="animation-duration:.25s">
+        <div class="progress-row">
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${i}" aria-label="進捗"><i style="width:${(i / total) * 100}%"></i></div>
+          <span class="progress-num">${i + 1} / ${total}</span>
+        </div>
+        <p class="q-label">Q${i + 1}</p>
+        <h2 class="q-text">${esc(q.text)}</h2>
+        <div class="choices">
+          ${['a', 'b'].map(k => `
+            <button type="button" class="choice${picked === q[k].value ? ' picked' : ''}" data-value="${esc(q[k].value)}">
+              <span class="tag">${k.toUpperCase()}</span><span>${esc(q[k].text)}</span>
+            </button>`).join('')}
+        </div>
+        <button type="button" class="back-link" data-back ${i === 0 ? 'disabled' : ''}>← 前の質問に戻る</button>
+      </section>`;
+    state.locked = false;
+
+    app.querySelectorAll('.choice').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.locked) return;
+        state.locked = true;
+        btn.classList.add('picked');
+        state.answers[i] = btn.dataset.value;
+        state.answers.length = Math.max(state.answers.length, i + 1);
+        const bar = app.querySelector('.progress > i');
+        bar.style.width = ((i + 1) / total) * 100 + '%';
+        setTimeout(() => {
+          if (i + 1 < total) {
+            state.index = i + 1;
+            viewQuiz();
+          } else if (isComplete()) {
+            state.result = computeResult(state.answers);
+            location.hash = '#/result';
+          } else {
+            // 未回答が残っていれば最初の未回答へ
+            state.index = firstUnanswered();
+            viewQuiz();
+          }
+        }, 220);
+      });
+    });
+    app.querySelector('[data-back]').addEventListener('click', () => {
+      if (state.index > 0) { state.index -= 1; viewQuiz(); }
+    });
+    const first = app.querySelector('.choice');
+    if (first && document.activeElement && document.activeElement !== document.body) first.focus({ preventScroll: true });
+  }
+
+  function isComplete() {
+    if (state.answers.length !== QUESTIONS.length) return false;
+    return QUESTIONS.every((q, i) => state.answers[i] === q.a.value || state.answers[i] === q.b.value);
+  }
+  function firstUnanswered() {
+    for (let i = 0; i < QUESTIONS.length; i++) if (!state.answers[i]) return i;
+    return 0;
+  }
+
+  function axisBlock(result, code) {
+    // result がある場合は比率、ない場合（タイプ詳細）はどちら側かだけを表示
+    return AXES.map((a, idx) => {
+      const [s0, s1] = a.sides;
+      let n0, n1, winCode;
+      if (result) {
+        const r = result.axes[idx];
+        n0 = r.counts[0]; n1 = r.counts[1]; winCode = r.win.code;
+      } else {
+        winCode = code[idx];
+        n0 = winCode === s0.code ? 3 : 0; n1 = 3 - n0;
+      }
+      // 中央を0として、多い側へ差の分だけ寄せる（3:0なら端、2:1なら1/3ほど）
+      const total = n0 + n1 || 1;
+      const pos = 50 - ((n0 - n1) / total) * 50;
+      const from = Math.min(pos, 50), width = Math.abs(pos - 50);
+      return `<div class="axis-row">
+        <div class="axis-labels">
+          <span class="${winCode === s0.code ? 'on' : 'off'}">${esc(s0.code)} ${esc(s0.label)}</span>
+          <span class="${winCode === s1.code ? 'on' : 'off'}">${esc(s1.label)} ${esc(s1.code)}</span>
+        </div>
+        <div class="axis-track" aria-hidden="true"><i style="left:${from}%;width:${width}%"></i><b style="left:${pos}%"></b></div>
+        <div class="axis-ratio">${result ? `${esc(a.name)}：${esc(s0.label)} ${n0} : ${n1} ${esc(s1.label)}` : `${esc(a.name)}：${esc(sideOf(winCode).side.desc)}`}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function typeBody(code, result) {
+    const t = TYPES[code];
+    const eventsCount = Math.min(3, Math.max(2, t.events.length));
+    return `
+      <section class="card result-hero">
+        <p class="eyebrow">${result ? 'あなたの楽しみ方タイプは' : 'タイプ詳細'}</p>
+        <h1 class="type-title">${esc(t.name)}</h1>
+        <div class="code-badges" aria-label="タイプコード ${esc(code)}">${code.split('').map(ch => `<span title="${esc(sideOf(ch).side.label)}">${esc(ch)}</span>`).join('')}</div>
+        <div class="result-illust">${charSVG(code)}</div>
+      </section>
+
+      <section class="card">
+        <h2 class="sec-title">${result ? 'あなたの3軸の傾き' : '3軸の傾き'}</h2>
+        ${axisBlock(result, code)}
+      </section>
+
+      <section class="card stack">
+        <h2 class="sec-title">${esc(t.name)}ってどんなタイプ？</h2>
+        <p class="desc">${esc(t.description)}</p>
+        <div class="why-box">
+          <p class="why-lead">あなたがいつものジャンルを好きなのは、たぶんこの理由</p>
+          <p>${esc(t.reason)}</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="sec-title">同じ楽しみ方ができるジャンル</h2>
+        <ol class="genres">
+          ${t.genres.slice(0, 3).map((g, k) => `<li><span class="num">${k + 1}</span><div><b>${esc(g.name)}</b><span class="w">${esc(g.why)}</span></div></li>`).join('')}
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2 class="sec-title">おすすめ公演</h2>
+        <div class="events">
+          ${t.events.slice(0, eventsCount).map(e => `
+            <article class="event">
+              <span class="g">${esc(e.genre)}</span>
+              <h4>${esc(e.title)}</h4>
+              <dl><dt>日付</dt><dd>${esc(e.date)}</dd><dt>会場</dt><dd>${esc(e.venue)}</dd><dt>価格</dt><dd class="price">${esc(e.price)}</dd></dl>
+            </article>`).join('')}
+        </div>
+        <p class="dummy-note">※ 表示している公演はサンプルです。</p>
+      </section>`;
+  }
+
+  function shareText(code) {
+    const t = TYPES[code];
+    return `私のエンタメタイプは「${code} ${t.name}」\n次に試したいジャンル：${t.genres.slice(0, 3).map(g => g.name).join('・')}`;
+  }
+
+  function viewResult() {
+    if (!state.result || !isComplete()) {
+      // 9問に回答していない場合は結果を表示しない
+      location.replace('#/');
+      return;
+    }
+    const code = state.result.code;
+    const t = TYPES[code];
+    if (!t) { console.warn('[診断データ] タイプ ' + code + ' が定義されていません'); location.replace('#/'); return; }
+    setTheme(t.color);
+    const tag = DATA.meta.hashtag;
+    const text = shareText(code);
+    const pageUrl = /^https?:/.test(location.protocol) ? location.href.split('#')[0] : '';
+    const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&hashtags=' + encodeURIComponent(tag) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
+
+    app.innerHTML = `
+      <div class="stack fade-in" data-result="${esc(code)}">
+        ${typeBody(code, state.result)}
+        <section class="card">
+          <h2 class="sec-title">結果をシェア</h2>
+          <div class="share-row">
+            <button type="button" class="btn sub" data-copy>結果をコピー</button>
+            <a class="btn" href="${esc(intent)}" target="_blank" rel="noopener noreferrer">Xでポスト</a>
+          </div>
+          <p class="copied" data-copied role="status"></p>
+        </section>
+        <div class="end-row">
+          <a class="btn block" href="#/quiz" data-restart>もう一度診断する</a>
+          <a class="btn ghost block" href="#/types">8タイプ一覧を見る</a>
+        </div>
+      </div>`;
+    window.scrollTo(0, 0);
+
+    app.querySelector('[data-copy]').addEventListener('click', () => {
+      copyText(text + '\n#' + tag + (pageUrl ? '\n' + pageUrl : '')).then(ok => {
+        app.querySelector('[data-copied]').textContent = ok ? 'コピーしました！' : 'コピーできませんでした';
+      });
+    });
+    app.querySelector('[data-restart]').addEventListener('click', () => { state.answers = []; state.index = 0; state.result = null; });
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy(text));
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function viewTypes() {
+    setTheme(null);
+    app.innerHTML = `
+      <section class="fade-in">
+        <h1 class="page-title">8タイプ一覧</h1>
+        <p class="page-lead">気になるタイプをタップすると、詳細とおすすめジャンルが見られます。</p>
+        <div class="type-grid">
+          ${TYPE_ORDER.map(code => {
+            const t = TYPES[code];
+            return `<a class="type-card" href="#/types/${esc(code)}" style="--c:${esc(t.color)}">
+              ${charSVG(code)}
+              <div class="tc-code">${esc(code)}</div>
+              <div class="tc-name">${esc(t.name)}</div>
+              <div class="tc-sum">${esc(t.summary)}</div>
+            </a>`;
+          }).join('')}
+        </div>
+        <div class="end-row" style="margin-top:20px">
+          <a class="btn block" href="#/quiz" data-start>診断をはじめる（${esc(DATA.meta.duration)}）</a>
+        </div>
+      </section>`;
+    app.querySelector('[data-start]').addEventListener('click', () => { state.answers = []; state.index = 0; state.result = null; });
+  }
+
+  function viewTypeDetail(code) {
+    const t = TYPES[code];
+    if (!t) { location.replace('#/types'); return; }
+    setTheme(t.color);
+    app.innerHTML = `
+      <div class="stack fade-in" data-detail="${esc(code)}">
+        ${typeBody(code, null)}
+        <div class="end-row">
+          <a class="btn block" href="#/quiz" data-start>自分のタイプを診断する</a>
+          <a class="btn ghost block" href="#/types">8タイプ一覧に戻る</a>
+        </div>
+      </div>`;
+    app.querySelector('[data-start]').addEventListener('click', () => { state.answers = []; state.index = 0; state.result = null; });
+  }
+
+  // ---------- router ----------
+  function route() {
+    const h = location.hash.replace(/^#/, '') || '/';
+    const parts = h.split('/').filter(Boolean);
+    if (parts[0] === 'quiz') viewQuiz();
+    else if (parts[0] === 'result') viewResult();
+    else if (parts[0] === 'types' && parts[1]) viewTypeDetail(decodeURIComponent(parts[1]).toUpperCase());
+    else if (parts[0] === 'types') viewTypes();
+    else viewTop();
+    if (parts[0] !== 'quiz') window.scrollTo(0, 0);
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
+</body>
+</html>
