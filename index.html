@@ -342,7 +342,9 @@
       { "id": "intro1", "title": "紹介上手", "desc": "友達に新しい趣味を紹介",
         "cond": { "type": "introducedGenres", "count": 1 }, "reward": { "points": 20, "sticker": "megaphone" } },
       { "id": "view10", "title": "図鑑めくり", "desc": "ジャンルを10個チェック",
-        "cond": { "type": "viewedGenres", "count": 10 }, "reward": { "points": 20 } }
+        "cond": { "type": "viewedGenres", "count": 10 }, "reward": { "points": 20 } },
+      { "id": "book3", "title": "プロフ帳デビュー", "desc": "プロフ帳に3つ貼る",
+        "cond": { "type": "bookItems", "count": 3 }, "reward": { "points": 20, "sticker": "star" } }
     ],
 
     "stickers": [
@@ -356,6 +358,21 @@
       { "id": "note", "name": "音符", "color": "#0C8599" },
       { "id": "ball", "name": "ボール", "color": "#B7791F" }
     ],
+
+    "book": {
+      "fields": [
+        { "id": "fav", "label": "すきなジャンル", "max": 24 },
+        { "id": "oshi", "label": "いま推してるもの", "max": 24 },
+        { "id": "best", "label": "今年いちばんの公演", "max": 24 },
+        { "id": "next", "label": "次に行ってみたい", "max": 24 },
+        { "id": "msg", "label": "ひとこと", "max": 40 }
+      ],
+      "papers": [
+        { "id": "note", "name": "ノート" },
+        { "id": "grid", "name": "方眼" },
+        { "id": "dot", "name": "ドット" }
+      ]
+    },
 
     "skins": [
       { "id": "stage", "name": "ステージ" },
@@ -501,15 +518,14 @@ img, svg { max-width: 100%; }
 
 /* ---- Axes ---- */
 .axes { display: grid; gap: 0; border-top: 2px solid var(--line); max-width: 720px; }
-.axis-item { display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 2px solid var(--line); }
-.axis-item .ax-name { font-size: 28px; font-weight: 900; text-align: center; }
-.axis-item .ax-sides { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
-.axis-item .side b { display: block; font-size: 17px; font-weight: 900; }
-.axis-item .side small { display: block; font-size: 12px; color: var(--muted); line-height: 1.5; }
-.axis-item .side.r { text-align: right; }
-.axis-item .vs { font-weight: 900; font-size: 13px; color: var(--muted); }
-.code-chip { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; margin-right: 4px; background: var(--text); color: var(--bg); font-size: .85em; vertical-align: .05em; }
-.side.r .code-chip { margin: 0 0 0 4px; }
+.axis-item { padding: 18px 0; border-bottom: 2px solid var(--line); }
+.axis-item .ax-name { display: block; font-size: 14px; font-weight: 900; margin-bottom: 8px; }
+.axis-item .ax-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 2px solid var(--line); background: var(--bg); }
+.axis-item .side { padding: 12px; }
+.axis-item .side + .side { border-left: 2px solid var(--line); }
+.axis-item .side b { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: 900; line-height: 1.3; }
+.axis-item .side small { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.code-chip { display: inline-grid; place-items: center; flex: none; width: 1.5em; height: 1.5em; background: var(--text); color: var(--bg); font-size: .8em; }
 
 /* ---- Type tiles ---- */
 .type-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid var(--line); border-left: 2px solid var(--line); }
@@ -635,7 +651,7 @@ img, svg { max-width: 100%; }
 
 /* ---- My page ---- */
 .subnav { border-bottom: 2px solid var(--line); background: var(--bg-2); }
-.subnav .inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 680px; }
+.subnav .inner { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 680px; }
 .subnav a { text-align: center; padding: 12px 2px 10px; font-size: 13px; font-weight: 800; text-decoration: none; border-bottom: 4px solid transparent; white-space: nowrap; }
 .subnav a.on { border-bottom-color: var(--text); }
 
@@ -686,10 +702,10 @@ img, svg { max-width: 100%; }
 
 .missions { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--line); }
 .mission { padding: 16px 0; border-bottom: 2px solid var(--line); }
-.mission .m-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.mission .m-top { display: grid; gap: 6px; justify-items: start; }
 .mission b { font-size: 16px; line-height: 1.45; }
 .mission.done b::before { content: "✓ "; }
-.mission .m-reward { flex: none; font-size: 12px; font-weight: 900; background: var(--brand-2); color: #1C1A22; padding: 2px 8px; max-width: 45%; text-align: right; }
+.mission .m-reward { font-size: 12px; font-weight: 900; background: var(--brand-2); color: #1C1A22; padding: 2px 8px; }
 .mission small { display: block; font-size: 12px; color: var(--muted); }
 .m-prog { height: 10px; border: 2px solid var(--line); background: var(--bg); margin: 8px 0 4px; }
 .m-prog i { display: block; height: 100%; background: var(--brand); }
@@ -709,14 +725,14 @@ img, svg { max-width: 100%; }
 .gbody li b { color: var(--text); margin-right: 6px; }
 .g-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .genres .g-actions { grid-column: 2; }
-.act { min-height: 36px; padding: 6px 12px; font-size: 13px; font-weight: 800; border: 2px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+.act { min-height: 40px; padding: 6px 12px; font-size: 13px; font-weight: 800; border: 2px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
 .act.on { background: var(--text); color: var(--bg); }
 .act:disabled { cursor: default; }
 
 .balance { font-size: 44px; font-weight: 900; line-height: 1.1; margin: 0; font-variant-numeric: tabular-nums; }
 .balance small { font-size: 16px; margin-left: 4px; }
 .shop { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--line); }
-.shop-item { display: grid; grid-template-columns: 56px 1fr; gap: 8px 14px; align-items: center; padding: 14px 0; border-bottom: 2px solid var(--line); }
+.shop-item { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 14px 0; border-bottom: 2px solid var(--line); }
 .si-art { width: 56px; height: 56px; display: grid; place-items: center; border: 2px solid var(--line); background: var(--bg); font-size: 13px; font-weight: 900; overflow: hidden; }
 .si-art svg { width: 50px; height: 50px; }
 .si-art.skin-stage { background: radial-gradient(ellipse at 30% -10%, rgba(255,255,255,.45), transparent 60%), #1C1A22; }
@@ -724,14 +740,91 @@ img, svg { max-width: 100%; }
 .si-body b { display: block; font-size: 15px; line-height: 1.4; }
 .si-body small { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .si-cost { font-size: 14px; font-weight: 900; }
-.shop-item .btn { grid-column: 2; justify-self: start; }
+.shop-item .btn { grid-column: 3; grid-row: 1; padding: 6px 12px; }
 .si-code { display: inline-block; margin-top: 4px; padding: 2px 8px; border: 2px dashed var(--line); font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 800; }
 .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: 2px 2px 0 var(--line); }
 
-.toasts { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 50; display: grid; gap: 8px; justify-items: center; pointer-events: none; }
+.toasts { position: fixed; left: 16px; right: 16px; bottom: calc(16px + var(--tabbar-h, 0px)); z-index: 50; display: grid; gap: 8px; justify-items: center; pointer-events: none; }
 .toast { width: 100%; max-width: 420px; padding: 12px 16px; background: var(--text); color: var(--bg); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--brand-2); font-size: 14px; font-weight: 800; animation: toastIn .25s ease both; transition: opacity .3s ease; }
 .toast.out { opacity: 0; }
 @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- Genre jump ---- */
+.jump-wrap { border-bottom: 2px solid var(--line); background: var(--bg); }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 14px; padding-bottom: 14px; }
+.jump button { font: inherit; font-size: 13px; font-weight: 800; padding: 6px 12px; border: 2px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+[id^="cat-"] { scroll-margin-top: 60px; }
+.event .ev-act { grid-column: 1 / -1; margin-top: 8px; }
+
+/* ---- Profile book ---- */
+.book-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.seg { display: inline-grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--line); }
+.seg button { font: inherit; font-size: 14px; font-weight: 900; padding: 8px 18px; border: 0; background: var(--bg); color: var(--text); cursor: pointer; }
+.seg button + button { border-left: 2px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.paper-pick { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; }
+.paper-pick select { font: inherit; font-size: 14px; padding: 8px; border: 2px solid var(--line); border-radius: 0; background: var(--bg); color: var(--text); }
+
+.sheet { position: relative; aspect-ratio: 3 / 4; border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--accent); overflow: hidden; container-type: inline-size; color: #1C1A22; background: #FFFDF5; user-select: none; -webkit-user-select: none; }
+.sheet-bg { position: absolute; inset: 0; }
+.paper-note .sheet-bg { background: #FFFDF5 repeating-linear-gradient(transparent 0 calc(9cqw - 1px), #E6DAC6 calc(9cqw - 1px) 9cqw); }
+.paper-grid .sheet-bg { background-color: #FFFFFF; background-image: linear-gradient(#E3E8F0 1px, transparent 1px), linear-gradient(90deg, #E3E8F0 1px, transparent 1px); background-size: 5cqw 5cqw; }
+.paper-dot .sheet-bg { background-color: #FFF7F0; background-image: radial-gradient(#F2B9A8 1.3px, transparent 1.8px); background-size: 4cqw 4cqw; }
+.paper-confetti .sheet-bg { background-color: #FFFDF5; background-image: radial-gradient(#F2545B 2.5px, transparent 3px), radial-gradient(#3E63DD 2.5px, transparent 3px), radial-gradient(#FFC53D 3px, transparent 3.5px); background-size: 30px 30px, 38px 38px, 26px 26px; background-position: 0 0, 12px 16px, 6px 4px; }
+.paper-stage .sheet-bg { background: radial-gradient(ellipse at 30% -10%, rgba(255,255,255,.4), transparent 55%), #1C1A22; }
+.sheet.paper-stage { color: #FFFFFF; }
+.sheet-inner { position: absolute; inset: 0; padding: 7cqw; }
+.sheet-head { margin: 0; font-size: 8cqw; font-weight: 900; line-height: 1.1; letter-spacing: .06em; color: var(--accent); }
+.sheet-type { margin: 1.5cqw 0 4.5cqw; display: flex; flex-wrap: wrap; align-items: center; gap: 2cqw; font-size: 4.6cqw; font-weight: 900; line-height: 1.3; }
+.sheet-type span { font-size: 3.2cqw; padding: .4cqw 2cqw; background: #FFC53D; color: #1C1A22; }
+.sheet-fields { display: grid; gap: 3cqw; }
+.sf { display: grid; gap: .4cqw; }
+.sf-l { font-size: 3.2cqw; font-weight: 900; color: #7A6A55; }
+.paper-stage .sf-l { color: #C8C2D0; }
+.sf input { width: 100%; min-width: 0; padding: .6cqw 0; border: 0; border-bottom: .5cqw dashed currentColor; border-radius: 0; background: transparent; color: inherit; font: inherit; font-size: max(16px, 4.4cqw); font-weight: 700; outline: none; user-select: text; -webkit-user-select: text; }
+.sf input:focus { border-bottom-style: solid; }
+.deco { position: absolute; inset: 0; pointer-events: none; }
+.sheet.mode-deco .deco { pointer-events: auto; touch-action: none; }
+.it { position: absolute; cursor: grab; }
+.it svg { display: block; width: 100%; height: auto; pointer-events: none; }
+.sheet.mode-deco .it.sel { outline: 2px dashed #1C1A22; outline-offset: 4px; }
+.sheet.paper-stage.mode-deco .it.sel { outline-color: #FFFFFF; }
+.it-h { display: none; position: absolute; right: -16px; bottom: -16px; width: 30px; height: 30px; border-radius: 50%; border: 2px solid #1C1A22; background: #FFC53D; cursor: nwse-resize; }
+.it-h::after { content: "⤡"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; font-weight: 900; color: #1C1A22; }
+.sheet.mode-deco .it.sel .it-h { display: block; }
+.book-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin-top: 18px; padding: 12px; border: 2px solid var(--line); background: var(--bg-2); }
+.book-tools label { display: grid; gap: 2px; font-size: 12px; font-weight: 800; }
+.book-tools input[type="range"] { width: 100%; accent-color: var(--accent); }
+.bt-btns { grid-column: 1 / -1; display: flex; gap: 8px; }
+.tray { margin-top: 18px; border: 2px solid var(--line); background: var(--bg); }
+.tray-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 2px solid var(--line); }
+.tray-tabs button { font: inherit; font-size: 12px; font-weight: 800; padding: 10px 2px; border: 0; background: var(--bg-2); color: var(--text); cursor: pointer; white-space: nowrap; }
+.tray-tabs button + button { border-left: 2px solid var(--line); }
+.tray-tabs button[aria-selected="true"] { background: var(--bg); box-shadow: inset 0 -4px 0 var(--accent); }
+.tray-items { display: flex; align-items: center; gap: 10px; min-height: 96px; padding: 12px; overflow-x: auto; }
+.tray-items button { flex: none; display: grid; place-items: center; width: 68px; height: 68px; padding: 4px; border: 2px solid var(--hair); background: #FFFDF5; cursor: pointer; }
+.tray-items button:hover { border-color: var(--line); }
+.tray-items button svg { display: block; max-width: 100%; max-height: 100%; }
+.tray-items button.wide { width: auto; padding: 4px 8px; }
+.tray-items button.wide svg { height: 34px; width: auto; }
+
+/* ---- Bottom tab bar (smartphone) ---- */
+.tabbar { display: none; }
+body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display: none; }
+@media (max-width: 599px) {
+  :root { --tabbar-h: 62px; }
+  body { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
+  body[data-route="quiz"] { padding-bottom: 0; --tabbar-h: 0px; }
+  .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--bg); border-top: 2px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+  body[data-route="quiz"] .tabbar { display: none; }
+  .tabbar a { position: relative; display: grid; justify-items: center; align-content: center; gap: 2px; height: 60px; font-size: 10px; font-weight: 800; text-decoration: none; color: var(--muted); }
+  .tabbar a svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .tabbar a.on { color: var(--text); }
+  .tabbar a.on::before { content: ""; position: absolute; top: -2px; left: 20%; right: 20%; height: 4px; background: var(--brand); }
+  .subnav { display: none; }
+  .site-foot nav { display: none; }
+  .sec { padding: 48px 0; }
+}
 
 [hidden] { display: none !important; }
 </style>
@@ -751,11 +844,18 @@ img, svg { max-width: 100%; }
 <footer class="site-foot">
   <div class="inner">
     <nav aria-label="フッター">
-      <a href="#/">トップ</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a><a href="#/me">マイページ</a><a href="#/missions">ミッション</a><a href="#/genres">ジャンル図鑑</a><a href="#/shop">交換所</a>
+      <a href="#/">トップ</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a><a href="#/me">マイページ</a><a href="#/book">プロフ帳</a><a href="#/missions">ミッション</a><a href="#/genres">ジャンル図鑑</a><a href="#/shop">交換所</a>
     </nav>
     <p>個人情報は取得しません。マイページの記録はこの端末にだけ保存されます。公演情報・特典はサンプルです。</p>
   </div>
 </footer>
+<nav class="tabbar" aria-label="マイページメニュー（スマホ）">
+  <a href="#/me" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>マイページ</a>
+  <a href="#/book" data-tab="book"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/><path d="M12 7.5l1 2 2 .3-1.5 1.4.4 2-1.9-1-1.9 1 .4-2L9 9.8l2-.3z"/></svg>プロフ帳</a>
+  <a href="#/missions" data-tab="missions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4"/><path d="M6 4h12l-2.5 4L18 12H6"/></svg>ミッション</a>
+  <a href="#/genres" data-tab="genres"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg>図鑑</a>
+  <a href="#/shop" data-tab="shop"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="10"/><path d="M3 7h18v3H3zM12 7v13"/><path d="M12 7C10 3 6 4 7.5 7M12 7c2-4 6-3 4.5 0"/></svg>交換所</a>
+</nav>
 
 <script>
 (function () {
@@ -989,16 +1089,15 @@ img, svg { max-width: 100%; }
       <section class="sec alt">
         <div class="inner">
           <span class="kicker">3 AXES</span>
-          <h2 class="sec-h">3つの軸 × 2 ＝ 8タイプ</h2>
+          <h2 class="sec-h">3つの軸の組み合わせで、<br>8タイプ</h2>
           <div class="axes">
             ${AXES.map(a => {
               const [s0, s1] = a.sides;
               return `<div class="axis-item">
-                <span class="ax-name">${esc(a.name)}</span>
+                <span class="ax-name">${esc(a.name)}の軸</span>
                 <div class="ax-sides">
                   <div class="side"><b><span class="code-chip">${esc(s0.code)}</span>${esc(s0.label)}</b><small>${esc(s0.desc)}</small></div>
-                  <span class="vs">or</span>
-                  <div class="side r"><b>${esc(s1.label)}<span class="code-chip">${esc(s1.code)}</span></b><small>${esc(s1.desc)}</small></div>
+                  <div class="side"><b><span class="code-chip">${esc(s1.code)}</span>${esc(s1.label)}</b><small>${esc(s1.desc)}</small></div>
                 </div>
               </div>`;
             }).join('')}
@@ -1160,12 +1259,13 @@ img, svg { max-width: 100%; }
         <div class="inner narrow">
           <h2 class="r-h"><span class="kicker">PICK UP</span>おすすめ公演</h2>
           <div class="events">
-            ${t.events.slice(0, eventsCount).map(e => `
+            ${t.events.slice(0, eventsCount).map((e, k) => `
               <article class="event">
                 <span class="g">${esc(e.genre)}</span>
                 <h3>${esc(e.title)}</h3>
                 <span class="price">${esc(e.price)}</span>
                 <span class="meta">${esc(e.date)}　${esc(e.venue)}</span>
+                <div class="ev-act"><button type="button" class="act" data-went="${esc(code)}-${k}">行った！</button></div>
               </article>`).join('')}
           </div>
           <p class="dummy-note">※ サンプル</p>
@@ -1288,7 +1388,8 @@ img, svg { max-width: 100%; }
 
   function blankProfile() {
     return {
-      v: 1, type: null, events: [], genres: {}, earned: [], spent: [],
+      v: 1, type: null, events: [], genres: {}, earned: [], spent: [], shows: {},
+      book: { fields: {}, items: [], paper: '' },
       owned: { stickers: [], skins: [], titles: [], perks: {} },
       done: { missions: [], achievements: [] },
       equip: { title: '', skin: '' }
@@ -1303,7 +1404,9 @@ img, svg { max-width: 100%; }
       return Object.assign(base, p, {
         owned: Object.assign(base.owned, p.owned),
         done: Object.assign(base.done, p.done),
-        equip: Object.assign(base.equip, p.equip)
+        equip: Object.assign(base.equip, p.equip),
+        book: Object.assign(base.book, p.book),
+        shows: Object.assign({}, p.shows)
       });
     } catch (e) {
       return base;
@@ -1393,6 +1496,7 @@ img, svg { max-width: 100%; }
       case 'viewedGenres': n = gs.filter(([, s]) => s.viewed).length; break;
       case 'interestedGenres': n = gs.filter(([, s]) => s.interest).length; break;
       case 'introducedGenres': n = gs.filter(([, s]) => s.introduced).length; break;
+      case 'bookItems': n = profile.book.items.length; break;
       default: n = profile.events.filter(e => e.t === c.type).length;
     }
     return Math.min(n, c.count);
@@ -1503,6 +1607,12 @@ img, svg { max-width: 100%; }
       if (b.dataset.act === 'experience') { b.textContent = s.exp ? '✓ 体験した（' + s.exp + '回）' : '体験した'; b.classList.toggle('on', !!s.exp); }
       if (b.dataset.act === 'introduce') b.classList.toggle('on', !!s.introduced);
     });
+    app.querySelectorAll('[data-went]').forEach(b => {
+      const on = !!profile.shows[b.dataset.went];
+      b.textContent = on ? '✓ 行った（ロゴ獲得）' : '行った！';
+      b.classList.toggle('on', on);
+      b.disabled = on;
+    });
     app.querySelectorAll('[data-g-status]').forEach(el => {
       const st = genreStatus(el.dataset.gStatus);
       el.textContent = st.label;
@@ -1529,7 +1639,7 @@ img, svg { max-width: 100%; }
   });
 
   function subNav(active) {
-    const tabs = [['me', 'マイページ'], ['missions', 'ミッション'], ['genres', 'ジャンル図鑑'], ['shop', '交換所']];
+    const tabs = [['me', 'マイページ'], ['book', 'プロフ帳'], ['missions', 'ミッション'], ['genres', '図鑑'], ['shop', '交換所']];
     return `<nav class="subnav" aria-label="マイページメニュー"><div class="inner">${tabs.map(([k, l]) =>
       `<a href="#/${k}"${k === active ? ' class="on" aria-current="page"' : ''}>${l}</a>`).join('')}</div></nav>`;
   }
@@ -1731,7 +1841,8 @@ img, svg { max-width: 100%; }
     }));
     app.innerHTML = `${subNav('genres')}
       <div class="fade-in" data-page="genres">
-        ${CATALOG.map((c, i) => `<section class="r-sec${i % 2 ? ' alt' : ''}">
+        <div class="jump-wrap"><div class="inner narrow jump">${CATALOG.map((c, i) => `<button type="button" data-jump="${i}">${esc(c.category)}</button>`).join('')}</div></div>
+        ${CATALOG.map((c, i) => `<section class="r-sec${i % 2 ? ' alt' : ''}" id="cat-${i}">
           <div class="inner narrow">
             <h2 class="r-h">${esc(c.category)}</h2>
             <div class="gbook">
@@ -1746,6 +1857,9 @@ img, svg { max-width: 100%; }
           </div>
         </section>`).join('')}
       </div>`;
+    app.querySelectorAll('[data-jump]').forEach(b => b.addEventListener('click', () => {
+      document.getElementById('cat-' + b.dataset.jump).scrollIntoView({ behavior: 'smooth' });
+    }));
     app.querySelectorAll('details[data-genre]').forEach(d => d.addEventListener('toggle', () => {
       if (!d.open) return;
       track('view', d.dataset.genre);
@@ -1814,10 +1928,399 @@ img, svg { max-width: 100%; }
   }
 
 
+  // ---------- プロフ帳 ----------
+  const BOOK = GAME.book || {};
+  const DEFAULT_W = { char: 34, sticker: 18, show: 26, badge: 22, title: 40 };
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const normDeg = d => ((d + 540) % 360) - 180;
+  const fitFont = (text, max, width) => Math.min(max, width / Math.max(1, Array.from(text).length));
+  const svgText = (x, y, size, txt, fill, weight) =>
+    `<text x="${x}" y="${y}" font-size="${(+size).toFixed(1)}" font-weight="${weight || 900}" fill="${fill}" text-anchor="middle" font-family="system-ui, sans-serif">${esc(txt)}</text>`;
+
+  // 公演ID は「タイプコード-番号」（例：LIE-0）
+  function eventById(id) {
+    const i = id.lastIndexOf('-');
+    const t = TYPES[id.slice(0, i)];
+    const k = +id.slice(i + 1);
+    return t && t.events[k] ? { type: t, ev: t.events[k], k: k } : null;
+  }
+
+  // 公演ロゴ（サンプル公演用に、公演ごとの形と色で自動生成）
+  function showLogoSVG(id) {
+    const o = eventById(id);
+    if (!o) return '';
+    const c = o.type.color, e = o.ev, letter = e.title.slice(-1);
+    const open = `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(e.title + ' ' + e.genre)}" xmlns="http://www.w3.org/2000/svg">`;
+    if (o.k % 3 === 1) {
+      return open + `<path d="M6 24h88v16a8 8 0 0 0 0 20v16H6V60a8 8 0 0 0 0-20z" fill="#fff" stroke="${INK}" stroke-width="4"/>
+        <path d="M8 26h20v48H8V60a8 8 0 0 0 0-20z" fill="${c}"/><path d="M28 26v48" stroke="${INK}" stroke-width="2" stroke-dasharray="3 3"/>`
+        + svgText(17, 56, 16, letter, '#fff') + svgText(61, 44, 7, 'ADMIT ONE', INK, 800) + svgText(61, 63, fitFont(e.genre, 10, 58), e.genre, INK) + '</svg>';
+    }
+    if (o.k % 3 === 2) {
+      return open + `<path d="M50 5L90 17v33c0 24-18 40-40 46C28 90 10 74 10 50V17z" fill="${c}" stroke="${INK}" stroke-width="4"/>
+        <path d="M50 17l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="#fff"/>`
+        + svgText(50, 67, 22, letter, '#fff') + svgText(50, 81, fitFont(e.genre, 8, 50), e.genre, '#fff', 800) + '</svg>';
+    }
+    return open + `<circle cx="50" cy="50" r="46" fill="${c}" stroke="${INK}" stroke-width="4"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>`
+      + svgText(50, 32, 8, 'SAMPLE LIVE', '#fff', 800) + svgText(50, 64, 32, letter, '#fff') + svgText(50, 79, fitFont(e.genre, 9, 62), e.genre, '#fff', 800) + '</svg>';
+  }
+
+  function badgeSVG(id) {
+    const a = (GAME.achievements || []).find(x => x.id === id);
+    if (!a) return '';
+    return `<svg viewBox="0 0 100 110" role="img" aria-label="${esc(a.title)}" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 58L20 102l13-7 10 11 7-40M68 58l12 44-13-7-10 11-7-40" fill="#E5484D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="50" cy="42" r="35" fill="#FFC53D" stroke="${INK}" stroke-width="4"/>
+      <circle cx="50" cy="42" r="26" fill="none" stroke="${INK}" stroke-width="2"/>
+      <path d="M50 25l5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="${INK}"/>
+      <rect x="6" y="74" width="88" height="22" fill="#fff" stroke="${INK}" stroke-width="3"/>`
+      + svgText(50, 90, fitFont(a.title, 12, 80), a.title, INK) + '</svg>';
+  }
+
+  function titleSVG(text) {
+    const w = Math.max(64, Array.from(text).length * 15 + 26);
+    return `<svg viewBox="0 0 ${w} 40" role="img" aria-label="${esc(text)}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="2" width="${w - 4}" height="36" fill="#FFC53D" stroke="${INK}" stroke-width="3"/>`
+      + svgText(w / 2, 27, 15, text, INK) + '</svg>';
+  }
+
+  function itemSVG(it) {
+    if (it.kind === 'char') return TYPES[it.ref] ? charSVG(it.ref, { noHalo: true }) : '';
+    if (it.kind === 'sticker') return stickerSVG(it.ref);
+    if (it.kind === 'show') return showLogoSVG(it.ref);
+    if (it.kind === 'badge') return badgeSVG(it.ref);
+    if (it.kind === 'title') return titleSVG(it.ref);
+    return '';
+  }
+
+  function trayGroups() {
+    return [
+      { key: 'sticker', label: 'シール', items: profile.owned.stickers, empty: 'ミッション・実績・交換所で集まります' },
+      { key: 'show', label: '公演ロゴ', items: Object.keys(profile.shows), empty: '結果画面の公演で「行った！」を押すと増えます' },
+      { key: 'badge', label: 'バッジ', items: profile.done.achievements, empty: '体験実績を解除すると増えます' },
+      { key: 'title', label: '称号', items: ownedTitles(), empty: '開拓タイプや称号が増えると使えます' },
+      { key: 'char', label: 'キャラ', items: profile.type ? [profile.type] : [], empty: '診断するとキャラが使えます' }
+    ];
+  }
+
+  function paperOptions() {
+    return (BOOK.papers || [{ id: 'note', name: 'ノート' }]).concat(profile.owned.skins.map(id => ({ id: id, name: skinName(id) })));
+  }
+
+  function bookProgress() {
+    const messages = [];
+    checkProgress(messages);
+    saveProfile();
+    messages.forEach(toast);
+    updateHeader();
+  }
+
+  let bookMode = 'write', bookSel = null, bookTab = 'sticker';
+
+  function viewBook() {
+    const t = profile.type && TYPES[profile.type];
+    setTheme(t ? t.color : null);
+    const b = profile.book;
+    const papers = paperOptions();
+    const paper = papers.some(p => p.id === b.paper) ? b.paper : papers[0].id;
+    const title = currentTitle();
+    app.innerHTML = `${subNav('book')}
+      <div class="fade-in" data-page="book">
+        <section class="r-sec book-sec">
+          <div class="inner narrow">
+            <div class="book-bar">
+              <div class="seg" role="group" aria-label="モード">
+                <button type="button" data-mode="write">書く</button><button type="button" data-mode="deco">貼る</button>
+              </div>
+              <label class="paper-pick">紙
+                <select data-paper>${papers.map(p => `<option value="${esc(p.id)}"${p.id === paper ? ' selected' : ''}>${esc(p.name)}</option>`).join('')}</select>
+              </label>
+            </div>
+            <div class="sheet paper-${esc(paper)}" data-sheet>
+              <div class="sheet-bg" aria-hidden="true"></div>
+              <div class="sheet-inner">
+                <p class="sheet-head">MY PROFILE</p>
+                <p class="sheet-type">${t ? esc(profile.type + ' ' + t.name) : 'タイプ未診断'}${title ? `<span>${esc(title)}</span>` : ''}</p>
+                <div class="sheet-fields">
+                  ${(BOOK.fields || []).map(f => `<label class="sf"><span class="sf-l">${esc(f.label)}</span><input type="text" data-field="${esc(f.id)}" maxlength="${f.max || 30}" value="${esc(b.fields[f.id] || '')}" autocomplete="off"></label>`).join('')}
+                </div>
+              </div>
+              <div class="deco" data-deco></div>
+            </div>
+            <div class="book-tools" data-tools hidden>
+              <label>サイズ<input type="range" min="6" max="100" data-tool="w"></label>
+              <label>回転<input type="range" min="-180" max="180" data-tool="r"></label>
+              <div class="bt-btns">
+                <button type="button" class="act" data-tool-act="front">前面へ</button>
+                <button type="button" class="act" data-tool-act="del">はがす</button>
+              </div>
+            </div>
+            <div class="tray">
+              <div class="tray-tabs" role="tablist">${trayGroups().map(g =>
+                `<button type="button" role="tab" data-tray-tab="${g.key}">${esc(g.label)}</button>`).join('')}</div>
+              <div class="tray-items" data-tray></div>
+            </div>
+            <div class="end-row" style="margin-top:20px">
+              <button type="button" class="btn no-arrow" data-export>画像で保存</button>
+              <button type="button" class="btn ghost no-arrow" data-clear>全部はがす</button>
+            </div>
+          </div>
+        </section>
+      </div>`;
+    bindBook();
+  }
+
+  function bindBook() {
+    const sheet = app.querySelector('[data-sheet]');
+    const deco = app.querySelector('[data-deco]');
+    const tools = app.querySelector('[data-tools]');
+    const items = profile.book.items;
+    const byId = id => items.find(x => x.id === id);
+    if (!byId(bookSel)) bookSel = null;
+
+    function place(it) {
+      const el = deco.querySelector(`[data-id="${it.id}"]`);
+      if (!el) return;
+      el.style.left = it.x + '%';
+      el.style.top = it.y + '%';
+      el.style.width = it.w + '%';
+      el.style.zIndex = it.z;
+      el.style.transform = `translate(-50%, -50%) rotate(${it.r}deg)`;
+    }
+    function renderDeco() {
+      deco.innerHTML = items.map(it => `<div class="it" data-id="${esc(it.id)}">${itemSVG(it)}<span class="it-h" data-handle aria-hidden="true"></span></div>`).join('');
+      items.forEach(place);
+      syncTools();
+    }
+    function syncTools() {
+      const it = bookMode === 'deco' ? byId(bookSel) : null;
+      tools.hidden = !it;
+      if (it) {
+        tools.querySelector('[data-tool="w"]').value = Math.round(it.w);
+        tools.querySelector('[data-tool="r"]').value = Math.round(it.r);
+      }
+      deco.querySelectorAll('.it').forEach(el => el.classList.toggle('sel', !!it && el.dataset.id === it.id));
+    }
+    function syncMode() {
+      sheet.classList.toggle('mode-deco', bookMode === 'deco');
+      app.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === bookMode)));
+      syncTools();
+    }
+    function select(id) { bookSel = id; syncTools(); }
+    const topZ = () => items.reduce((m, x) => Math.max(m, x.z), 0);
+
+    function renderTray() {
+      const g = trayGroups().find(x => x.key === bookTab) || trayGroups()[0];
+      app.querySelectorAll('[data-tray-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.trayTab === g.key)));
+      app.querySelector('[data-tray]').innerHTML = g.items.length
+        ? g.items.map(ref => `<button type="button" class="${g.key === 'title' ? 'wide' : ''}" data-add="${esc(g.key)}" data-ref="${esc(ref)}" aria-label="貼る">${itemSVG({ kind: g.key, ref: ref })}</button>`).join('')
+        : `<p class="empty-note">${esc(g.empty)}</p>`;
+    }
+
+    app.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { bookMode = b.dataset.mode; syncMode(); }));
+    app.querySelector('[data-paper]').addEventListener('change', e => {
+      profile.book.paper = e.target.value;
+      sheet.className = 'sheet paper-' + e.target.value + (bookMode === 'deco' ? ' mode-deco' : '');
+      saveProfile();
+    });
+    app.querySelectorAll('[data-field]').forEach(inp => inp.addEventListener('input', () => {
+      profile.book.fields[inp.dataset.field] = inp.value;
+      saveProfile();
+    }));
+    app.querySelectorAll('[data-tray-tab]').forEach(b => b.addEventListener('click', () => { bookTab = b.dataset.trayTab; renderTray(); }));
+    app.querySelector('[data-tray]').addEventListener('click', e => {
+      const b = e.target.closest('[data-add]');
+      if (!b) return;
+      const kind = b.dataset.add;
+      const it = {
+        id: 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        kind: kind, ref: b.dataset.ref,
+        x: Math.round(40 + Math.random() * 20), y: Math.round(35 + Math.random() * 20),
+        w: DEFAULT_W[kind] || 20, r: Math.round(Math.random() * 16 - 8), z: topZ() + 1
+      };
+      items.push(it);
+      bookSel = it.id;
+      bookMode = 'deco';
+      renderDeco();
+      syncMode();
+      bookProgress();
+    });
+
+    tools.querySelectorAll('[data-tool]').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const it = byId(bookSel);
+        if (!it) return;
+        it[inp.dataset.tool] = +inp.value;
+        place(it);
+      });
+      inp.addEventListener('change', saveProfile);
+    });
+    tools.querySelectorAll('[data-tool-act]').forEach(b => b.addEventListener('click', () => {
+      const it = byId(bookSel);
+      if (!it) return;
+      if (b.dataset.toolAct === 'front') { it.z = topZ() + 1; place(it); }
+      if (b.dataset.toolAct === 'del') { items.splice(items.indexOf(it), 1); bookSel = null; renderDeco(); }
+      saveProfile();
+    }));
+    app.querySelector('[data-clear]').addEventListener('click', () => {
+      if (!items.length || !confirm('貼ったものを全部はがします。よろしいですか？')) return;
+      items.length = 0;
+      bookSel = null;
+      renderDeco();
+      saveProfile();
+    });
+    app.querySelector('[data-export]').addEventListener('click', () => {
+      bookSel = null;
+      syncTools();
+      exportBook(sheet).then(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'profile.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        toast('画像を保存しました');
+      }, () => toast('画像にできませんでした'));
+    });
+
+    // ドラッグで移動、右下のつまみで拡大・回転、2本指でピンチ
+    const pts = new Map();
+    let drag = null, pinch = null, blankTap = false;
+    deco.addEventListener('pointerdown', e => {
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      try { deco.setPointerCapture(e.pointerId); } catch (err) { /* 古いブラウザ */ }
+      e.preventDefault();
+      const sel = byId(bookSel);
+      if (pts.size === 2 && sel) {
+        const [a, b] = Array.from(pts.values());
+        pinch = { it: sel, d0: Math.hypot(b.x - a.x, b.y - a.y) || 1, a0: Math.atan2(b.y - a.y, b.x - a.x), w0: sel.w, r0: sel.r };
+        drag = null;
+        blankTap = false;
+        return;
+      }
+      const el = e.target.closest('.it');
+      if (!el) { blankTap = true; return; }
+      const it = byId(el.dataset.id);
+      select(it.id);
+      const rect = deco.getBoundingClientRect();
+      const cx = rect.left + it.x / 100 * rect.width, cy = rect.top + it.y / 100 * rect.height;
+      drag = e.target.closest('[data-handle]')
+        ? { mode: 'resize', it: it, cx: cx, cy: cy, d0: Math.hypot(e.clientX - cx, e.clientY - cy) || 1, a0: Math.atan2(e.clientY - cy, e.clientX - cx), w0: it.w, r0: it.r }
+        : { mode: 'move', it: it, rect: rect, sx: e.clientX, sy: e.clientY, x0: it.x, y0: it.y };
+    });
+    deco.addEventListener('pointermove', e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && pts.size >= 2) {
+        const [a, b] = Array.from(pts.values());
+        pinch.it.w = clamp(pinch.w0 * Math.hypot(b.x - a.x, b.y - a.y) / pinch.d0, 6, 100);
+        pinch.it.r = Math.round(normDeg(pinch.r0 + (Math.atan2(b.y - a.y, b.x - a.x) - pinch.a0) * 180 / Math.PI));
+        place(pinch.it);
+        syncTools();
+        return;
+      }
+      if (!drag) return;
+      const it = drag.it;
+      if (drag.mode === 'move') {
+        it.x = Math.round(clamp(drag.x0 + (e.clientX - drag.sx) / drag.rect.width * 100, 0, 100) * 10) / 10;
+        it.y = Math.round(clamp(drag.y0 + (e.clientY - drag.sy) / drag.rect.height * 100, 0, 100) * 10) / 10;
+      } else {
+        it.w = clamp(drag.w0 * Math.hypot(e.clientX - drag.cx, e.clientY - drag.cy) / drag.d0, 6, 100);
+        it.r = Math.round(normDeg(drag.r0 + (Math.atan2(e.clientY - drag.cy, e.clientX - drag.cx) - drag.a0) * 180 / Math.PI));
+      }
+      place(it);
+      syncTools();
+    });
+    const end = e => {
+      pts.delete(e.pointerId);
+      if (pts.size < 2) pinch = null;
+      if (pts.size) return;
+      if (blankTap) select(null);
+      blankTap = false;
+      drag = null;
+      saveProfile();
+    };
+    deco.addEventListener('pointerup', end);
+    deco.addEventListener('pointercancel', end);
+
+    renderDeco();
+    syncMode();
+    renderTray();
+  }
+
+  // プロフ帳を PNG に書き出す（画面の配置を読み取って SVG に描き直し、canvas で画像化）
+  function exportBook(sheet) {
+    const r = sheet.getBoundingClientRect();
+    const W = 900, H = Math.round(W * r.height / r.width), s = W / r.width, cq = W / 100;
+    const paper = (sheet.className.match(/paper-([\w-]+)/) || [])[1] || 'note';
+    const PAPER = {
+      note: ['#FFFDF5', `<pattern id="pp" width="${W}" height="${9 * cq}" patternUnits="userSpaceOnUse"><rect y="${9 * cq - 2}" width="${W}" height="2" fill="#E6DAC6"/></pattern>`],
+      grid: ['#FFFFFF', `<pattern id="pp" width="${5 * cq}" height="${5 * cq}" patternUnits="userSpaceOnUse"><path d="M0 0H${5 * cq}M0 0V${5 * cq}" stroke="#E3E8F0" stroke-width="2"/></pattern>`],
+      dot: ['#FFF7F0', `<pattern id="pp" width="${4 * cq}" height="${4 * cq}" patternUnits="userSpaceOnUse"><circle cx="${2 * cq}" cy="${2 * cq}" r="3" fill="#F2B9A8"/></pattern>`],
+      confetti: ['#FFFDF5', '<pattern id="pp" width="60" height="60" patternUnits="userSpaceOnUse"><circle cx="8" cy="10" r="5" fill="#F2545B"/><circle cx="38" cy="26" r="5" fill="#3E63DD"/><circle cx="20" cy="46" r="6" fill="#FFC53D"/></pattern>'],
+      stage: ['#1C1A22', '<radialGradient id="pp" cx="30%" cy="-10%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>']
+    }[paper] || ['#FFFDF5', ''];
+    const out = [`<rect width="${W}" height="${H}" fill="${PAPER[0]}"/>`];
+    if (PAPER[1]) out.push(`<defs>${PAPER[1]}</defs><rect width="${W}" height="${H}" fill="url(#pp)"/>`);
+
+    const ownText = el => el.tagName === 'INPUT' ? el.value : Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join('');
+    sheet.querySelectorAll('.sheet-head, .sheet-type, .sheet-type span, .sf-l, .sf input').forEach(el => {
+      const b = el.getBoundingClientRect(), cs = getComputedStyle(el);
+      const x = (b.left - r.left) * s, y = (b.top - r.top) * s, w = b.width * s, h = b.height * s;
+      const fs = parseFloat(cs.fontSize) * s;
+      if (cs.backgroundColor && !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor)) out.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${cs.backgroundColor}"/>`);
+      const bw = parseFloat(cs.borderBottomWidth);
+      if (bw) out.push(`<line x1="${x}" y1="${y + h - bw * s / 2}" x2="${x + w}" y2="${y + h - bw * s / 2}" stroke="${cs.borderBottomColor}" stroke-width="${bw * s}"${cs.borderBottomStyle === 'dashed' ? ` stroke-dasharray="${bw * s * 3} ${bw * s * 2}"` : ''}/>`);
+      const text = ownText(el);
+      if (!text) return;
+      const px = x + parseFloat(cs.paddingLeft) * s;
+      out.push(`<text x="${px}" y="${y + h / 2 + fs * 0.36}" font-size="${fs}" font-weight="${cs.fontWeight}" fill="${cs.color}" letter-spacing="${(parseFloat(cs.letterSpacing) || 0) * s}" font-family="${esc(cs.fontFamily.replace(/"/g, "'"))}">${esc(text)}</text>`);
+    });
+
+    profile.book.items.slice().sort((a, b) => a.z - b.z).forEach(it => {
+      const svg = itemSVG(it);
+      const vb = (svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/) || [0, 100, 100]);
+      const w = it.w / 100 * W, h = w * vb[2] / vb[1];
+      out.push(`<g transform="translate(${it.x / 100 * W} ${it.y / 100 * H}) rotate(${it.r})">${svg.replace('<svg ', `<svg x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" `)}</g>`);
+    });
+
+    const doc = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${out.join('')}</svg>`;
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(new Blob([doc], { type: 'image/svg+xml;charset=utf-8' }));
+      const img = new Image();
+      img.onload = () => {
+        const cv = document.createElement('canvas');
+        cv.width = W; cv.height = H;
+        cv.getContext('2d').drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        cv.toBlob(blob => blob ? resolve(blob) : reject(new Error('png')), 'image/png');
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('svg')); };
+      img.src = url;
+    });
+  }
+
+  // 公演カードの「行った！」→ 公演ロゴを獲得し、そのジャンルの体験として記録
+  app.addEventListener('click', e => {
+    const b = e.target.closest('[data-went]');
+    if (!b || profile.shows[b.dataset.went]) return;
+    const o = eventById(b.dataset.went);
+    if (!o) return;
+    profile.shows[b.dataset.went] = Date.now();
+    toast('公演ロゴをゲット！プロフ帳に貼れます');
+    track('experience', o.ev.genre);
+    refreshGenreUI();
+  });
+
+
   // ---------- router ----------
   function route() {
     const h = location.hash.replace(/^#/, '') || '/';
     const parts = h.split('/').filter(Boolean);
+    document.body.dataset.route = parts[0] || 'top';
+    document.querySelectorAll('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === parts[0]));
     if (parts[0] === 'quiz') viewQuiz();
     else if (parts[0] === 'result') viewResult();
     else if (parts[0] === 'types' && parts[1]) viewTypeDetail(decodeURIComponent(parts[1]).toUpperCase());
@@ -1826,6 +2329,7 @@ img, svg { max-width: 100%; }
     else if (parts[0] === 'missions') viewMissions();
     else if (parts[0] === 'genres') viewGenres();
     else if (parts[0] === 'shop') viewShop();
+    else if (parts[0] === 'book') viewBook();
     else viewTop();
     window.scrollTo(0, 0);
   }
