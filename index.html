@@ -465,7 +465,7 @@ img, svg { max-width: 100%; }
   box-shadow: 4px 4px 0 var(--line);
   transition: transform .1s ease, box-shadow .1s ease;
 }
-.btn::after { content: "→"; font-weight: 900; }
+.btn::after { content: ""; flex: none; width: 1.1em; height: 1.1em; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; }
 .btn.no-arrow::after { content: none; }
 .btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--line); }
 .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--line); }
@@ -580,6 +580,8 @@ img, svg { max-width: 100%; }
 .choice.picked .tag { background: #1C1A22; color: #FFF; }
 .back-link { margin-top: 24px; background: none; border: 0; font-size: 14px; font-weight: 700; cursor: pointer; padding: 8px 0; text-decoration: underline; }
 .back-link:disabled { visibility: hidden; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; }
+.ic.flip { transform: scaleX(-1); }
 
 /* ---- Result ---- */
 .fade-in { animation: fadeIn .5s ease both; }
@@ -655,12 +657,12 @@ img, svg { max-width: 100%; }
 .subnav a { text-align: center; padding: 12px 2px 10px; font-size: 13px; font-weight: 800; text-decoration: none; border-bottom: 4px solid transparent; white-space: nowrap; }
 .subnav a.on { border-bottom-color: var(--text); }
 
-.pcard { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: center; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 16px; box-shadow: 6px 6px 0 var(--accent); }
+.pcard { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 16px; align-items: center; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 16px; box-shadow: 6px 6px 0 var(--accent); }
 .pcard-char svg { width: 100%; height: auto; display: block; }
 .pcard-char.empty { aspect-ratio: 1; display: grid; place-items: center; font-size: 44px; font-weight: 900; border: 2px dashed var(--hair); color: var(--muted); }
 .pcard-title { margin: 0; display: inline-block; font-size: 12px; font-weight: 900; background: var(--accent); color: var(--on-accent); padding: 2px 8px; }
 .pcard-type { margin: 4px 0 8px; font-size: 20px; font-weight: 900; line-height: 1.3; }
-.pcard-stats { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; }
+.pcard-stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 14px; margin: 0; }
 .pcard-stats dt { font-size: 11px; font-weight: 700; opacity: .7; }
 .pcard-stats dd { margin: 0; font-size: 20px; font-weight: 900; line-height: 1.3; font-variant-numeric: tabular-nums; }
 .pcard-stickers { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
@@ -704,7 +706,6 @@ img, svg { max-width: 100%; }
 .mission { padding: 16px 0; border-bottom: 2px solid var(--line); }
 .mission .m-top { display: grid; gap: 6px; justify-items: start; }
 .mission b { font-size: 16px; line-height: 1.45; }
-.mission.done b::before { content: "✓ "; }
 .mission .m-reward { font-size: 12px; font-weight: 900; background: var(--brand-2); color: #1C1A22; padding: 2px 8px; }
 .mission small { display: block; font-size: 12px; color: var(--muted); }
 .m-prog { height: 10px; border: 2px solid var(--line); background: var(--bg); margin: 8px 0 4px; }
@@ -790,7 +791,7 @@ img, svg { max-width: 100%; }
 .sheet.mode-deco .it.sel { outline: 2px dashed #1C1A22; outline-offset: 4px; }
 .sheet.paper-stage.mode-deco .it.sel { outline-color: #FFFFFF; }
 .it-h { display: none; position: absolute; right: -16px; bottom: -16px; width: 30px; height: 30px; border-radius: 50%; border: 2px solid #1C1A22; background: #FFC53D; cursor: nwse-resize; }
-.it-h::after { content: "⤡"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; font-weight: 900; color: #1C1A22; }
+.it-h::after { content: ""; position: absolute; inset: 5px; background: #1C1A22; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5'/%3E%3C/svg%3E") center / contain no-repeat; }
 .sheet.mode-deco .it.sel .it-h { display: block; }
 .book-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin-top: 18px; padding: 12px; border: 2px solid var(--line); background: var(--bg-2); }
 .book-tools label { display: grid; gap: 2px; font-size: 12px; font-weight: 800; }
@@ -826,16 +827,84 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
   .sec { padding: 48px 0; }
 }
 
+/* ---- Icons ---- */
+.ic { width: 1.15em; height: 1.15em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.2em; }
+.kicker { display: flex; align-items: center; gap: 6px; width: fit-content; }
+.kicker .ic { width: 15px; height: 15px; stroke-width: 2.4; }
+.r-h { display: block; }
+.act, .m-reward, .gstat, .pts, .hero-badge, .hero-note, .jump button, .tray-tabs button, .seg button, .pcard-stats dt { display: inline-flex; align-items: center; gap: 6px; }
+.tray-tabs button { flex-direction: column; gap: 2px; justify-content: center; }
+.tray-tabs .ic { width: 20px; height: 20px; }
+.seg button .ic { width: 18px; height: 18px; }
+.m-reward .ic { width: 14px; height: 14px; }
+.mission b { display: flex; align-items: flex-start; gap: 6px; }
+.mission b .ic { margin-top: .2em; color: var(--brand); stroke-width: 3; }
+.cat-h { display: flex; align-items: center; gap: 10px; }
+.cat-h .ic, .side-ic { width: 34px; height: 34px; padding: 6px; background: var(--text); color: var(--bg); stroke-width: 2; }
+.axis-item .side { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 0 10px; align-items: start; }
+.axis-item .side b, .axis-item .side small { grid-column: 2; }
+.axis-item .side .side-ic { grid-row: span 2; }
+.steps b { display: flex; align-items: center; gap: 8px; }
+.steps b .ic { width: 22px; height: 22px; color: var(--accent); }
+.badge .medal .ic { width: 22px; height: 22px; }
+.si-art .ic { width: 28px; height: 28px; }
+.ledger .rule { display: inline-flex; align-items: center; gap: 8px; }
+.ledger .rule .ic { color: var(--muted); }
+.toast { display: flex; align-items: center; gap: 10px; }
+.toast .ic { width: 20px; height: 20px; color: var(--brand-2); }
+.subnav a { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.subnav a .ic { width: 16px; height: 16px; }
+.logo-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.demo-chip { font: inherit; font-size: 10px; font-weight: 900; letter-spacing: .1em; line-height: 1; padding: 4px 6px; border: 0; background: var(--brand); color: #FFFFFF; cursor: pointer; }
+.pts .ic { width: 14px; height: 14px; }
+
+/* ---- Intro (demo) ---- */
+body.intro-open { overflow: hidden; }
+.intro-overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(20, 18, 24, .6); animation: fadeIn .25s ease both; }
+.intro { width: 100%; max-width: 560px; max-height: calc(100dvh - 32px); overflow-y: auto; padding: 24px 22px; background: var(--bg); color: var(--text); border: 2px solid var(--line); box-shadow: 8px 8px 0 var(--brand); }
+.demo-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; background: var(--brand); color: #FFFFFF; font-size: 12px; font-weight: 900; letter-spacing: .14em; }
+.intro h2 { margin: 10px 0 6px; font-size: 24px; font-weight: 900; line-height: 1.3; }
+.intro-lead { margin: 0 0 18px; font-size: 14px; color: var(--muted); }
+.intro-feats { list-style: none; margin: 0 0 16px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; }
+.intro-feats li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 0 10px; align-items: center; }
+.intro-feats .fi { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; background: var(--c); color: #FFFFFF; border: 2px solid var(--line); }
+.intro-feats .fi .ic { width: 22px; height: 22px; }
+.intro-feats b { font-size: 14px; line-height: 1.3; }
+.intro-feats .d { font-size: 12px; line-height: 1.4; color: var(--muted); }
+.intro-notes { list-style: none; margin: 0 0 18px; padding: 12px 14px; display: grid; gap: 6px; background: var(--bg-2); border: 2px solid var(--line); font-size: 13px; font-weight: 700; }
+.intro-notes li { display: flex; align-items: center; gap: 8px; }
+.intro-q { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 900; }
+.intro-q .ic { color: var(--brand); }
+.intro-choices { display: grid; gap: 12px; }
+.choice-btn { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 0 12px; width: 100%; padding: 12px 14px; text-align: left; font: inherit; color: var(--text); background: var(--bg); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--line); cursor: pointer; transition: transform .1s ease, box-shadow .1s ease; }
+.choice-btn:hover { background: color-mix(in srgb, var(--brand-2) 18%, var(--bg)); }
+.choice-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--line); }
+.choice-btn .ci { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; background: var(--text); color: var(--bg); }
+.choice-btn .ci .ic { width: 24px; height: 24px; }
+.choice-btn.primary .ci { background: var(--brand); color: #FFFFFF; }
+.choice-btn b { font-size: 16px; font-weight: 900; line-height: 1.35; }
+.choice-btn small { grid-column: 2; font-size: 12px; color: var(--muted); line-height: 1.4; }
+.choice-btn .arr { grid-column: 3; grid-row: 1 / span 2; width: 20px; height: 20px; }
+.choice-btn:focus-visible { outline: 3px solid var(--brand-2); outline-offset: 3px; }
+@media (max-width: 599px) {
+  .intro-overlay { padding: 0; place-items: stretch; }
+  .intro { max-width: none; max-height: none; height: 100dvh; padding: 20px 16px 28px; border: 0; box-shadow: none; }
+  .intro h2 { font-size: 22px; }
+}
+
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <header class="site-head">
   <div class="inner">
-    <a class="logo" href="#/"><span class="logo-mark" aria-hidden="true"></span>エンタメタイプ診断</a>
+    <div class="logo-wrap">
+      <a class="logo" href="#/"><span class="logo-mark" aria-hidden="true"></span>エンタメタイプ診断</a>
+      <button type="button" class="demo-chip" data-intro aria-label="デモの説明を開く">DEMO</button>
+    </div>
     <nav class="head-nav" aria-label="メニュー">
       <a class="txt hide-sm" href="#/types">8タイプ一覧</a>
-      <a class="me-link" href="#/me"><span class="lbl">マイページ</span><span class="pts"><span data-pts>0</span>pt</span></a>
+      <a class="me-link" href="#/me"><span class="lbl">マイページ</span><span class="pts" data-icon="coin"><span data-pts>0</span>pt</span></a>
       <a class="btn small" href="#/quiz" data-start>診断する</a>
     </nav>
   </div>
@@ -844,7 +913,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 <footer class="site-foot">
   <div class="inner">
     <nav aria-label="フッター">
-      <a href="#/">トップ</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a><a href="#/me">マイページ</a><a href="#/book">プロフ帳</a><a href="#/missions">ミッション</a><a href="#/genres">ジャンル図鑑</a><a href="#/shop">交換所</a>
+      <a href="#/">トップ</a><a href="#" data-intro>デモの説明</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a><a href="#/me">マイページ</a><a href="#/book">プロフ帳</a><a href="#/missions">ミッション</a><a href="#/genres">ジャンル図鑑</a><a href="#/shop">交換所</a>
     </nav>
     <p>個人情報は取得しません。マイページの記録はこの端末にだけ保存されます。公演情報・特典はサンプルです。</p>
   </div>
@@ -940,6 +1009,65 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     // すでに質問画面にいる場合は hashchange が起きないので、ここで描き直す
     if (location.hash === '#/quiz') { e.preventDefault(); route(); }
   });
+
+  // ---------- icons（線のSVGアイコン。絵文字は使わない） ----------
+  const ICONS = {
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    heart: '<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/>',
+    ticket: '<path d="M3 7h18v3.2a1.8 1.8 0 0 0 0 3.6V17H3v-3.2a1.8 1.8 0 0 0 0-3.6z"/><path d="M15 7v10" stroke-dasharray="2 2.2"/>',
+    send: '<path d="M21 3L3 10.5l7 2.5 2.5 7z"/><path d="M10 13l11-10"/>',
+    copy: '<rect x="8" y="8" width="12" height="12"/><path d="M16 8V4H4v12h4"/>',
+    share: '<path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/>',
+    download: '<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+    layers: '<path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/>',
+    pen: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+    sticker: '<path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/><path d="M8.5 14.5q3.5 2.5 7 0"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+    book: '<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',
+    flag: '<path d="M6 21V4"/><path d="M6 4h12l-2.5 4L18 12H6"/>',
+    grid: '<rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/>',
+    gift: '<rect x="4" y="10" width="16" height="10"/><path d="M3 7h18v3H3zM12 7v13"/><path d="M12 7C10 3 6 4 7.5 7M12 7c2-4 6-3 4.5 0"/>',
+    coin: '<circle cx="12" cy="12" r="8.5"/><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"/>',
+    medal: '<circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5"/>',
+    tag: '<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    spark: '<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l3 3M15 15l3 3M6 18l3-3M15 9l3-3"/>',
+    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    lock: '<rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    device: '<rect x="7" y="3" width="10" height="18"/><path d="M11 18h2"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.5v.5"/>',
+    shuffle: '<path d="M3 7h3.5l11 10H21M3 17h3.5l3-2.7M14.5 9.7l3-2.7H21"/><path d="M18.5 4.5L21 7l-2.5 2.5M18.5 14.5L21 17l-2.5 2.5"/>',
+    play: '<path d="M7 5l12 7-12 7z"/>',
+    resume: '<path d="M5 5v14"/><path d="M10 5l10 7-10 7z"/>',
+    eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+    crowd: '<circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5M15 14.5c3 0 6 1.7 6 5"/>',
+    frame: '<rect x="4" y="4" width="16" height="16"/><path d="M4 16l5-5 4 4 2.5-2.5L20 17"/><circle cx="15.5" cy="8.5" r="1.5"/>',
+    chat: '<path d="M3 4h12v9H8l-5 3.5z"/><path d="M15 8h6v9l-3-2h-6.5v-2"/>',
+    headphones: '<path d="M4 16v-4a8 8 0 0 1 16 0v4"/><rect x="3" y="14" width="4" height="6"/><rect x="17" y="14" width="4" height="6"/>',
+    compass: '<circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+    music: '<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>',
+    mask: '<path d="M4 5h16v6a8 8 0 0 1-16 0z"/><path d="M7.5 9.5h3M13.5 9.5h3M9 13.5q3 2.5 6 0"/>',
+    ball: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c3 2.4 3 14.6 0 17M12 3.5c-3 2.4-3 14.6 0 17"/>',
+    piano: '<rect x="3" y="5" width="18" height="14"/><path d="M8 5v14M12 5v14M16 5v14"/><path d="M6.5 5v8M10.5 5v8M14.5 5v8M18.5 5v8" stroke-width="3"/>',
+    palette: '<path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.4 0 1.9-1 1.9-1.9 0-1.2-1-1.6-.2-2.6.6-.8 1.6-.8 2.6-.8h1.4a3.8 3.8 0 0 0 3.8-3.8C21.5 7 17.5 3.5 12 3.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14.5" cy="7.5" r="1"/>',
+    film: '<rect x="3" y="5" width="18" height="14"/><path d="M7 5v14M17 5v14M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
+    tv: '<rect x="3" y="7" width="18" height="13"/><path d="M8 3l4 4 4-4"/>',
+    refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4.5h-4.5"/>',
+    leaf: '<path d="M5 19C5 10 11 5 20 5c0 9-5 14-14 14z"/><path d="M5 19l9-9"/>',
+    link: '<path d="M10 14l4-4"/><path d="M8.5 11.5L6 14a3.5 3.5 0 0 0 5 5l2.5-2.5M15.5 12.5L18 10a3.5 3.5 0 0 0-5-5l-2.5 2.5"/>',
+    star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',
+    home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>'
+  };
+  function icon(name, cls) {
+    return `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICONS[name] || ICONS.info}</svg>`;
+  }
+  const AXIS_ICON = { L: 'crowd', W: 'frame', S: 'chat', I: 'headphones', F: 'heart', E: 'compass' };
+  const CAT_ICON = { '音楽': 'music', '演劇': 'mask', 'スポーツ': 'ball', 'クラシック': 'piano', 'イベント・アート': 'palette', '映画': 'film', 'アニメ': 'tv' };
+  const KIND_ICON = { regular: 'refresh', season: 'leaf', collab: 'link' };
+  const RULE_ICON = { diagnose: 'clock', view: 'eye', interest: 'heart', experience: 'ticket', share: 'share', introduce: 'send' };
+  const STATUS_ICON = { none: '', interest: 'heart', debut: 'check', master: 'medal' };
 
   // ---------- illustration ----------
   const INK = '#2B2733';
@@ -1063,12 +1191,12 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     app.innerHTML = `
       <section class="hero fade-in">
         <div class="inner">
-          <span class="hero-badge"><b>${esc(m.duration)}</b>で診断</span>
+          <span class="hero-badge">${icon('clock')}<b>${esc(m.duration)}</b>で診断</span>
           <h1>その「好き」、<br><span class="mark">別のジャンル</span>でも<br><span class="red">楽しめる。</span></h1>
           <p class="hero-lead">${esc(m.lead)}</p>
           <div class="hero-cta">
             <a class="btn block" href="#/quiz" data-start>診断をはじめる</a>
-            <p class="hero-note">個人情報の入力なし</p>
+            <p class="hero-note">${icon('lock')}個人情報の入力なし</p>
           </div>
           <div class="hero-chars">${TYPE_ORDER.map(c => `<a href="#/types/${esc(c)}" aria-label="${esc(TYPES[c].name)}">${charSVG(c, { noHalo: true })}</a>`).join('')}</div>
         </div>
@@ -1076,19 +1204,19 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
       <section class="sec">
         <div class="inner">
-          <span class="kicker">ABOUT</span>
+          <span class="kicker">${icon('info')}ABOUT</span>
           <h2 class="sec-h">性格じゃなくて、<br>「楽しみ方」を診断。</h2>
           <ol class="steps">
-            <li><span class="no">01</span><b>9問に答える</b><p>2択をタップするだけ</p></li>
-            <li><span class="no">02</span><b>8タイプを判定</b><p>3つの軸の傾きから</p></li>
-            <li><span class="no">03</span><b>次のジャンルへ</b><p>おすすめジャンルと公演</p></li>
+            <li><span class="no">01</span><b>${icon('clock')}9問に答える</b><p>2択をタップするだけ</p></li>
+            <li><span class="no">02</span><b>${icon('compass')}8タイプを判定</b><p>3つの軸の傾きから</p></li>
+            <li><span class="no">03</span><b>${icon('ticket')}次のジャンルへ</b><p>おすすめジャンルと公演</p></li>
           </ol>
         </div>
       </section>
 
       <section class="sec alt">
         <div class="inner">
-          <span class="kicker">3 AXES</span>
+          <span class="kicker">${icon('compass')}3 AXES</span>
           <h2 class="sec-h">3つの軸の組み合わせで、<br>8タイプ</h2>
           <div class="axes">
             ${AXES.map(a => {
@@ -1096,8 +1224,8 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
               return `<div class="axis-item">
                 <span class="ax-name">${esc(a.name)}の軸</span>
                 <div class="ax-sides">
-                  <div class="side"><b><span class="code-chip">${esc(s0.code)}</span>${esc(s0.label)}</b><small>${esc(s0.desc)}</small></div>
-                  <div class="side"><b><span class="code-chip">${esc(s1.code)}</span>${esc(s1.label)}</b><small>${esc(s1.desc)}</small></div>
+                  <div class="side">${icon(AXIS_ICON[s0.code], 'side-ic')}<b><span class="code-chip">${esc(s0.code)}</span>${esc(s0.label)}</b><small>${esc(s0.desc)}</small></div>
+                  <div class="side">${icon(AXIS_ICON[s1.code], 'side-ic')}<b><span class="code-chip">${esc(s1.code)}</span>${esc(s1.label)}</b><small>${esc(s1.desc)}</small></div>
                 </div>
               </div>`;
             }).join('')}
@@ -1107,7 +1235,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
       <section class="sec">
         <div class="inner">
-          <span class="kicker">8 TYPES</span>
+          <span class="kicker">${icon('grid')}8 TYPES</span>
           <h2 class="sec-h">あなたはどのタイプ？</h2>
           ${typeGrid()}
         </div>
@@ -1139,7 +1267,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
                 <span class="tag">${k.toUpperCase()}</span><span>${esc(q[k].text)}</span>
               </button>`).join('')}
           </div>
-          <button type="button" class="back-link" data-back ${i === 0 ? 'disabled' : ''}>← 前の質問に戻る</button>
+          <button type="button" class="back-link" data-back ${i === 0 ? 'disabled' : ''}>${icon('arrow', 'flip')}前の質問に戻る</button>
         </div>
       </section>`;
     state.locked = false;
@@ -1224,14 +1352,14 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
       <section class="r-sec">
         <div class="inner narrow">
-          <h2 class="r-h"><span class="kicker">BALANCE</span>${result ? 'あなたの3軸の傾き' : '3軸の傾き'}</h2>
+          <h2 class="r-h"><span class="kicker">${icon('compass')}BALANCE</span>${result ? 'あなたの3軸の傾き' : '3軸の傾き'}</h2>
           ${axisBlock(result, code)}
         </div>
       </section>
 
       <section class="r-sec alt">
         <div class="inner narrow">
-          <h2 class="r-h"><span class="kicker">ABOUT</span>${esc(t.name)}ってどんなタイプ？</h2>
+          <h2 class="r-h"><span class="kicker">${icon('info')}ABOUT</span>${esc(t.name)}ってどんなタイプ？</h2>
           <p class="desc">${esc(t.description)}</p>
           <div class="why-box">
             <p class="why-lead">あなたがいつものジャンルを好きなのは、たぶんこの理由</p>
@@ -1242,7 +1370,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
       <section class="r-sec">
         <div class="inner narrow">
-          <h2 class="r-h"><span class="kicker">NEXT GENRE</span>同じ楽しみ方ができるジャンル</h2>
+          <h2 class="r-h"><span class="kicker">${icon('arrow')}NEXT GENRE</span>同じ楽しみ方ができるジャンル</h2>
           <ol class="genres">
             ${t.genres.slice(0, 3).map((g, k) => `<li>
               <span class="num">0${k + 1}</span>
@@ -1257,7 +1385,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
       <section class="r-sec alt">
         <div class="inner narrow">
-          <h2 class="r-h"><span class="kicker">PICK UP</span>おすすめ公演</h2>
+          <h2 class="r-h"><span class="kicker">${icon('ticket')}PICK UP</span>おすすめ公演</h2>
           <div class="events">
             ${t.events.slice(0, eventsCount).map((e, k) => `
               <article class="event">
@@ -1298,10 +1426,10 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
         ${typeBody(code, state.result)}
         <section class="r-sec">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">SHARE</span>結果をシェア</h2>
+            <h2 class="r-h"><span class="kicker">${icon('share')}SHARE</span>結果をシェア</h2>
             <div class="share-row">
-              <button type="button" class="btn ghost no-arrow" data-copy>結果をコピー</button>
-              <a class="btn x no-arrow" href="${esc(intent)}" target="_blank" rel="noopener noreferrer">𝕏 でポスト</a>
+              <button type="button" class="btn ghost no-arrow" data-copy>${icon('copy')}結果をコピー</button>
+              <a class="btn x no-arrow" href="${esc(intent)}" target="_blank" rel="noopener noreferrer">${icon('share')}Xでポスト</a>
             </div>
             <p class="copied" data-copied role="status"></p>
             <div class="end-row" style="margin-top:24px">
@@ -1355,7 +1483,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
       <div class="fade-in">
         <section class="page-head">
           <div class="inner">
-            <span class="kicker">8 TYPES</span>
+            <span class="kicker">${icon('grid')}8 TYPES</span>
             <h1 class="sec-h">8タイプ一覧</h1>
           </div>
         </section>
@@ -1428,14 +1556,13 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     return profile.genres[g];
   }
 
-  // イベント種別 → ポイントルール
+  // イベント種別からポイントルールへの対応
   const RULE_OF = { diagnose: 'diagnose', view: 'view', interest: 'interest', experience: 'experience', share: 'share', shareProfile: 'share', introduce: 'introduce' };
 
-  function awardRule(type, g) {
+  function awardRule(type, g, now) {
     const key = RULE_OF[type];
     const rule = (GAME.pointRules || {})[key];
     if (!rule || !rule.points) return null;
-    const now = Date.now();
     const already = profile.earned.some(x => x.k === key && (
       rule.limit === 'once' ||
       (rule.limit === 'perGenre' && x.g === (g || '')) ||
@@ -1446,7 +1573,10 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     return '+' + rule.points + 'pt ' + label;
   }
 
-  function track(type, g) {
+  // opts.ts：記録する時刻（デモの「途中から」用）、opts.silent：通知・保存をしない
+  function track(type, g, opts) {
+    const o = opts || {};
+    const now = Math.round(o.ts || Date.now());
     if (g) {
       const st = genreState(g);
       // 体験済みのジャンルは「未開拓のチェック」に数えない
@@ -1455,15 +1585,16 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
       if (type === 'experience') st.exp += 1;
       if (type === 'introduce') st.introduced = true;
     }
-    const ev = { t: type, ts: Date.now() };
+    const ev = { t: type, ts: now };
     if (g) { ev.g = g; ev.c = GENRE_CAT[g] || ''; }
     profile.events.push(ev);
     const messages = [];
-    const m = awardRule(type, g);
-    if (m) messages.push(m);
-    checkProgress(messages);
+    const m = awardRule(type, g, now);
+    if (m) messages.push([m, 'coin']);
+    checkProgress(messages, now);
+    if (o.silent) return;
     saveProfile();
-    messages.forEach(toast);
+    messages.forEach(x => toast(x[0], x[1]));
     updateHeader();
   }
 
@@ -1510,24 +1641,24 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     if (r.skin) parts.push('着せ替え「' + skinName(r.skin) + '」');
     return parts.join(' ');
   }
-  function grant(reward, label, messages) {
+  function grant(reward, label, messages, ts, ic) {
     if (!reward) return;
-    if (reward.points) profile.earned.push({ k: 'bonus', g: '', pts: reward.points, label: label, ts: Date.now() });
+    if (reward.points) profile.earned.push({ k: 'bonus', g: '', pts: reward.points, label: label, ts: ts || Date.now() });
     if (reward.sticker && !profile.owned.stickers.includes(reward.sticker)) profile.owned.stickers.push(reward.sticker);
     if (reward.title && !profile.owned.titles.includes(reward.title)) profile.owned.titles.push(reward.title);
     if (reward.skin && !profile.owned.skins.includes(reward.skin)) profile.owned.skins.push(reward.skin);
-    messages.push(label + '　' + rewardText(reward));
+    messages.push([label + '　' + rewardText(reward), ic]);
   }
-  function checkProgress(messages) {
+  function checkProgress(messages, ts) {
     activeMissions().forEach(m => {
       if (profile.done.missions.includes(m.id) || missionProgress(m) < m.goal.count) return;
       profile.done.missions.push(m.id);
-      grant(m.reward, 'ミッション達成「' + m.title + '」', messages);
+      grant(m.reward, 'ミッション達成「' + m.title + '」', messages, ts, 'flag');
     });
     (GAME.achievements || []).forEach(a => {
       if (profile.done.achievements.includes(a.id) || achievementProgress(a) < a.cond.count) return;
       profile.done.achievements.push(a.id);
-      grant(a.reward, '実績解除「' + a.title + '」', messages);
+      grant(a.reward, '実績解除「' + a.title + '」', messages, ts, 'medal');
     });
   }
 
@@ -1560,10 +1691,10 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
   toastBox.className = 'toasts';
   toastBox.setAttribute('role', 'status');
   document.body.appendChild(toastBox);
-  function toast(msg) {
+  function toast(msg, ic) {
     const el = document.createElement('div');
     el.className = 'toast';
-    el.textContent = msg;
+    el.innerHTML = icon(ic || 'info') + '<span>' + esc(msg) + '</span>';
     toastBox.appendChild(el);
     while (toastBox.children.length > 3) toastBox.firstChild.remove();
     setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 2600);
@@ -1595,27 +1726,27 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
   function genreActions(g, withIntro) {
     return `<div class="g-actions">
-      <button type="button" class="act" data-act="interest" data-g="${esc(g)}">＋ 気になる</button>
+      <button type="button" class="act" data-act="interest" data-g="${esc(g)}">${icon('heart')}気になる</button>
       <button type="button" class="act" data-act="experience" data-g="${esc(g)}">体験した</button>
-      ${withIntro ? `<button type="button" class="act" data-act="introduce" data-g="${esc(g)}">友達に勧める</button>` : ''}
+      ${withIntro ? `<button type="button" class="act" data-act="introduce" data-g="${esc(g)}">${icon('send')}友達に勧める</button>` : ''}
     </div>`;
   }
   function refreshGenreUI() {
     app.querySelectorAll('[data-act]').forEach(b => {
       const s = profile.genres[b.dataset.g] || {};
-      if (b.dataset.act === 'interest') { b.textContent = s.interest ? '✓ 気になる' : '＋ 気になる'; b.classList.toggle('on', !!s.interest); b.disabled = !!s.interest; }
-      if (b.dataset.act === 'experience') { b.textContent = s.exp ? '✓ 体験した（' + s.exp + '回）' : '体験した'; b.classList.toggle('on', !!s.exp); }
+      if (b.dataset.act === 'interest') { b.innerHTML = icon(s.interest ? 'check' : 'heart') + '気になる'; b.classList.toggle('on', !!s.interest); b.disabled = !!s.interest; }
+      if (b.dataset.act === 'experience') { b.innerHTML = icon(s.exp ? 'check' : 'ticket') + (s.exp ? '体験した（' + s.exp + '回）' : '体験した'); b.classList.toggle('on', !!s.exp); }
       if (b.dataset.act === 'introduce') b.classList.toggle('on', !!s.introduced);
     });
     app.querySelectorAll('[data-went]').forEach(b => {
       const on = !!profile.shows[b.dataset.went];
-      b.textContent = on ? '✓ 行った（ロゴ獲得）' : '行った！';
+      b.innerHTML = icon(on ? 'check' : 'ticket') + (on ? '行った（ロゴ獲得）' : '行った！');
       b.classList.toggle('on', on);
       b.disabled = on;
     });
     app.querySelectorAll('[data-g-status]').forEach(el => {
       const st = genreStatus(el.dataset.gStatus);
-      el.textContent = st.label;
+      el.innerHTML = (STATUS_ICON[st.key] ? icon(STATUS_ICON[st.key]) : '') + esc(st.label);
       el.className = 'gstat st-' + st.key;
     });
   }
@@ -1627,8 +1758,8 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     if (b.dataset.act === 'introduce') {
       const text = `「${g}」おすすめだよ。いっしょに行ってみない？\n#${DATA.meta.hashtag}`;
       copyText(text).then(ok => {
-        if (!ok) { toast('コピーできませんでした'); return; }
-        toast('紹介文をコピーしました');
+        if (!ok) { toast('コピーできませんでした', 'info'); return; }
+        toast('紹介文をコピーしました', 'copy');
         track('introduce', g);
         refreshGenreUI();
       });
@@ -1639,9 +1770,9 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
   });
 
   function subNav(active) {
-    const tabs = [['me', 'マイページ'], ['book', 'プロフ帳'], ['missions', 'ミッション'], ['genres', '図鑑'], ['shop', '交換所']];
-    return `<nav class="subnav" aria-label="マイページメニュー"><div class="inner">${tabs.map(([k, l]) =>
-      `<a href="#/${k}"${k === active ? ' class="on" aria-current="page"' : ''}>${l}</a>`).join('')}</div></nav>`;
+    const tabs = [['me', 'マイページ', 'user'], ['book', 'プロフ帳', 'book'], ['missions', 'ミッション', 'flag'], ['genres', '図鑑', 'grid'], ['shop', '交換所', 'gift']];
+    return `<nav class="subnav" aria-label="マイページメニュー"><div class="inner">${tabs.map(([k, l, ic]) =>
+      `<a href="#/${k}"${k === active ? ' class="on" aria-current="page"' : ''}>${icon(ic)}${l}</a>`).join('')}</div></nav>`;
   }
 
   function fmtDate(iso) {
@@ -1681,17 +1812,17 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
                 <p class="pcard-title">${cur ? esc(cur) : '称号なし'}</p>
                 <p class="pcard-type">${t ? esc(profile.type + ' ' + t.name) : 'タイプ未診断'}</p>
                 <dl class="pcard-stats">
-                  <div><dt>ポイント</dt><dd>${balance()}</dd></div>
-                  <div><dt>体験ジャンル</dt><dd>${exp}</dd></div>
-                  <div><dt>実績</dt><dd>${profile.done.achievements.length}</dd></div>
+                  <div><dt>${icon('coin')}ポイント</dt><dd>${balance()}</dd></div>
+                  <div><dt>${icon('ticket')}体験</dt><dd>${exp}</dd></div>
+                  <div><dt>${icon('medal')}実績</dt><dd>${profile.done.achievements.length}</dd></div>
                 </dl>
                 ${profile.owned.stickers.length ? `<div class="pcard-stickers">${profile.owned.stickers.map(id => stickerSVG(id)).join('')}</div>` : ''}
               </div>
             </div>
             ${t ? '' : '<a class="btn block" href="#/quiz" data-start style="margin-top:24px">診断してタイプを登録</a>'}
             <div class="share-row" style="margin-top:24px">
-              <button type="button" class="btn ghost no-arrow" data-share-profile>プロフィールをコピー</button>
-              <a class="btn x no-arrow" data-share-profile-x href="${esc(intent)}" target="_blank" rel="noopener noreferrer">𝕏 でシェア</a>
+              <button type="button" class="btn ghost no-arrow" data-share-profile>${icon('copy')}プロフィールをコピー</button>
+              <a class="btn x no-arrow" data-share-profile-x href="${esc(intent)}" target="_blank" rel="noopener noreferrer">${icon('share')}Xでシェア</a>
             </div>
             <p class="copied" data-copied role="status"></p>
             <div class="field-row">
@@ -1707,7 +1838,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
         <section class="r-sec alt">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">EXPLORE</span>開拓タイプ</h2>
+            <h2 class="r-h"><span class="kicker">${icon('compass')}EXPLORE</span>開拓タイプ</h2>
             ${explore.length
               ? `<div class="chips">${explore.map(x => `<span class="chip${x.level >= 3 ? ' lv3' : x.level >= 1 ? ' lv1' : ''}">${esc(x.label)}</span>`).join('')}</div>`
               : '<p class="empty-note">ジャンル図鑑の「気になる」「体験した」で増えていきます。</p>'}
@@ -1716,12 +1847,12 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
         <section class="r-sec">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">BADGES</span>体験実績</h2>
+            <h2 class="r-h"><span class="kicker">${icon('medal')}BADGES</span>体験実績</h2>
             <div class="badges">
               ${(GAME.achievements || []).map(a => {
                 const on = profile.done.achievements.includes(a.id);
                 return `<div class="badge${on ? ' on' : ''}">
-                  <span class="medal">${on ? '★' : '?'}</span>
+                  <span class="medal">${icon(on ? 'medal' : 'lock')}</span>
                   <b>${esc(a.title)}</b>
                   <small>${esc(a.desc)}</small>
                   <span class="n">${achievementProgress(a)} / ${a.cond.count}</span>
@@ -1733,7 +1864,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
         <section class="r-sec alt">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">STICKERS</span>ステッカー帳</h2>
+            <h2 class="r-h"><span class="kicker">${icon('sticker')}STICKERS</span>ステッカー帳</h2>
             <div class="sticker-book">
               ${(GAME.stickers || []).map(st => {
                 const own = profile.owned.stickers.includes(st.id);
@@ -1745,7 +1876,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
         <section class="r-sec">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">HISTORY</span>ポイント履歴</h2>
+            <h2 class="r-h"><span class="kicker">${icon('coin')}HISTORY</span>ポイント履歴</h2>
             ${history.length
               ? `<ul class="ledger">${history.map(x => `<li><span>${esc(x.label)}</span><span class="p${x.sign < 0 ? ' minus' : ''}">${x.sign < 0 ? '−' : '+'}${x.pts}pt</span></li>`).join('')}</ul>`
               : '<p class="empty-note">まだありません。</p>'}
@@ -1800,13 +1931,13 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
           if (!list.length) return '';
           return `<section class="r-sec${i % 2 ? '' : ' alt'}">
             <div class="inner narrow">
-              <h2 class="r-h"><span class="kicker">${esc(kind.toUpperCase())}</span>${esc(kinds[kind])}</h2>
+              <h2 class="r-h"><span class="kicker">${icon(KIND_ICON[kind] || 'flag')}${esc(kind.toUpperCase())}</span>${esc(kinds[kind])}</h2>
               <ul class="missions">
                 ${list.map(m => {
                   const n = missionProgress(m);
                   const done = profile.done.missions.includes(m.id);
                   return `<li class="mission${done ? ' done' : ''}">
-                    <div class="m-top"><b>${esc(m.title)}</b><span class="m-reward">${esc(rewardText(m.reward))}</span></div>
+                    <div class="m-top"><b>${done ? icon('check') : ''}${esc(m.title)}</b><span class="m-reward">${icon('gift')}${esc(rewardText(m.reward))}</span></div>
                     ${m.partner ? `<small>${esc(m.partner)}</small>` : ''}
                     ${m.desc ? `<small>${esc(m.desc)}</small>` : ''}
                     <div class="m-prog"><i style="width:${(n / m.goal.count) * 100}%"></i></div>
@@ -1819,13 +1950,13 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
         }).join('')}
         <section class="r-sec">
           <div class="inner narrow">
-            <h2 class="r-h"><span class="kicker">POINTS</span>ポイントのため方</h2>
+            <h2 class="r-h"><span class="kicker">${icon('coin')}POINTS</span>ポイントのため方</h2>
             <ul class="ledger">
               ${Object.keys(GAME.pointRules || {}).map(k => {
                 const r = GAME.pointRules[k];
-                return `<li><span>${esc(r.label)}<small style="color:var(--muted)">（${esc(limitText[r.limit] || '毎回')}）</small></span><span class="p">+${r.points}pt</span></li>`;
+                return `<li><span class="rule">${icon(RULE_ICON[k] || 'coin')}<span>${esc(r.label)}<small style="color:var(--muted)">（${esc(limitText[r.limit] || '毎回')}）</small></span></span><span class="p">+${r.points}pt</span></li>`;
               }).join('')}
-              <li><span>ミッション・実績の達成</span><span class="p">ボーナス</span></li>
+              <li><span class="rule">${icon('flag')}<span>ミッション・実績の達成</span></span><span class="p">ボーナス</span></li>
             </ul>
           </div>
         </section>
@@ -1841,10 +1972,10 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     }));
     app.innerHTML = `${subNav('genres')}
       <div class="fade-in" data-page="genres">
-        <div class="jump-wrap"><div class="inner narrow jump">${CATALOG.map((c, i) => `<button type="button" data-jump="${i}">${esc(c.category)}</button>`).join('')}</div></div>
+        <div class="jump-wrap"><div class="inner narrow jump">${CATALOG.map((c, i) => `<button type="button" data-jump="${i}">${icon(CAT_ICON[c.category] || 'grid')}${esc(c.category)}</button>`).join('')}</div></div>
         ${CATALOG.map((c, i) => `<section class="r-sec${i % 2 ? ' alt' : ''}" id="cat-${i}">
           <div class="inner narrow">
-            <h2 class="r-h">${esc(c.category)}</h2>
+            <h2 class="r-h cat-h">${icon(CAT_ICON[c.category] || 'grid')}${esc(c.category)}</h2>
             <div class="gbook">
               ${c.genres.map(g => `<details class="grow" data-genre="${esc(g)}">
                 <summary><span>${esc(g)}</span><span data-g-status="${esc(g)}"></span></summary>
@@ -1877,8 +2008,8 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
   function shopArt(item) {
     if (item.kind === 'sticker') return stickerSVG(item.sticker);
     if (item.kind === 'skin') return '';
-    if (item.kind === 'title') return '称号';
-    return '特典';
+    if (item.kind === 'title') return icon('tag');
+    return icon('spark');
   }
 
   function viewShop() {
@@ -1922,7 +2053,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
       else profile.owned.perks[item.id] = 'DEMO-' + Math.random().toString(36).slice(2, 8).toUpperCase();
       saveProfile();
       updateHeader();
-      toast(item.name + 'と交換しました');
+      toast(item.name + 'と交換しました', 'gift');
       viewShop();
     }));
   }
@@ -1996,11 +2127,11 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
 
   function trayGroups() {
     return [
-      { key: 'sticker', label: 'シール', items: profile.owned.stickers, empty: 'ミッション・実績・交換所で集まります' },
-      { key: 'show', label: '公演ロゴ', items: Object.keys(profile.shows), empty: '結果画面の公演で「行った！」を押すと増えます' },
-      { key: 'badge', label: 'バッジ', items: profile.done.achievements, empty: '体験実績を解除すると増えます' },
-      { key: 'title', label: '称号', items: ownedTitles(), empty: '開拓タイプや称号が増えると使えます' },
-      { key: 'char', label: 'キャラ', items: profile.type ? [profile.type] : [], empty: '診断するとキャラが使えます' }
+      { key: 'sticker', icon: 'sticker', label: 'シール', items: profile.owned.stickers, empty: 'ミッション・実績・交換所で集まります' },
+      { key: 'show', icon: 'ticket', label: '公演ロゴ', items: Object.keys(profile.shows), empty: '結果画面の公演で「行った！」を押すと増えます' },
+      { key: 'badge', icon: 'medal', label: 'バッジ', items: profile.done.achievements, empty: '体験実績を解除すると増えます' },
+      { key: 'title', icon: 'tag', label: '称号', items: ownedTitles(), empty: '開拓タイプや称号が増えると使えます' },
+      { key: 'char', icon: 'user', label: 'キャラ', items: profile.type ? [profile.type] : [], empty: '診断するとキャラが使えます' }
     ];
   }
 
@@ -2012,7 +2143,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     const messages = [];
     checkProgress(messages);
     saveProfile();
-    messages.forEach(toast);
+    messages.forEach(x => toast(x[0], x[1]));
     updateHeader();
   }
 
@@ -2031,7 +2162,7 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
           <div class="inner narrow">
             <div class="book-bar">
               <div class="seg" role="group" aria-label="モード">
-                <button type="button" data-mode="write">書く</button><button type="button" data-mode="deco">貼る</button>
+                <button type="button" data-mode="write">${icon('pen')}書く</button><button type="button" data-mode="deco">${icon('sticker')}貼る</button>
               </div>
               <label class="paper-pick">紙
                 <select data-paper>${papers.map(p => `<option value="${esc(p.id)}"${p.id === paper ? ' selected' : ''}>${esc(p.name)}</option>`).join('')}</select>
@@ -2052,18 +2183,18 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
               <label>サイズ<input type="range" min="6" max="100" data-tool="w"></label>
               <label>回転<input type="range" min="-180" max="180" data-tool="r"></label>
               <div class="bt-btns">
-                <button type="button" class="act" data-tool-act="front">前面へ</button>
-                <button type="button" class="act" data-tool-act="del">はがす</button>
+                <button type="button" class="act" data-tool-act="front">${icon('layers')}前面へ</button>
+                <button type="button" class="act" data-tool-act="del">${icon('trash')}はがす</button>
               </div>
             </div>
             <div class="tray">
               <div class="tray-tabs" role="tablist">${trayGroups().map(g =>
-                `<button type="button" role="tab" data-tray-tab="${g.key}">${esc(g.label)}</button>`).join('')}</div>
+                `<button type="button" role="tab" data-tray-tab="${g.key}">${icon(g.icon)}${esc(g.label)}</button>`).join('')}</div>
               <div class="tray-items" data-tray></div>
             </div>
             <div class="end-row" style="margin-top:20px">
-              <button type="button" class="btn no-arrow" data-export>画像で保存</button>
-              <button type="button" class="btn ghost no-arrow" data-clear>全部はがす</button>
+              <button type="button" class="btn no-arrow" data-export>${icon('download')}画像で保存</button>
+              <button type="button" class="btn ghost no-arrow" data-clear>${icon('trash')}全部はがす</button>
             </div>
           </div>
         </section>
@@ -2181,8 +2312,8 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-        toast('画像を保存しました');
-      }, () => toast('画像にできませんでした'));
+        toast('画像を保存しました', 'download');
+      }, () => toast('画像にできませんでした', 'info'));
     });
 
     // ドラッグで移動、右下のつまみで拡大・回転、2本指でピンチ
@@ -2302,18 +2433,160 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
     });
   }
 
-  // 公演カードの「行った！」→ 公演ロゴを獲得し、そのジャンルの体験として記録
+  // 公演カードの「行った！」で公演ロゴを獲得し、そのジャンルの体験として記録
   app.addEventListener('click', e => {
     const b = e.target.closest('[data-went]');
     if (!b || profile.shows[b.dataset.went]) return;
     const o = eventById(b.dataset.went);
     if (!o) return;
     profile.shows[b.dataset.went] = Date.now();
-    toast('公演ロゴをゲット！プロフ帳に貼れます');
+    toast('公演ロゴをゲット！プロフ帳に貼れます', 'ticket');
     track('experience', o.ev.genre);
     refreshGenreUI();
   });
 
+
+  // ---------- デモ：はじめの説明と、開始状態の選択 ----------
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const randInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+  function shuffled(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
+  function hasSaved() {
+    try { return !!localStorage.getItem(STORE_KEY); } catch (e) { return false; }
+  }
+
+  // 「途中から」：今の四半期のあいだに何公演か行った、という状態を通常のルールで再現する
+  function randomProfile() {
+    profile = blankProfile();
+    const now = Date.now();
+    const d = new Date();
+    const qStart = new Date(d.getFullYear(), Math.floor(d.getMonth() / 3) * 3, 1).getTime();
+    const from = Math.min(qStart, now - 7 * 86400000);
+    const at = () => from + Math.random() * (now - from - 3600000);
+
+    profile.type = pick(TYPE_ORDER);
+    const allEvents = [];
+    TYPE_ORDER.forEach(c => TYPES[c].events.forEach((e, k) => allEvents.push(c + '-' + k)));
+    const genres = shuffled(Object.keys(GENRE_CAT));
+    const acts = [{ t: 'diagnose', ts: at() }];
+    shuffled(allEvents).slice(0, randInt(3, 5)).forEach(id => acts.push({ t: 'went', id: id, ts: at() }));
+    genres.slice(0, randInt(4, 7)).forEach(g => acts.push({ t: 'view', g: g, ts: at() }));
+    genres.slice(2, 2 + randInt(3, 5)).forEach(g => acts.push({ t: 'interest', g: g, ts: at() }));
+    if (Math.random() < 0.6) acts.push({ t: 'introduce', g: genres[2], ts: at() });
+    acts.push({ t: 'share', ts: at() });
+
+    acts.sort((a, b) => a.ts - b.ts).forEach(a => {
+      if (a.t === 'went') {
+        profile.shows[a.id] = Math.round(a.ts);
+        track('experience', eventById(a.id).ev.genre, { ts: a.ts, silent: true });
+      } else {
+        track(a.t, a.g, { ts: a.ts, silent: true });
+      }
+    });
+
+    // 交換所でシールを1枚交換済みにしておく
+    const item = shuffled((GAME.shop || []).filter(x => x.kind === 'sticker' && !profile.owned.stickers.includes(x.sticker)))[0];
+    if (item && balance() >= item.cost) {
+      profile.spent.push({ k: 'shop', g: '', pts: item.cost, label: '交換：' + item.name, ts: Math.round(at()) });
+      profile.owned.stickers.push(item.sticker);
+    }
+
+    // プロフ帳も少し書いて、貼った状態に
+    const went = Object.keys(profile.shows).sort((a, b) => profile.shows[a] - profile.shows[b]);
+    const firstShow = eventById(went[went.length - 1]).ev;
+    const nextGenre = Object.keys(profile.genres).find(g => profile.genres[g].interest && !profile.genres[g].exp);
+    profile.book.fields = {
+      fav: eventById(went[0]).ev.genre,
+      best: firstShow.title + '（' + firstShow.genre + '）',
+      next: nextGenre || '',
+      msg: pick(['次は一人でも行ってみたい', '気になるジャンルを全部まわりたい', '感想を言い合える友達募集中'])
+    };
+    const items = [{ kind: 'char', ref: profile.type, x: 76, y: 17, w: 30, r: 6 }];
+    went.slice(0, 2).forEach((id, i) => items.push({ kind: 'show', ref: id, x: i ? 83 : 85, y: i ? 66 : 44, w: 20, r: i ? 8 : -10 }));
+    if (profile.owned.stickers[0]) items.push({ kind: 'sticker', ref: profile.owned.stickers[0], x: 89, y: 93, w: 12, r: 0 });
+    profile.book.items = items.map((it, i) => Object.assign({ id: 'd' + i + Math.random().toString(36).slice(2, 6), z: i + 1 }, it));
+    profile.book.paper = pick(['note', 'grid', 'dot']);
+    checkProgress([], now);
+  }
+
+  function startWith(mode) {
+    if (mode === 'fresh') profile = blankProfile();
+    if (mode === 'random') randomProfile();
+    if (mode !== 'continue') {
+      resetQuiz();
+      bookSel = null;
+      saveProfile();
+    }
+    updateHeader();
+  }
+
+  let introBox = null;
+  function openIntro() {
+    if (introBox) return;
+    const saved = hasSaved();
+    const shows = Object.keys(profile.shows).length;
+    const feats = [
+      ['clock', '#E5484D', '診断', '9問・2択で8タイプに'],
+      ['ticket', '#E8590C', '行った公演', '「行った！」でロゴを入手'],
+      ['flag', '#2B9A66', 'ミッション', '達成するとポイント'],
+      ['grid', '#3E63DD', '図鑑', 'ジャンルの開拓状況'],
+      ['book', '#8E4EC6', 'プロフ帳', 'ロゴやシールを貼る'],
+      ['gift', '#0C8599', '交換所', 'ポイントでシール・称号']
+    ];
+    const choice = (mode, ic, title, sub, primary) =>
+      `<button type="button" class="choice-btn${primary ? ' primary' : ''}" data-start-mode="${mode}">
+        <span class="ci">${icon(ic)}</span><b>${title}</b><small>${sub}</small>${icon('arrow', 'arr')}
+      </button>`;
+    introBox = document.createElement('div');
+    introBox.className = 'intro-overlay';
+    introBox.innerHTML = `
+      <div class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+        <span class="demo-tag">${icon('info')}DEMO</span>
+        <h2 id="intro-title">エンタメタイプ診断<br>デモ版</h2>
+        <p class="intro-lead">楽しみ方の診断と、新しいジャンルとの出会いを記録する機能を試せます。</p>
+        <ul class="intro-feats">
+          ${feats.map(f => `<li style="--c:${f[1]}"><span class="fi">${icon(f[0])}</span><b>${f[2]}</b><span class="d">${f[3]}</span></li>`).join('')}
+        </ul>
+        <ul class="intro-notes">
+          <li>${icon('ticket')}公演・特典はすべてサンプル</li>
+          <li>${icon('device')}記録はこの端末にだけ保存</li>
+          <li>${icon('lock')}個人情報の入力なし</li>
+        </ul>
+        <p class="intro-q">${icon('play')}どこから始める？</p>
+        <div class="intro-choices">
+          ${saved ? choice('continue', 'resume', '前回の続き', `${balance()}pt・公演${shows}件`, true) : ''}
+          ${choice('fresh', 'play', 'はじめから', saved ? '記録を消して、何もない状態から' : '何もない状態から', !saved)}
+          ${choice('random', 'shuffle', '途中から（ランダム）', '何公演か行った状態から', false)}
+        </div>
+      </div>`;
+    document.body.appendChild(introBox);
+    document.body.classList.add('intro-open');
+    ['.site-head', '#app', '.site-foot', '.tabbar', '.toasts'].forEach(sel => { const el = document.querySelector(sel); if (el) el.inert = true; });
+    introBox.querySelectorAll('[data-start-mode]').forEach(b => b.addEventListener('click', () => {
+      startWith(b.dataset.startMode);
+      closeIntro();
+      route();
+      if (b.dataset.startMode === 'random') toast('ランダムな途中の状態を作りました', 'shuffle');
+      if (b.dataset.startMode === 'fresh') toast('はじめから始めます', 'play');
+    }));
+    const first = introBox.querySelector('[data-start-mode]');
+    if (first) first.focus({ preventScroll: true });
+  }
+  function closeIntro() {
+    if (!introBox) return;
+    introBox.remove();
+    introBox = null;
+    document.body.classList.remove('intro-open');
+    ['.site-head', '#app', '.site-foot', '.tabbar', '.toasts'].forEach(sel => { const el = document.querySelector(sel); if (el) el.inert = false; });
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-intro]')) return;
+    e.preventDefault();
+    openIntro();
+  });
 
   // ---------- router ----------
   function route() {
@@ -2335,8 +2608,11 @@ body[data-route="quiz"] .head-nav, body[data-route="quiz"] .site-foot { display:
   }
 
   window.addEventListener('hashchange', route);
+  document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon)));
   updateHeader();
   route();
+  // 開くたび（再読み込みのたび）にデモの説明を出す
+  openIntro();
 })();
 </script>
 </body>
