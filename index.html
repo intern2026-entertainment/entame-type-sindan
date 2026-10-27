@@ -750,11 +750,19 @@ img, svg { max-width: 100%; }
 .toast.out { opacity: 0; }
 @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-/* ---- Genre jump ---- */
-.jump-wrap { border-bottom: 2px solid var(--line); background: var(--bg); }
-.jump { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 14px; padding-bottom: 14px; }
-.jump button { font: inherit; font-size: 13px; font-weight: 800; padding: 6px 12px; border: 2px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
-[id^="cat-"] { scroll-margin-top: 60px; }
+/* ---- Genre book tabs ---- */
+.cat-tabs-wrap { position: sticky; top: 58px; z-index: 10; background: var(--bg); border-bottom: 2px solid var(--line); }
+.cat-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; padding-top: 12px; padding-bottom: 12px; }
+@media (max-width: 599px) { .cat-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.cat-tab { display: grid; justify-items: center; gap: 2px; padding: 8px 2px 6px; font: inherit; color: var(--text); background: var(--bg); border: 2px solid var(--line); cursor: pointer; }
+.cat-tab .ic { width: 22px; height: 22px; }
+.cat-tab b { font-size: 12px; font-weight: 900; line-height: 1.3; white-space: nowrap; }
+.cat-tab small { font-size: 11px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cat-tab[aria-selected="true"] { background: var(--text); color: var(--bg); }
+.cat-tab[aria-selected="true"] small { color: inherit; opacity: .75; }
+.cat-panel-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.cat-panel-h .r-h { margin: 0; }
+.cat-prog { flex: none; font-size: 13px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
 .event .ev-act { grid-column: 1 / -1; margin-top: 8px; }
 
 /* ---- Profile book ---- */
@@ -1744,6 +1752,10 @@ body.intro-open { overflow: hidden; }
       b.classList.toggle('on', on);
       b.disabled = on;
     });
+    app.querySelectorAll('[data-cat-count]').forEach(el => {
+      const c = CATALOG[+el.dataset.catCount];
+      el.textContent = openedCount(c) + ' / ' + c.genres.length;
+    });
     app.querySelectorAll('[data-g-status]').forEach(el => {
       const st = genreStatus(el.dataset.gStatus);
       el.innerHTML = (STATUS_ICON[st.key] ? icon(STATUS_ICON[st.key]) : '') + esc(st.label);
@@ -1963,35 +1975,55 @@ body.intro-open { overflow: hidden; }
       </div>`;
   }
 
+  let genreCat = 0;
+  const openedCount = c => c.genres.filter(g => genreStatus(g).key !== 'none').length;
+
   function viewGenres() {
     setTheme(null);
-    // ジャンルごとに、推薦しているタイプと理由を集める
+    if (!CATALOG[genreCat]) genreCat = 0;
+    app.innerHTML = `${subNav('genres')}
+      <div class="fade-in" data-page="genres">
+        <div class="cat-tabs-wrap">
+          <div class="inner narrow cat-tabs" role="tablist" aria-label="大ジャンル">
+            ${CATALOG.map((c, i) => `<button type="button" class="cat-tab" role="tab" data-cat-tab="${i}" aria-controls="cat-panel">
+              ${icon(CAT_ICON[c.category] || 'grid')}<b>${esc(c.category)}</b><small data-cat-count="${i}"></small>
+            </button>`).join('')}
+          </div>
+        </div>
+        <section class="r-sec" id="cat-panel" role="tabpanel" data-cat-panel></section>
+      </div>`;
+    app.querySelectorAll('[data-cat-tab]').forEach(b => b.addEventListener('click', () => {
+      genreCat = +b.dataset.catTab;
+      renderGenrePanel();
+    }));
+    renderGenrePanel();
+  }
+
+  // 選んだ大ジャンルのジャンルだけを表示する
+  function renderGenrePanel() {
     const fits = {};
     TYPE_ORDER.forEach(code => TYPES[code].genres.forEach(g => {
       (fits[g.name] = fits[g.name] || []).push({ code: code, why: g.why });
     }));
-    app.innerHTML = `${subNav('genres')}
-      <div class="fade-in" data-page="genres">
-        <div class="jump-wrap"><div class="inner narrow jump">${CATALOG.map((c, i) => `<button type="button" data-jump="${i}">${icon(CAT_ICON[c.category] || 'grid')}${esc(c.category)}</button>`).join('')}</div></div>
-        ${CATALOG.map((c, i) => `<section class="r-sec${i % 2 ? ' alt' : ''}" id="cat-${i}">
-          <div class="inner narrow">
-            <h2 class="r-h cat-h">${icon(CAT_ICON[c.category] || 'grid')}${esc(c.category)}</h2>
-            <div class="gbook">
-              ${c.genres.map(g => `<details class="grow" data-genre="${esc(g)}">
-                <summary><span>${esc(g)}</span><span data-g-status="${esc(g)}"></span></summary>
-                <div class="gbody">
-                  ${fits[g] ? `<ul>${fits[g].map(f => `<li><b>${esc(TYPES[f.code].name)}</b>${esc(f.why)}</li>`).join('')}</ul>` : ''}
-                  ${genreActions(g, true)}
-                </div>
-              </details>`).join('')}
-            </div>
+    const c = CATALOG[genreCat];
+    app.querySelectorAll('[data-cat-tab]').forEach(b => b.setAttribute('aria-selected', String(+b.dataset.catTab === genreCat)));
+    const panel = app.querySelector('[data-cat-panel]');
+    panel.innerHTML = `<div class="inner narrow">
+      <div class="cat-panel-h">
+        <h2 class="r-h cat-h">${icon(CAT_ICON[c.category] || 'grid')}${esc(c.category)}</h2>
+        <span class="cat-prog">開拓 <span data-cat-count="${genreCat}"></span></span>
+      </div>
+      <div class="gbook">
+        ${c.genres.map(g => `<details class="grow" data-genre="${esc(g)}">
+          <summary><span>${esc(g)}</span><span data-g-status="${esc(g)}"></span></summary>
+          <div class="gbody">
+            ${fits[g] ? `<ul>${fits[g].map(f => `<li><b>${esc(TYPES[f.code].name)}</b>${esc(f.why)}</li>`).join('')}</ul>` : ''}
+            ${genreActions(g, true)}
           </div>
-        </section>`).join('')}
-      </div>`;
-    app.querySelectorAll('[data-jump]').forEach(b => b.addEventListener('click', () => {
-      document.getElementById('cat-' + b.dataset.jump).scrollIntoView({ behavior: 'smooth' });
-    }));
-    app.querySelectorAll('details[data-genre]').forEach(d => d.addEventListener('toggle', () => {
+        </details>`).join('')}
+      </div>
+    </div>`;
+    panel.querySelectorAll('details[data-genre]').forEach(d => d.addEventListener('toggle', () => {
       if (!d.open) return;
       track('view', d.dataset.genre);
       refreshGenreUI();
