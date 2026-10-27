@@ -259,7 +259,120 @@
     }
   },
 
-  "typeOrder": ["LIE", "LSE", "LSF", "LIF", "WIF", "WIE", "WSE", "WSF"]
+  "typeOrder": ["LIE", "LSE", "LSF", "LIF", "WIF", "WIE", "WSE", "WSF"],
+
+  "genreCatalog": [
+    { "category": "音楽", "genres": ["邦楽", "洋楽", "フェスティバル", "ジャズ", "ディナーショー"] },
+    { "category": "演劇", "genres": ["演劇", "ミュージカル・ショー", "バレエ・ダンス", "パフォーマンス", "歌舞伎・古典芸能", "寄席・お笑い"] },
+    { "category": "スポーツ", "genres": ["野球", "サッカー", "ラグビー", "バスケットボール", "バレーボール", "ソフトボール", "プロレス", "格闘技", "ボクシング", "相撲", "フィギュアスケート", "モータースポーツ", "ゴルフ"] },
+    { "category": "クラシック", "genres": ["オーケストラ", "器楽・室内楽", "オペラ・声楽", "合唱", "吹奏楽"] },
+    { "category": "イベント・アート", "genres": ["アート", "子ども向け・ファミリー", "サーカス", "祭り・花火大会", "学園祭"] },
+    { "category": "映画", "genres": ["舞台挨拶", "ライブビューイング"] },
+    { "category": "アニメ", "genres": ["アニメ・声優・ゲーム", "2.5次元舞台"] }
+  ],
+
+  "game": {
+    "storageKey": "entame-type-mypage-v1",
+
+    "pointRules": {
+      "diagnose":   { "label": "診断", "points": 20, "limit": "once" },
+      "view":       { "label": "未開拓ジャンルをチェック", "points": 2, "limit": "perGenre" },
+      "interest":   { "label": "気になる登録", "points": 5, "limit": "perGenre" },
+      "experience": { "label": "ジャンル体験", "points": 30, "limit": "perGenre" },
+      "share":      { "label": "シェア", "points": 5, "limit": "daily" },
+      "introduce":  { "label": "友達に紹介", "points": 10, "limit": "perGenre" }
+    },
+
+    "exploreTitles": [
+      { "when": "experience", "count": 3, "label": "{genre}通" },
+      { "when": "experience", "count": 1, "label": "{genre}デビュー済み" },
+      { "when": "interest", "label": "{genre}開拓中" }
+    ],
+
+    "missionKinds": {
+      "regular": "常設（四半期ごとに更新）",
+      "season": "季節限定",
+      "collab": "コラボ"
+    },
+
+    "missions": [
+      { "id": "2026q4-profile", "kind": "regular", "from": "2026-10-01", "to": "2026-12-31",
+        "title": "プロフィールを友達とシェアしよう",
+        "goal": { "type": "shareProfile", "count": 1 }, "reward": { "points": 30 } },
+      { "id": "2026q4-event", "kind": "regular", "from": "2026-10-01", "to": "2026-12-31",
+        "title": "イベントに1つ参加しよう",
+        "goal": { "type": "experience", "count": 1 }, "reward": { "points": 50, "sticker": "mic" } },
+      { "id": "2026q4-view", "kind": "regular", "from": "2026-10-01", "to": "2026-12-31",
+        "title": "未開拓のジャンルを3つチェックしよう",
+        "goal": { "type": "view", "count": 3, "unique": true }, "reward": { "points": 20 } },
+      { "id": "2026q4-diagnose", "kind": "regular", "from": "2026-10-01", "to": "2026-12-31",
+        "title": "今期の診断をしよう",
+        "goal": { "type": "diagnose", "count": 1 }, "reward": { "points": 10 } },
+
+      { "id": "2026-autumn-interest", "kind": "season", "from": "2026-09-01", "to": "2026-11-30",
+        "title": "芸術の秋：気になるジャンルを3つ見つけよう",
+        "desc": "クラシック・演劇・イベント・アートから",
+        "goal": { "type": "interest", "count": 3, "unique": true, "categories": ["クラシック", "演劇", "イベント・アート"] },
+        "reward": { "points": 30 } },
+      { "id": "2026-autumn-exp", "kind": "season", "from": "2026-09-01", "to": "2026-11-30",
+        "title": "芸術の秋：クラシックかアートを体験しよう",
+        "goal": { "type": "experience", "count": 1, "categories": ["クラシック", "イベント・アート"] },
+        "reward": { "points": 80, "sticker": "leaf", "title": "芸術の秋びと" } },
+
+      { "id": "collab-sample-check", "kind": "collab", "from": "2026-10-15", "to": "2027-01-31",
+        "partner": "サンプル市（コラボ例）",
+        "title": "歌舞伎・古典芸能を「気になる」に登録しよう",
+        "goal": { "type": "interest", "count": 1, "genres": ["歌舞伎・古典芸能"] }, "reward": { "points": 20 } },
+      { "id": "collab-sample-go", "kind": "collab", "from": "2026-10-15", "to": "2027-01-31",
+        "partner": "サンプル市（コラボ例）",
+        "title": "対象の古典芸能公演に行こう",
+        "goal": { "type": "experience", "count": 1, "genres": ["歌舞伎・古典芸能"] },
+        "reward": { "points": 100, "title": "古典芸能サポーター" } }
+    ],
+
+    "achievements": [
+      { "id": "first", "title": "はじめの一歩", "desc": "診断をする",
+        "cond": { "type": "diagnose", "count": 1 }, "reward": { "points": 10, "sticker": "star" } },
+      { "id": "interest5", "title": "好奇心旺盛", "desc": "気になるジャンルを5つ登録",
+        "cond": { "type": "interestedGenres", "count": 5 }, "reward": { "points": 20, "sticker": "sparkle" } },
+      { "id": "new3", "title": "3ジャンル開拓", "desc": "初めてのジャンルを3つ体験",
+        "cond": { "type": "experiencedGenres", "count": 3 }, "reward": { "points": 50, "sticker": "ticket" } },
+      { "id": "cross3", "title": "ジャンル越境", "desc": "3つの大ジャンルで体験",
+        "cond": { "type": "experiencedCategories", "count": 3 }, "reward": { "points": 50, "title": "越境エンタメ人" } },
+      { "id": "intro1", "title": "紹介上手", "desc": "友達に新しい趣味を紹介",
+        "cond": { "type": "introducedGenres", "count": 1 }, "reward": { "points": 20, "sticker": "megaphone" } },
+      { "id": "view10", "title": "図鑑めくり", "desc": "ジャンルを10個チェック",
+        "cond": { "type": "viewedGenres", "count": 10 }, "reward": { "points": 20 } }
+    ],
+
+    "stickers": [
+      { "id": "star", "name": "スター", "color": "#F2A900" },
+      { "id": "sparkle", "name": "きらめき", "color": "#8E4EC6" },
+      { "id": "ticket", "name": "チケット", "color": "#E5484D" },
+      { "id": "megaphone", "name": "メガホン", "color": "#E8590C" },
+      { "id": "mic", "name": "マイク", "color": "#3E63DD" },
+      { "id": "leaf", "name": "紅葉", "color": "#C2410C" },
+      { "id": "mask", "name": "仮面", "color": "#2B9A66" },
+      { "id": "note", "name": "音符", "color": "#0C8599" },
+      { "id": "ball", "name": "ボール", "color": "#B7791F" }
+    ],
+
+    "skins": [
+      { "id": "stage", "name": "ステージ" },
+      { "id": "confetti", "name": "紙吹雪" }
+    ],
+
+    "shop": [
+      { "id": "shop-mask", "kind": "sticker", "sticker": "mask", "name": "電子ステッカー「仮面」", "cost": 50 },
+      { "id": "shop-note", "kind": "sticker", "sticker": "note", "name": "電子ステッカー「音符」", "cost": 50 },
+      { "id": "shop-ball", "kind": "sticker", "sticker": "ball", "name": "電子ステッカー「ボール」", "cost": 50 },
+      { "id": "shop-stage", "kind": "skin", "skin": "stage", "name": "着せ替え「ステージ」", "cost": 100 },
+      { "id": "shop-confetti", "kind": "skin", "skin": "confetti", "name": "着せ替え「紙吹雪」", "cost": 100 },
+      { "id": "shop-title", "kind": "title", "title": "エンタメ探検家", "name": "称号「エンタメ探検家」", "cost": 150 },
+      { "id": "shop-lottery", "kind": "perk", "name": "抽選確率アップ（デモ）", "desc": "見本の特典です。実際には使えません。", "cost": 200 },
+      { "id": "shop-drink", "kind": "perk", "name": "会場ドリンク引換券（デモ）", "desc": "見本の特典です。実際には使えません。", "cost": 300 }
+    ]
+  }
 }
 </script>
 
@@ -321,7 +434,10 @@ img, svg { max-width: 100%; }
 .head-nav { display: flex; align-items: center; gap: 4px; }
 .head-nav a.txt { font-size: 13px; font-weight: 700; text-decoration: none; padding: 8px; }
 .head-nav a.txt:hover { text-decoration: underline; }
-@media (max-width: 380px) { .head-nav a.txt { display: none; } }
+.me-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; text-decoration: none; padding: 6px 2px; white-space: nowrap; }
+.me-link .pts { background: var(--text); color: var(--bg); padding: 2px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+@media (max-width: 599px) { .hide-sm, .me-link .lbl { display: none; } .head-nav .btn.small::after { content: none; } }
+@media (max-width: 400px) { .logo-mark { display: none; } .logo { font-size: 14px; } }
 
 /* ---- Buttons ---- */
 .btn {
@@ -453,7 +569,7 @@ img, svg { max-width: 100%; }
 .fade-in { animation: fadeIn .5s ease both; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .fade-in { animation: none; }
+  .fade-in, .toast { animation: none; }
   * { transition: none !important; scroll-behavior: auto !important; }
 }
 
@@ -517,6 +633,106 @@ img, svg { max-width: 100%; }
 .page-head .sec-h { margin-bottom: 8px; }
 .page-head p { color: var(--muted); margin: 0; }
 
+/* ---- My page ---- */
+.subnav { border-bottom: 2px solid var(--line); background: var(--bg-2); }
+.subnav .inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 680px; }
+.subnav a { text-align: center; padding: 12px 2px 10px; font-size: 13px; font-weight: 800; text-decoration: none; border-bottom: 4px solid transparent; white-space: nowrap; }
+.subnav a.on { border-bottom-color: var(--text); }
+
+.pcard { display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: center; border: 2px solid var(--line); background: var(--bg); color: var(--text); padding: 16px; box-shadow: 6px 6px 0 var(--accent); }
+.pcard-char svg { width: 100%; height: auto; display: block; }
+.pcard-char.empty { aspect-ratio: 1; display: grid; place-items: center; font-size: 44px; font-weight: 900; border: 2px dashed var(--hair); color: var(--muted); }
+.pcard-title { margin: 0; display: inline-block; font-size: 12px; font-weight: 900; background: var(--accent); color: var(--on-accent); padding: 2px 8px; }
+.pcard-type { margin: 4px 0 8px; font-size: 20px; font-weight: 900; line-height: 1.3; }
+.pcard-stats { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; }
+.pcard-stats dt { font-size: 11px; font-weight: 700; opacity: .7; }
+.pcard-stats dd { margin: 0; font-size: 20px; font-weight: 900; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.pcard-stickers { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.pcard-stickers svg { width: 28px; height: 28px; }
+.pcard.skin-stage { background: radial-gradient(ellipse at 30% -10%, rgba(255,255,255,.4), transparent 55%), #1C1A22; color: #FFFFFF; }
+.pcard.skin-confetti {
+  background-color: var(--bg);
+  background-image: radial-gradient(#F2545B 2px, transparent 2.6px), radial-gradient(#3E63DD 2px, transparent 2.6px), radial-gradient(#FFC53D 2.5px, transparent 3px);
+  background-size: 26px 26px, 34px 34px, 22px 22px; background-position: 0 0, 11px 15px, 5px 3px;
+}
+.field-row { display: grid; gap: 12px; margin-top: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.field-row label { display: grid; gap: 4px; font-size: 12px; font-weight: 800; }
+.field-row select { width: 100%; min-width: 0; font: inherit; font-size: 14px; padding: 10px; border: 2px solid var(--line); border-radius: 0; background: var(--bg); color: var(--text); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 13px; font-weight: 800; padding: 4px 10px; border: 2px solid var(--line); background: var(--bg); }
+.chip.lv1 { background: var(--brand-2); color: #1C1A22; }
+.chip.lv3 { background: var(--text); color: var(--bg); }
+.empty-note { color: var(--muted); font-size: 14px; margin: 0; }
+
+.badges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid var(--line); border-left: 2px solid var(--line); }
+@media (min-width: 600px) { .badges { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.badge { padding: 14px; border-right: 2px solid var(--line); border-bottom: 2px solid var(--line); }
+.badge .medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--line); background: var(--hair); color: var(--muted); font-size: 18px; font-weight: 900; }
+.badge.on .medal { background: var(--brand-2); color: #1C1A22; }
+.badge b { display: block; font-size: 15px; line-height: 1.4; margin-top: 8px; }
+.badge small { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.badge .n { font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.sticker-book { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 12px; }
+.sticker-book figure { margin: 0; text-align: center; }
+.sticker-book svg { width: 60px; height: 60px; }
+.sticker-book figcaption { font-size: 11px; font-weight: 700; color: var(--muted); }
+
+.ledger { list-style: none; margin: 0 0 16px; padding: 0; border-top: 2px solid var(--line); }
+.ledger li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--hair); font-size: 14px; }
+.ledger .p { font-weight: 900; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ledger .p.minus { color: var(--muted); }
+
+.missions { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--line); }
+.mission { padding: 16px 0; border-bottom: 2px solid var(--line); }
+.mission .m-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.mission b { font-size: 16px; line-height: 1.45; }
+.mission.done b::before { content: "✓ "; }
+.mission .m-reward { flex: none; font-size: 12px; font-weight: 900; background: var(--brand-2); color: #1C1A22; padding: 2px 8px; max-width: 45%; text-align: right; }
+.mission small { display: block; font-size: 12px; color: var(--muted); }
+.m-prog { height: 10px; border: 2px solid var(--line); background: var(--bg); margin: 8px 0 4px; }
+.m-prog i { display: block; height: 100%; background: var(--brand); }
+.mission.done .m-prog i { background: var(--text); }
+
+.gbook { border-top: 2px solid var(--line); }
+.grow { border-bottom: 2px solid var(--line); }
+.grow summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; font-weight: 900; font-size: 16px; }
+.grow summary::-webkit-details-marker { display: none; }
+.gstat { flex: none; font-size: 12px; font-weight: 900; padding: 2px 8px; border: 2px solid var(--line); }
+.gstat.st-none { color: var(--muted); border-color: var(--hair); }
+.gstat.st-interest { background: var(--bg); }
+.gstat.st-debut { background: var(--brand-2); color: #1C1A22; }
+.gstat.st-master { background: var(--text); color: var(--bg); }
+.gbody { padding: 0 0 16px; }
+.gbody ul { margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+.gbody li b { color: var(--text); margin-right: 6px; }
+.g-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.genres .g-actions { grid-column: 2; }
+.act { min-height: 36px; padding: 6px 12px; font-size: 13px; font-weight: 800; border: 2px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+.act.on { background: var(--text); color: var(--bg); }
+.act:disabled { cursor: default; }
+
+.balance { font-size: 44px; font-weight: 900; line-height: 1.1; margin: 0; font-variant-numeric: tabular-nums; }
+.balance small { font-size: 16px; margin-left: 4px; }
+.shop { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--line); }
+.shop-item { display: grid; grid-template-columns: 56px 1fr; gap: 8px 14px; align-items: center; padding: 14px 0; border-bottom: 2px solid var(--line); }
+.si-art { width: 56px; height: 56px; display: grid; place-items: center; border: 2px solid var(--line); background: var(--bg); font-size: 13px; font-weight: 900; overflow: hidden; }
+.si-art svg { width: 50px; height: 50px; }
+.si-art.skin-stage { background: radial-gradient(ellipse at 30% -10%, rgba(255,255,255,.45), transparent 60%), #1C1A22; }
+.si-art.skin-confetti { background-image: radial-gradient(#F2545B 2px, transparent 2.6px), radial-gradient(#3E63DD 2px, transparent 2.6px), radial-gradient(#FFC53D 2.5px, transparent 3px); background-size: 14px 14px, 18px 18px, 11px 11px; background-position: 0 0, 6px 8px, 3px 2px; }
+.si-body b { display: block; font-size: 15px; line-height: 1.4; }
+.si-body small { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.si-cost { font-size: 14px; font-weight: 900; }
+.shop-item .btn { grid-column: 2; justify-self: start; }
+.si-code { display: inline-block; margin-top: 4px; padding: 2px 8px; border: 2px dashed var(--line); font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 800; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: 2px 2px 0 var(--line); }
+
+.toasts { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 50; display: grid; gap: 8px; justify-items: center; pointer-events: none; }
+.toast { width: 100%; max-width: 420px; padding: 12px 16px; background: var(--text); color: var(--bg); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--brand-2); font-size: 14px; font-weight: 800; animation: toastIn .25s ease both; transition: opacity .3s ease; }
+.toast.out { opacity: 0; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -525,7 +741,8 @@ img, svg { max-width: 100%; }
   <div class="inner">
     <a class="logo" href="#/"><span class="logo-mark" aria-hidden="true"></span>エンタメタイプ診断</a>
     <nav class="head-nav" aria-label="メニュー">
-      <a class="txt" href="#/types">8タイプ一覧</a>
+      <a class="txt hide-sm" href="#/types">8タイプ一覧</a>
+      <a class="me-link" href="#/me"><span class="lbl">マイページ</span><span class="pts"><span data-pts>0</span>pt</span></a>
       <a class="btn small" href="#/quiz" data-start>診断する</a>
     </nav>
   </div>
@@ -534,9 +751,9 @@ img, svg { max-width: 100%; }
 <footer class="site-foot">
   <div class="inner">
     <nav aria-label="フッター">
-      <a href="#/">トップ</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a>
+      <a href="#/">トップ</a><a href="#/quiz" data-start>診断をはじめる</a><a href="#/types">8タイプ一覧</a><a href="#/me">マイページ</a><a href="#/missions">ミッション</a><a href="#/genres">ジャンル図鑑</a><a href="#/shop">交換所</a>
     </nav>
-    <p>個人情報は取得しません。公演情報はサンプルです。</p>
+    <p>個人情報は取得しません。マイページの記録はこの端末にだけ保存されます。公演情報・特典はサンプルです。</p>
   </div>
 </footer>
 
@@ -551,6 +768,10 @@ img, svg { max-width: 100%; }
   const QUESTIONS = DATA.questions;
   const TYPES = DATA.types;
   const TYPE_ORDER = DATA.typeOrder && DATA.typeOrder.length ? DATA.typeOrder : Object.keys(TYPES);
+  const GAME = DATA.game || {};
+  const CATALOG = DATA.genreCatalog || [];
+  const GENRE_CAT = {};
+  CATALOG.forEach(c => c.genres.forEach(g => { GENRE_CAT[g] = c.category; }));
 
   // 回答はメモリ上だけに保持（保存・送信はしない）
   const state = { answers: [], index: 0, result: null, locked: false };
@@ -604,6 +825,9 @@ img, svg { max-width: 100%; }
         console.warn('[診断データ] 質問' + (i + 1) + 'の axis / value が正しくありません');
       }
     });
+    Object.keys(TYPES).forEach(code => TYPES[code].genres.forEach(g => {
+      if (!GENRE_CAT[g.name]) console.warn('[診断データ] ' + code + ' の推薦ジャンル「' + g.name + '」が genreCatalog にありません');
+    }));
   }
 
   // ロゴの色ドット（8タイプの色）
@@ -926,6 +1150,7 @@ img, svg { max-width: 100%; }
               ${g.category ? `<span class="cat">${esc(g.category)}</span>` : ''}
               <b>${esc(g.name)}</b>
               <span class="w">${esc(g.why)}</span>
+              ${genreActions(g.name)}
             </li>`).join('')}
           </ol>
         </div>
@@ -980,7 +1205,8 @@ img, svg { max-width: 100%; }
             </div>
             <p class="copied" data-copied role="status"></p>
             <div class="end-row" style="margin-top:24px">
-              <a class="btn" href="#/quiz" data-start>もう一度診断する</a>
+              <a class="btn" href="#/me">マイページを見る</a>
+              <a class="btn ghost" href="#/quiz" data-start>もう一度診断する</a>
               <a class="btn ghost" href="#/types">8タイプ一覧を見る</a>
             </div>
           </div>
@@ -990,8 +1216,18 @@ img, svg { max-width: 100%; }
     app.querySelector('[data-copy]').addEventListener('click', () => {
       copyText(text + '\n#' + tag + (pageUrl ? '\n' + pageUrl : '')).then(ok => {
         app.querySelector('[data-copied]').textContent = ok ? 'コピーしました！' : 'コピーできませんでした';
+        if (ok) track('share');
       });
     });
+    app.querySelector('a.btn.x').addEventListener('click', () => track('share'));
+
+    // 診断結果をマイページに記録（同じ結果画面で二重に数えない）
+    if (!state.result.saved) {
+      state.result.saved = true;
+      profile.type = code;
+      track('diagnose');
+    }
+    refreshGenreUI();
   }
 
   function copyText(text) {
@@ -1044,7 +1280,539 @@ img, svg { max-width: 100%; }
           </div>
         </section>
       </div>`;
+    refreshGenreUI();
   }
+
+  // ---------- my page: progress (saved only in this browser) ----------
+  const STORE_KEY = GAME.storageKey || 'entame-type-mypage';
+
+  function blankProfile() {
+    return {
+      v: 1, type: null, events: [], genres: {}, earned: [], spent: [],
+      owned: { stickers: [], skins: [], titles: [], perks: {} },
+      done: { missions: [], achievements: [] },
+      equip: { title: '', skin: '' }
+    };
+  }
+  function loadProfile() {
+    const base = blankProfile();
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return base;
+      const p = JSON.parse(raw);
+      return Object.assign(base, p, {
+        owned: Object.assign(base.owned, p.owned),
+        done: Object.assign(base.done, p.done),
+        equip: Object.assign(base.equip, p.equip)
+      });
+    } catch (e) {
+      return base;
+    }
+  }
+  let profile = loadProfile();
+  function saveProfile() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(profile)); } catch (e) { /* 保存できない環境ではこのページを開いている間だけ有効 */ }
+  }
+
+  const sumPts = list => list.reduce((n, x) => n + x.pts, 0);
+  const balance = () => sumPts(profile.earned) - sumPts(profile.spent);
+  const dayKey = ts => new Date(ts).toDateString();
+  const findSticker = id => (GAME.stickers || []).find(s => s.id === id);
+  const skinName = id => ((GAME.skins || []).find(s => s.id === id) || { name: id }).name;
+
+  function genreState(g) {
+    if (!profile.genres[g]) profile.genres[g] = { interest: false, viewed: false, exp: 0, introduced: false };
+    return profile.genres[g];
+  }
+
+  // イベント種別 → ポイントルール
+  const RULE_OF = { diagnose: 'diagnose', view: 'view', interest: 'interest', experience: 'experience', share: 'share', shareProfile: 'share', introduce: 'introduce' };
+
+  function awardRule(type, g) {
+    const key = RULE_OF[type];
+    const rule = (GAME.pointRules || {})[key];
+    if (!rule || !rule.points) return null;
+    const now = Date.now();
+    const already = profile.earned.some(x => x.k === key && (
+      rule.limit === 'once' ||
+      (rule.limit === 'perGenre' && x.g === (g || '')) ||
+      (rule.limit === 'daily' && dayKey(x.ts) === dayKey(now))));
+    if (rule.limit && rule.limit !== 'none' && already) return null;
+    const label = rule.label + (g ? '：' + g : '');
+    profile.earned.push({ k: key, g: g || '', pts: rule.points, label: label, ts: now });
+    return '+' + rule.points + 'pt ' + label;
+  }
+
+  function track(type, g) {
+    if (g) {
+      const st = genreState(g);
+      // 体験済みのジャンルは「未開拓のチェック」に数えない
+      if (type === 'view') { if (st.viewed || st.exp > 0) return; st.viewed = true; }
+      if (type === 'interest') { if (st.interest) return; st.interest = true; }
+      if (type === 'experience') st.exp += 1;
+      if (type === 'introduce') st.introduced = true;
+    }
+    const ev = { t: type, ts: Date.now() };
+    if (g) { ev.g = g; ev.c = GENRE_CAT[g] || ''; }
+    profile.events.push(ev);
+    const messages = [];
+    const m = awardRule(type, g);
+    if (m) messages.push(m);
+    checkProgress(messages);
+    saveProfile();
+    messages.forEach(toast);
+    updateHeader();
+  }
+
+  function inPeriod(m, ts) {
+    if (m.from && ts < new Date(m.from + 'T00:00:00').getTime()) return false;
+    if (m.to && ts > new Date(m.to + 'T23:59:59').getTime()) return false;
+    return true;
+  }
+  function activeMissions() {
+    const now = Date.now();
+    return (GAME.missions || []).filter(m => inPeriod(m, now));
+  }
+  function missionProgress(m) {
+    const goal = m.goal;
+    const evs = profile.events.filter(e =>
+      (e.t === goal.type || (goal.type === 'share' && e.t === 'shareProfile')) &&
+      inPeriod(m, e.ts) &&
+      (!goal.categories || goal.categories.includes(e.c)) &&
+      (!goal.genres || goal.genres.includes(e.g)));
+    const n = goal.unique ? new Set(evs.map(e => e.g)).size : evs.length;
+    return Math.min(n, goal.count);
+  }
+  function achievementProgress(a) {
+    const c = a.cond;
+    const gs = Object.keys(profile.genres).map(g => [g, profile.genres[g]]);
+    let n;
+    switch (c.type) {
+      case 'experiencedGenres': n = gs.filter(([, s]) => s.exp > 0).length; break;
+      case 'experiencedCategories': n = new Set(gs.filter(([, s]) => s.exp > 0).map(([g]) => GENRE_CAT[g])).size; break;
+      case 'viewedGenres': n = gs.filter(([, s]) => s.viewed).length; break;
+      case 'interestedGenres': n = gs.filter(([, s]) => s.interest).length; break;
+      case 'introducedGenres': n = gs.filter(([, s]) => s.introduced).length; break;
+      default: n = profile.events.filter(e => e.t === c.type).length;
+    }
+    return Math.min(n, c.count);
+  }
+
+  function rewardText(r) {
+    const parts = [];
+    if (r.points) parts.push('+' + r.points + 'pt');
+    if (r.sticker) parts.push('ステッカー「' + (findSticker(r.sticker) || { name: r.sticker }).name + '」');
+    if (r.title) parts.push('称号「' + r.title + '」');
+    if (r.skin) parts.push('着せ替え「' + skinName(r.skin) + '」');
+    return parts.join(' ');
+  }
+  function grant(reward, label, messages) {
+    if (!reward) return;
+    if (reward.points) profile.earned.push({ k: 'bonus', g: '', pts: reward.points, label: label, ts: Date.now() });
+    if (reward.sticker && !profile.owned.stickers.includes(reward.sticker)) profile.owned.stickers.push(reward.sticker);
+    if (reward.title && !profile.owned.titles.includes(reward.title)) profile.owned.titles.push(reward.title);
+    if (reward.skin && !profile.owned.skins.includes(reward.skin)) profile.owned.skins.push(reward.skin);
+    messages.push(label + '　' + rewardText(reward));
+  }
+  function checkProgress(messages) {
+    activeMissions().forEach(m => {
+      if (profile.done.missions.includes(m.id) || missionProgress(m) < m.goal.count) return;
+      profile.done.missions.push(m.id);
+      grant(m.reward, 'ミッション達成「' + m.title + '」', messages);
+    });
+    (GAME.achievements || []).forEach(a => {
+      if (profile.done.achievements.includes(a.id) || achievementProgress(a) < a.cond.count) return;
+      profile.done.achievements.push(a.id);
+      grant(a.reward, '実績解除「' + a.title + '」', messages);
+    });
+  }
+
+  // 開拓タイプ：ジャンルごとに、いちばん上の段階の称号を1つ
+  function exploreTitles() {
+    const out = [];
+    Object.keys(profile.genres).forEach(g => {
+      const s = profile.genres[g];
+      const rule = (GAME.exploreTitles || []).find(r =>
+        r.when === 'experience' ? s.exp >= (r.count || 1) : (r.when === 'interest' && s.interest));
+      if (rule) out.push({ label: rule.label.replace('{genre}', g), level: rule.when === 'experience' ? (rule.count || 1) : 0 });
+    });
+    return out.sort((a, b) => b.level - a.level);
+  }
+  function ownedTitles() { return exploreTitles().map(t => t.label).concat(profile.owned.titles); }
+  function currentTitle() {
+    const all = ownedTitles();
+    return all.includes(profile.equip.title) ? profile.equip.title : (all[0] || '');
+  }
+  function genreStatus(g) {
+    const s = profile.genres[g] || {};
+    if (s.exp >= 3) return { key: 'master', label: '通 ×' + s.exp };
+    if (s.exp >= 1) return { key: 'debut', label: 'デビュー済み' };
+    if (s.interest) return { key: 'interest', label: '開拓中' };
+    return { key: 'none', label: '未開拓' };
+  }
+
+  // ---------- my page: UI parts ----------
+  const toastBox = document.createElement('div');
+  toastBox.className = 'toasts';
+  toastBox.setAttribute('role', 'status');
+  document.body.appendChild(toastBox);
+  function toast(msg) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    toastBox.appendChild(el);
+    while (toastBox.children.length > 3) toastBox.firstChild.remove();
+    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 2600);
+  }
+
+  function updateHeader() {
+    document.querySelectorAll('[data-pts]').forEach(el => { el.textContent = balance(); });
+  }
+
+  const STICKER_ART = {
+    star: c => '<path d="M32 12l6 13 14 2-10 10 2 14-12-7-12 7 2-14-10-10 14-2z" fill="#fff"/>',
+    sparkle: c => '<path d="M32 11l5 16 16 5-16 5-5 16-5-16-16-5 16-5z" fill="#fff"/>',
+    ticket: c => `<path d="M13 22h38v6a4 4 0 0 0 0 8v6H13v-6a4 4 0 0 0 0-8z" fill="#fff"/><path d="M39 23v18" stroke="${c}" stroke-width="2.5" stroke-dasharray="3 3"/>`,
+    megaphone: c => '<path d="M15 27h8l19-10v30l-19-10h-8z" fill="#fff"/><path d="M23 37l3 10h6l-3-10" fill="#fff"/><path d="M47 26q4 6 0 12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>',
+    mic: c => '<rect x="26" y="11" width="12" height="22" rx="6" fill="#fff"/><path d="M20 29a12 12 0 0 0 24 0" stroke="#fff" stroke-width="3" fill="none"/><path d="M32 41v8M25 50h14" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+    leaf: c => `<path d="M17 47C17 27 31 16 48 16c0 19-12 31-31 31z" fill="#fff"/><path d="M17 47L37 27" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`,
+    mask: c => `<path d="M13 23q19-9 38 0q0 19-19 24q-19-5-19-24z" fill="#fff"/><ellipse cx="25" cy="30" rx="4.5" ry="3" fill="${c}"/><ellipse cx="39" cy="30" rx="4.5" ry="3" fill="${c}"/><path d="M26 38q6 4 12 0" stroke="${c}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+    note: c => '<path d="M26 44V18l18-4v26" stroke="#fff" stroke-width="4" fill="none" stroke-linejoin="round"/><circle cx="21" cy="44" r="6" fill="#fff"/><circle cx="39" cy="40" r="6" fill="#fff"/>',
+    ball: c => `<circle cx="32" cy="32" r="15" fill="#fff"/><path d="M21 22q9 10 0 20M43 22q-9 10 0 20" stroke="${c}" stroke-width="2.5" fill="none"/>`
+  };
+  function stickerSVG(id, locked) {
+    const st = findSticker(id) || { id: id, name: id, color: '#888888' };
+    const col = locked ? '#C9C2B8' : st.color;
+    const art = locked
+      ? '<text x="32" y="42" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" font-family="system-ui, sans-serif">?</text>'
+      : (STICKER_ART[id] ? STICKER_ART[id](col) : `<text x="32" y="41" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="system-ui, sans-serif">${esc(st.name.charAt(0))}</text>`);
+    return `<svg viewBox="0 0 64 64" role="img" aria-label="${esc(locked ? '未入手' : st.name)}" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="29" fill="${col}" stroke="#1C1A22" stroke-width="3"/>${art}</svg>`;
+  }
+
+  function genreActions(g, withIntro) {
+    return `<div class="g-actions">
+      <button type="button" class="act" data-act="interest" data-g="${esc(g)}">＋ 気になる</button>
+      <button type="button" class="act" data-act="experience" data-g="${esc(g)}">体験した</button>
+      ${withIntro ? `<button type="button" class="act" data-act="introduce" data-g="${esc(g)}">友達に勧める</button>` : ''}
+    </div>`;
+  }
+  function refreshGenreUI() {
+    app.querySelectorAll('[data-act]').forEach(b => {
+      const s = profile.genres[b.dataset.g] || {};
+      if (b.dataset.act === 'interest') { b.textContent = s.interest ? '✓ 気になる' : '＋ 気になる'; b.classList.toggle('on', !!s.interest); b.disabled = !!s.interest; }
+      if (b.dataset.act === 'experience') { b.textContent = s.exp ? '✓ 体験した（' + s.exp + '回）' : '体験した'; b.classList.toggle('on', !!s.exp); }
+      if (b.dataset.act === 'introduce') b.classList.toggle('on', !!s.introduced);
+    });
+    app.querySelectorAll('[data-g-status]').forEach(el => {
+      const st = genreStatus(el.dataset.gStatus);
+      el.textContent = st.label;
+      el.className = 'gstat st-' + st.key;
+    });
+  }
+
+  app.addEventListener('click', e => {
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const g = b.dataset.g;
+    if (b.dataset.act === 'introduce') {
+      const text = `「${g}」おすすめだよ。いっしょに行ってみない？\n#${DATA.meta.hashtag}`;
+      copyText(text).then(ok => {
+        if (!ok) { toast('コピーできませんでした'); return; }
+        toast('紹介文をコピーしました');
+        track('introduce', g);
+        refreshGenreUI();
+      });
+      return;
+    }
+    track(b.dataset.act, g);
+    refreshGenreUI();
+  });
+
+  function subNav(active) {
+    const tabs = [['me', 'マイページ'], ['missions', 'ミッション'], ['genres', 'ジャンル図鑑'], ['shop', '交換所']];
+    return `<nav class="subnav" aria-label="マイページメニュー"><div class="inner">${tabs.map(([k, l]) =>
+      `<a href="#/${k}"${k === active ? ' class="on" aria-current="page"' : ''}>${l}</a>`).join('')}</div></nav>`;
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return (d.getMonth() + 1) + '/' + d.getDate();
+  }
+
+  // ---------- my page: views ----------
+  function profileText() {
+    const t = profile.type && TYPES[profile.type];
+    const exp = Object.keys(profile.genres).filter(g => profile.genres[g].exp > 0).length;
+    const title = currentTitle();
+    return `私のエンタメプロフィール\n${t ? profile.type + ' ' + t.name : 'タイプ未診断'}${title ? '／' + title : ''}\n体験ジャンル ${exp}・実績 ${profile.done.achievements.length}`;
+  }
+
+  function viewMe() {
+    const t = profile.type && TYPES[profile.type];
+    setTheme(t ? t.color : null);
+    const titles = ownedTitles();
+    const cur = currentTitle();
+    const skin = profile.owned.skins.includes(profile.equip.skin) ? profile.equip.skin : '';
+    const exp = Object.keys(profile.genres).filter(g => profile.genres[g].exp > 0).length;
+    const explore = exploreTitles();
+    const tag = DATA.meta.hashtag;
+    const pageUrl = /^https?:/.test(location.protocol) ? location.href.split('#')[0] : '';
+    const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(profileText()) + '&hashtags=' + encodeURIComponent(tag) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
+    const history = profile.earned.map(x => Object.assign({ sign: 1 }, x)).concat(profile.spent.map(x => Object.assign({ sign: -1 }, x)))
+      .sort((a, b) => b.ts - a.ts).slice(0, 10);
+
+    app.innerHTML = `${subNav('me')}
+      <div class="fade-in" data-page="me">
+        <section class="r-sec">
+          <div class="inner narrow">
+            <div class="pcard${skin ? ' skin-' + esc(skin) : ''}">
+              ${t ? `<div class="pcard-char">${charSVG(profile.type, { noHalo: true })}</div>` : '<div class="pcard-char empty">?</div>'}
+              <div>
+                <p class="pcard-title">${cur ? esc(cur) : '称号なし'}</p>
+                <p class="pcard-type">${t ? esc(profile.type + ' ' + t.name) : 'タイプ未診断'}</p>
+                <dl class="pcard-stats">
+                  <div><dt>ポイント</dt><dd>${balance()}</dd></div>
+                  <div><dt>体験ジャンル</dt><dd>${exp}</dd></div>
+                  <div><dt>実績</dt><dd>${profile.done.achievements.length}</dd></div>
+                </dl>
+                ${profile.owned.stickers.length ? `<div class="pcard-stickers">${profile.owned.stickers.map(id => stickerSVG(id)).join('')}</div>` : ''}
+              </div>
+            </div>
+            ${t ? '' : '<a class="btn block" href="#/quiz" data-start style="margin-top:24px">診断してタイプを登録</a>'}
+            <div class="share-row" style="margin-top:24px">
+              <button type="button" class="btn ghost no-arrow" data-share-profile>プロフィールをコピー</button>
+              <a class="btn x no-arrow" data-share-profile-x href="${esc(intent)}" target="_blank" rel="noopener noreferrer">𝕏 でシェア</a>
+            </div>
+            <p class="copied" data-copied role="status"></p>
+            <div class="field-row">
+              <label>称号
+                <select data-equip="title">${titles.length ? titles.map(x => `<option${x === cur ? ' selected' : ''}>${esc(x)}</option>`).join('') : '<option value="">まだありません</option>'}</select>
+              </label>
+              <label>着せ替え
+                <select data-equip="skin"><option value="">なし</option>${profile.owned.skins.map(id => `<option value="${esc(id)}"${id === skin ? ' selected' : ''}>${esc(skinName(id))}</option>`).join('')}</select>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="r-sec alt">
+          <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">EXPLORE</span>開拓タイプ</h2>
+            ${explore.length
+              ? `<div class="chips">${explore.map(x => `<span class="chip${x.level >= 3 ? ' lv3' : x.level >= 1 ? ' lv1' : ''}">${esc(x.label)}</span>`).join('')}</div>`
+              : '<p class="empty-note">ジャンル図鑑の「気になる」「体験した」で増えていきます。</p>'}
+          </div>
+        </section>
+
+        <section class="r-sec">
+          <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">BADGES</span>体験実績</h2>
+            <div class="badges">
+              ${(GAME.achievements || []).map(a => {
+                const on = profile.done.achievements.includes(a.id);
+                return `<div class="badge${on ? ' on' : ''}">
+                  <span class="medal">${on ? '★' : '?'}</span>
+                  <b>${esc(a.title)}</b>
+                  <small>${esc(a.desc)}</small>
+                  <span class="n">${achievementProgress(a)} / ${a.cond.count}</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section class="r-sec alt">
+          <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">STICKERS</span>ステッカー帳</h2>
+            <div class="sticker-book">
+              ${(GAME.stickers || []).map(st => {
+                const own = profile.owned.stickers.includes(st.id);
+                return `<figure>${stickerSVG(st.id, !own)}<figcaption>${own ? esc(st.name) : '？？？'}</figcaption></figure>`;
+              }).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section class="r-sec">
+          <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">HISTORY</span>ポイント履歴</h2>
+            ${history.length
+              ? `<ul class="ledger">${history.map(x => `<li><span>${esc(x.label)}</span><span class="p${x.sign < 0 ? ' minus' : ''}">${x.sign < 0 ? '−' : '+'}${x.pts}pt</span></li>`).join('')}</ul>`
+              : '<p class="empty-note">まだありません。</p>'}
+            <button type="button" class="back-link" data-reset>記録をリセット</button>
+          </div>
+        </section>
+      </div>`;
+
+    app.querySelector('[data-share-profile]').addEventListener('click', () => {
+      copyText(profileText() + '\n#' + tag + (pageUrl ? '\n' + pageUrl : '')).then(ok => {
+        app.querySelector('[data-copied]').textContent = ok ? 'コピーしました！' : 'コピーできませんでした';
+        if (ok) { track('shareProfile'); refreshMeStats(); }
+      });
+    });
+    app.querySelector('[data-share-profile-x]').addEventListener('click', () => { track('shareProfile'); refreshMeStats(); });
+    app.querySelectorAll('[data-equip]').forEach(sel => sel.addEventListener('change', () => {
+      profile.equip[sel.dataset.equip] = sel.value;
+      saveProfile();
+      viewMe();
+    }));
+    app.querySelector('[data-reset]').addEventListener('click', () => {
+      if (!confirm('ポイント・実績・ステッカーなど、この端末の記録をすべて消します。よろしいですか？')) return;
+      profile = blankProfile();
+      saveProfile();
+      updateHeader();
+      viewMe();
+    });
+  }
+  // シェアでポイントが入ったら、カードの数字だけ描き直す（コピー完了の表示は残す）
+  function refreshMeStats() {
+    const msg = app.querySelector('[data-copied]');
+    const keep = msg ? msg.textContent : '';
+    viewMe();
+    const m2 = app.querySelector('[data-copied]');
+    if (m2) m2.textContent = keep;
+  }
+
+  function viewMissions() {
+    setTheme(null);
+    const kinds = GAME.missionKinds || {};
+    const active = activeMissions();
+    const limitText = { once: '初回のみ', perGenre: 'ジャンルごと', daily: '1日1回', none: '毎回' };
+    app.innerHTML = `${subNav('missions')}
+      <div class="fade-in" data-page="missions">
+        <section class="r-sec">
+          <div class="inner narrow">
+            <p class="balance">${balance()}<small>pt</small></p>
+          </div>
+        </section>
+        ${Object.keys(kinds).map((kind, i) => {
+          const list = active.filter(m => m.kind === kind);
+          if (!list.length) return '';
+          return `<section class="r-sec${i % 2 ? '' : ' alt'}">
+            <div class="inner narrow">
+              <h2 class="r-h"><span class="kicker">${esc(kind.toUpperCase())}</span>${esc(kinds[kind])}</h2>
+              <ul class="missions">
+                ${list.map(m => {
+                  const n = missionProgress(m);
+                  const done = profile.done.missions.includes(m.id);
+                  return `<li class="mission${done ? ' done' : ''}">
+                    <div class="m-top"><b>${esc(m.title)}</b><span class="m-reward">${esc(rewardText(m.reward))}</span></div>
+                    ${m.partner ? `<small>${esc(m.partner)}</small>` : ''}
+                    ${m.desc ? `<small>${esc(m.desc)}</small>` : ''}
+                    <div class="m-prog"><i style="width:${(n / m.goal.count) * 100}%"></i></div>
+                    <small>${n} / ${m.goal.count}${m.to ? '　〜' + fmtDate(m.to) : ''}${done ? '　達成' : ''}</small>
+                  </li>`;
+                }).join('')}
+              </ul>
+            </div>
+          </section>`;
+        }).join('')}
+        <section class="r-sec">
+          <div class="inner narrow">
+            <h2 class="r-h"><span class="kicker">POINTS</span>ポイントのため方</h2>
+            <ul class="ledger">
+              ${Object.keys(GAME.pointRules || {}).map(k => {
+                const r = GAME.pointRules[k];
+                return `<li><span>${esc(r.label)}<small style="color:var(--muted)">（${esc(limitText[r.limit] || '毎回')}）</small></span><span class="p">+${r.points}pt</span></li>`;
+              }).join('')}
+              <li><span>ミッション・実績の達成</span><span class="p">ボーナス</span></li>
+            </ul>
+          </div>
+        </section>
+      </div>`;
+  }
+
+  function viewGenres() {
+    setTheme(null);
+    // ジャンルごとに、推薦しているタイプと理由を集める
+    const fits = {};
+    TYPE_ORDER.forEach(code => TYPES[code].genres.forEach(g => {
+      (fits[g.name] = fits[g.name] || []).push({ code: code, why: g.why });
+    }));
+    app.innerHTML = `${subNav('genres')}
+      <div class="fade-in" data-page="genres">
+        ${CATALOG.map((c, i) => `<section class="r-sec${i % 2 ? ' alt' : ''}">
+          <div class="inner narrow">
+            <h2 class="r-h">${esc(c.category)}</h2>
+            <div class="gbook">
+              ${c.genres.map(g => `<details class="grow" data-genre="${esc(g)}">
+                <summary><span>${esc(g)}</span><span data-g-status="${esc(g)}"></span></summary>
+                <div class="gbody">
+                  ${fits[g] ? `<ul>${fits[g].map(f => `<li><b>${esc(TYPES[f.code].name)}</b>${esc(f.why)}</li>`).join('')}</ul>` : ''}
+                  ${genreActions(g, true)}
+                </div>
+              </details>`).join('')}
+            </div>
+          </div>
+        </section>`).join('')}
+      </div>`;
+    app.querySelectorAll('details[data-genre]').forEach(d => d.addEventListener('toggle', () => {
+      if (!d.open) return;
+      track('view', d.dataset.genre);
+      refreshGenreUI();
+    }));
+    refreshGenreUI();
+  }
+
+  function shopOwned(item) {
+    if (item.kind === 'sticker') return profile.owned.stickers.includes(item.sticker);
+    if (item.kind === 'skin') return profile.owned.skins.includes(item.skin);
+    if (item.kind === 'title') return profile.owned.titles.includes(item.title);
+    return !!profile.owned.perks[item.id];
+  }
+  function shopArt(item) {
+    if (item.kind === 'sticker') return stickerSVG(item.sticker);
+    if (item.kind === 'skin') return '';
+    if (item.kind === 'title') return '称号';
+    return '特典';
+  }
+
+  function viewShop() {
+    setTheme(null);
+    const bal = balance();
+    app.innerHTML = `${subNav('shop')}
+      <div class="fade-in" data-page="shop">
+        <section class="r-sec">
+          <div class="inner narrow">
+            <p class="balance">${bal}<small>pt</small></p>
+          </div>
+        </section>
+        <section class="r-sec alt">
+          <div class="inner narrow">
+            <ul class="shop">
+              ${(GAME.shop || []).map(item => {
+                const own = shopOwned(item);
+                const code = profile.owned.perks[item.id];
+                return `<li class="shop-item">
+                  <div class="si-art${item.kind === 'skin' ? ' skin-' + esc(item.skin) : ''}">${shopArt(item)}</div>
+                  <div class="si-body">
+                    <b>${esc(item.name)}</b>
+                    ${item.desc ? `<small>${esc(item.desc)}</small>` : ''}
+                    <span class="si-cost">${item.cost}pt</span>
+                    ${code ? `<br><span class="si-code">${esc(code)}</span>` : ''}
+                  </div>
+                  <button type="button" class="btn small no-arrow" data-buy="${esc(item.id)}"${own || bal < item.cost ? ' disabled' : ''}>${own ? '交換済み' : '交換する'}</button>
+                </li>`;
+              }).join('')}
+            </ul>
+          </div>
+        </section>
+      </div>`;
+    app.querySelectorAll('[data-buy]').forEach(btn => btn.addEventListener('click', () => {
+      const item = (GAME.shop || []).find(x => x.id === btn.dataset.buy);
+      if (!item || shopOwned(item) || balance() < item.cost) return;
+      profile.spent.push({ k: 'shop', g: '', pts: item.cost, label: '交換：' + item.name, ts: Date.now() });
+      if (item.kind === 'sticker') profile.owned.stickers.push(item.sticker);
+      else if (item.kind === 'skin') { profile.owned.skins.push(item.skin); profile.equip.skin = item.skin; }
+      else if (item.kind === 'title') { profile.owned.titles.push(item.title); profile.equip.title = item.title; }
+      else profile.owned.perks[item.id] = 'DEMO-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+      saveProfile();
+      updateHeader();
+      toast(item.name + 'と交換しました');
+      viewShop();
+    }));
+  }
+
 
   // ---------- router ----------
   function route() {
@@ -1054,11 +1822,16 @@ img, svg { max-width: 100%; }
     else if (parts[0] === 'result') viewResult();
     else if (parts[0] === 'types' && parts[1]) viewTypeDetail(decodeURIComponent(parts[1]).toUpperCase());
     else if (parts[0] === 'types') viewTypes();
+    else if (parts[0] === 'me') viewMe();
+    else if (parts[0] === 'missions') viewMissions();
+    else if (parts[0] === 'genres') viewGenres();
+    else if (parts[0] === 'shop') viewShop();
     else viewTop();
     window.scrollTo(0, 0);
   }
 
   window.addEventListener('hashchange', route);
+  updateHeader();
   route();
 })();
 </script>
