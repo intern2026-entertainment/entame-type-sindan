@@ -929,6 +929,51 @@ body.intro-open { overflow: hidden; }
 .bt-colors { grid-column: 1 / -1; display: grid; gap: 6px; }
 .bt-l { font-size: 12px; font-weight: 800; }
 
+/* ---- プレゼンモード ---- */
+.spot { position: fixed; z-index: 90; pointer-events: none; border: 3px solid var(--brand-2); box-shadow: 0 0 0 200vmax rgba(14, 12, 18, .62); transition: top .3s ease, left .3s ease, width .3s ease, height .3s ease, opacity .2s ease; }
+.spot[hidden] { display: block !important; opacity: 0; }
+.pbar { position: fixed; left: 50%; bottom: 16px; z-index: 95; width: min(720px, calc(100% - 32px)); transform: translateX(-50%); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; background: var(--bg); color: var(--text); border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--brand); }
+.pbar button { display: inline-grid; place-items: center; font: inherit; color: inherit; background: var(--bg); border: 2px solid var(--line); cursor: pointer; }
+.pbar button .ic { width: 20px; height: 20px; }
+.pbar button:disabled { opacity: .3; cursor: default; }
+.pbar button:focus-visible { outline: 3px solid var(--brand-2); outline-offset: 2px; }
+.pb-nav { width: 48px; height: 48px; }
+.pb-nav.next { background: var(--brand); color: #FFFFFF; }
+.pb-main { min-width: 0; display: grid; gap: 2px; }
+.pb-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.pb-no { flex: none; font-size: 12px; font-weight: 900; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pb-title { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 17px; font-weight: 900; line-height: 1.3; }
+.pb-title .ic { flex: none; width: 20px; height: 20px; color: var(--brand); }
+.pb-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pb-cap { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.pb-tools { display: flex; gap: 6px; margin-left: auto; flex: none; }
+.pb-tools button { width: 32px; height: 32px; }
+.pb-tools button .ic { width: 18px; height: 18px; }
+.pb-tools button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.pb-dots { display: flex; gap: 3px; margin-top: 4px; }
+.pb-dots i { flex: 1; height: 3px; background: var(--hair); }
+.pb-dots i.on { background: var(--brand); }
+.pb-list { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); max-height: min(60vh, 520px); overflow-y: auto; margin: 0; padding: 6px; list-style: none; background: var(--bg); border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--line); }
+.pb-list button { display: grid; grid-template-columns: 28px 22px minmax(0, 1fr); align-items: center; gap: 8px; width: 100%; padding: 8px 10px; text-align: left; border: 0; font-size: 14px; font-weight: 800; }
+.pb-list button:hover { background: var(--bg-2); }
+.pb-list button[aria-current="step"] { background: var(--text); color: var(--bg); }
+.pb-list small { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pb-list button[aria-current="step"] small { color: inherit; }
+.pb-list .ic { width: 18px; height: 18px; }
+.pb-list .grp { padding: 10px 10px 4px; font-size: 11px; font-weight: 900; letter-spacing: .12em; color: var(--muted); }
+body.presenting { padding-bottom: 140px; }
+body.presenting .tabbar { display: none; }
+body.presenting .toasts { z-index: 96; bottom: 150px; }
+body.presenting .demo-chip { background: var(--text); color: var(--bg); }
+@media (max-width: 599px) {
+  .pbar { left: 0; bottom: 0; width: 100%; transform: none; gap: 8px; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); border-width: 2px 0 0; box-shadow: none; }
+  .pb-nav { width: 44px; height: 44px; }
+  .pb-title { font-size: 15px; }
+  .pb-cap { font-size: 12px; }
+  body.presenting { padding-bottom: 130px; }
+}
+@media (prefers-reduced-motion: reduce) { .spot { transition: none; } }
+
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -1095,6 +1140,11 @@ body.intro-open { overflow: hidden; }
     leaf: '<path d="M5 19C5 10 11 5 20 5c0 9-5 14-14 14z"/><path d="M5 19l9-9"/>',
     link: '<path d="M10 14l4-4"/><path d="M8.5 11.5L6 14a3.5 3.5 0 0 0 5 5l2.5-2.5M15.5 12.5L18 10a3.5 3.5 0 0 0-5-5l-2.5 2.5"/>',
     star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',
+    screen: '<rect x="3" y="4" width="18" height="12"/><path d="M12 16v4M8 20h8"/>',
+    prev: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    list: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h1M4 12h1M4 18h1" stroke-width="3"/>',
+    focus: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><circle cx="12" cy="12" r="3"/>',
+    close: '<path d="M6 6l12 12M18 6L6 18"/>',
     home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>'
   };
   function icon(name, cls) {
@@ -1226,7 +1276,7 @@ body.intro-open { overflow: hidden; }
     setTheme(null);
     const m = DATA.meta;
     app.innerHTML = `
-      <section class="hero fade-in">
+      <section class="hero fade-in" data-focus="hero">
         <div class="inner">
           <span class="hero-badge">${icon('clock')}<b>${esc(m.duration)}</b>で診断</span>
           <h1>その「好き」、<br><span class="mark">別のジャンル</span>でも<br><span class="red">楽しめる。</span></h1>
@@ -1251,7 +1301,7 @@ body.intro-open { overflow: hidden; }
         </div>
       </section>
 
-      <section class="sec alt">
+      <section class="sec alt" data-focus="axes">
         <div class="inner">
           <span class="kicker">${icon('compass')}3 AXES</span>
           <h2 class="sec-h">3つの軸の組み合わせで、<br>8タイプ</h2>
@@ -1290,7 +1340,7 @@ body.intro-open { overflow: hidden; }
     const total = QUESTIONS.length;
     const picked = state.answers[i];
     app.innerHTML = `
-      <section class="quiz">
+      <section class="quiz" data-focus="quiz">
         <div class="inner narrow fade-in" style="animation-duration:.25s">
           <div class="progress-row">
             <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${i}" aria-label="進捗"><i style="width:${(i / total) * 100}%"></i></div>
@@ -1377,7 +1427,7 @@ body.intro-open { overflow: hidden; }
     const t = TYPES[code];
     const eventsCount = Math.min(3, Math.max(2, t.events.length));
     return `
-      <section class="r-hero">
+      <section class="r-hero" data-focus="type">
         <div class="inner narrow">
           <p class="r-eyebrow">${result ? 'あなたの楽しみ方タイプは' : 'TYPE ' + esc(code)}</p>
           <h1 class="type-title">${esc(t.name)}</h1>
@@ -1387,7 +1437,7 @@ body.intro-open { overflow: hidden; }
         </div>
       </section>
 
-      <section class="r-sec">
+      <section class="r-sec" data-focus="balance">
         <div class="inner narrow">
           <h2 class="r-h"><span class="kicker">${icon('compass')}BALANCE</span>${result ? 'あなたの3軸の傾き' : '3軸の傾き'}</h2>
           ${axisBlock(result, code)}
@@ -1405,7 +1455,7 @@ body.intro-open { overflow: hidden; }
         </div>
       </section>
 
-      <section class="r-sec">
+      <section class="r-sec" data-focus="next">
         <div class="inner narrow">
           <h2 class="r-h"><span class="kicker">${icon('arrow')}NEXT GENRE</span>同じ楽しみ方ができるジャンル</h2>
           <ol class="genres">
@@ -1420,7 +1470,7 @@ body.intro-open { overflow: hidden; }
         </div>
       </section>
 
-      <section class="r-sec alt">
+      <section class="r-sec alt" data-focus="events">
         <div class="inner narrow">
           <h2 class="r-h"><span class="kicker">${icon('ticket')}PICK UP</span>おすすめ公演</h2>
           <div class="events">
@@ -1461,7 +1511,7 @@ body.intro-open { overflow: hidden; }
     app.innerHTML = `
       <div class="fade-in" data-result="${esc(code)}">
         ${typeBody(code, state.result)}
-        <section class="r-sec">
+        <section class="r-sec" data-focus="share">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('share')}SHARE</span>結果をシェア</h2>
             <div class="share-row">
@@ -1847,7 +1897,7 @@ body.intro-open { overflow: hidden; }
 
     app.innerHTML = `${subNav('me')}
       <div class="fade-in" data-page="me"${profile.oshi ? ` style="--oshi:${esc(profile.oshi)};--oshi-fg:${onColor(profile.oshi)}"` : ''}>
-        <section class="r-sec">
+        <section class="r-sec" data-focus="profile">
           <div class="inner narrow">
             <div class="pcard${skin ? ' skin-' + esc(skin) : ''}">
               ${t ? `<div class="pcard-char">${charSVG(profile.type, { noHalo: true })}</div>` : '<div class="pcard-char empty">?</div>'}
@@ -1879,7 +1929,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec alt">
+        <section class="r-sec alt" data-focus="oshi">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('heart')}OSHI COLOR</span>推しカラー</h2>
             <div data-oshi-colors>${swatchesHTML(profile.oshi, { noneLabel: 'なし' })}</div>
@@ -1893,7 +1943,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec">
+        <section class="r-sec" data-focus="explore">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('compass')}EXPLORE</span>開拓タイプ</h2>
             ${explore.length
@@ -1902,7 +1952,7 @@ body.intro-open { overflow: hidden; }
           </div>
         </section>
 
-        <section class="r-sec alt">
+        <section class="r-sec alt" data-focus="badges">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('medal')}BADGES</span>体験実績</h2>
             <div class="badges">
@@ -1990,7 +2040,7 @@ body.intro-open { overflow: hidden; }
         ${Object.keys(kinds).map((kind, i) => {
           const list = active.filter(m => m.kind === kind);
           if (!list.length) return '';
-          return `<section class="r-sec${i % 2 ? '' : ' alt'}">
+          return `<section class="r-sec${i % 2 ? '' : ' alt'}" data-focus="mission-${esc(kind)}">
             <div class="inner narrow">
               <h2 class="r-h"><span class="kicker">${icon(KIND_ICON[kind] || 'flag')}${esc(kind.toUpperCase())}</span>${esc(kinds[kind])}</h2>
               <ul class="missions">
@@ -2031,7 +2081,7 @@ body.intro-open { overflow: hidden; }
     setTheme(null);
     if (!CATALOG[genreCat]) genreCat = 0;
     app.innerHTML = `${subNav('genres')}
-      <div class="fade-in" data-page="genres">
+      <div class="fade-in" data-page="genres" data-focus="genres">
         <div class="cat-tabs-wrap">
           <div class="inner narrow cat-tabs" role="tablist" aria-label="大ジャンル">
             ${CATALOG.map((c, i) => `<button type="button" class="cat-tab" role="tab" data-cat-tab="${i}" aria-controls="cat-panel">
@@ -2103,7 +2153,7 @@ body.intro-open { overflow: hidden; }
             <p class="balance">${bal}<small>pt</small></p>
           </div>
         </section>
-        <section class="r-sec alt">
+        <section class="r-sec alt" data-focus="shop">
           <div class="inner narrow">
             <ul class="shop">
               ${(GAME.shop || []).map(item => {
@@ -2264,7 +2314,7 @@ body.intro-open { overflow: hidden; }
     const title = currentTitle();
     app.innerHTML = `${subNav('book')}
       <div class="fade-in" data-page="book">
-        <section class="r-sec book-sec">
+        <section class="r-sec book-sec" data-focus="book">
           <div class="inner narrow">
             <div class="book-bar">
               <div class="seg" role="group" aria-label="モード">
@@ -2661,6 +2711,7 @@ body.intro-open { overflow: hidden; }
   let introBox = null;
   function openIntro() {
     if (introBox) return;
+    stopPresent();
     const saved = hasSaved();
     const shows = Object.keys(profile.shows).length;
     const feats = [
@@ -2695,12 +2746,14 @@ body.intro-open { overflow: hidden; }
           ${saved ? choice('continue', 'resume', '前回の続き', `${balance()}pt・公演${shows}件`, true) : ''}
           ${choice('fresh', 'play', 'はじめから', saved ? '記録を消して、何もない状態から' : '何もない状態から', !saved)}
           ${choice('random', 'shuffle', '途中から（ランダム）', '何公演か行った状態から', false)}
+          ${choice('present', 'screen', 'プレゼンで見せる', '途中からの状態で、機能を順に案内', false)}
         </div>
       </div>`;
     document.body.appendChild(introBox);
     document.body.classList.add('intro-open');
     ['.site-head', '#app', '.site-foot', '.tabbar', '.toasts'].forEach(sel => { const el = document.querySelector(sel); if (el) el.inert = true; });
     introBox.querySelectorAll('[data-start-mode]').forEach(b => b.addEventListener('click', () => {
+      if (b.dataset.startMode === 'present') { closeIntro(); startPresent(true); return; }
       startWith(b.dataset.startMode);
       closeIntro();
       route();
@@ -2721,6 +2774,176 @@ body.intro-open { overflow: hidden; }
     if (!e.target.closest('[data-intro]')) return;
     e.preventDefault();
     openIntro();
+  });
+
+  // ---------- プレゼンモード ----------
+  // ?present で開くと説明を出さずにこのモードから始まる。← → / PageUp PageDown で移動、F でフォーカス切替、Esc で終了
+  const PRESENT_STEPS = [
+    { grp: '診断', ic: 'home', title: 'トップ', cap: '9問・1分半で、楽しみ方を8タイプに', hash: '#/', focus: 'hero' },
+    { grp: '診断', ic: 'compass', title: '3つの軸', cap: '場・人・対象の組み合わせでタイプが決まる', hash: '#/', focus: 'axes' },
+    { grp: '診断', ic: 'clock', title: '質問', cap: '2択を9問。選ぶと次へ進む', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz() },
+    { grp: '診断結果', ic: 'star', title: 'タイプ', cap: 'タイプ名とキャラクター', hash: '#/result', focus: 'type', prep: ensureResult },
+    { grp: '診断結果', ic: 'compass', title: '3軸の傾き', cap: '回答の比率をそのまま表示', hash: '#/result', focus: 'balance', prep: ensureResult },
+    { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult },
+    { grp: '診断結果', ic: 'ticket', title: 'おすすめ公演', cap: '「行った！」で体験として記録', hash: '#/result', focus: 'events', prep: ensureResult },
+    { grp: '診断結果', ic: 'share', title: 'シェア', cap: 'コピーとXへの投稿', hash: '#/result', focus: 'share', prep: ensureResult },
+    { grp: 'マイページ', ic: 'user', title: 'プロフィール', cap: 'タイプ・称号・ポイント', hash: '#/me', focus: 'profile' },
+    { grp: 'マイページ', ic: 'compass', title: '開拓タイプ', cap: '体験したジャンルの数で称号が変わる', hash: '#/me', focus: 'explore' },
+    { grp: 'マイページ', ic: 'medal', title: '体験実績', cap: '条件を満たすとバッジを獲得', hash: '#/me', focus: 'badges' },
+    { grp: 'マイページ', ic: 'heart', title: '推しカラー', cap: 'バッジやシールの色を変えられる', hash: '#/me', focus: 'oshi' },
+    { grp: 'マイページ', ic: 'flag', title: 'ミッション', cap: '達成するとポイント', hash: '#/missions', focus: 'missions' },
+    { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres' },
+    { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop' },
+    { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book' }
+  ];
+  const present = { on: false, i: 0, spot: true, bar: null, box: null, raf: 0, target: null, seq: 0 };
+
+  // 結果画面を出すために、回答がなければプロフィールのタイプで9問を埋める
+  function ensureResult() {
+    if (state.result && isComplete()) return;
+    const code = profile.type || pick(TYPE_ORDER);
+    state.answers = QUESTIONS.map(q => code.includes(q.a.value) ? q.a.value : q.b.value);
+    state.index = QUESTIONS.length - 1;
+    state.result = computeResult(state.answers);
+  }
+  function presentFocusEl(step) {
+    if (step.focus === 'missions') return app.querySelector('[data-focus^="mission-"]');
+    return app.querySelector('[data-focus="' + step.focus + '"]');
+  }
+  function placeSpot() {
+    present.raf = 0;
+    if (!present.on) return;
+    const el = present.target;
+    if (!present.spot || !el || !el.isConnected) { present.box.hidden = true; return; }
+    const r = el.getBoundingClientRect();
+    const top = document.querySelector('.site-head').getBoundingClientRect().bottom;
+    const bottom = present.bar.getBoundingClientRect().top;
+    const pad = 6;
+    const y1 = Math.max(r.top - pad, top + 4), y2 = Math.min(r.bottom + pad, bottom - 8);
+    const x1 = Math.max(r.left - pad, 4), x2 = Math.min(r.right + pad, innerWidth - 4);
+    present.box.hidden = y2 - y1 < 24;
+    Object.assign(present.box.style, { top: y1 + 'px', left: x1 + 'px', width: (x2 - x1) + 'px', height: (y2 - y1) + 'px' });
+  }
+  function queueSpot() { if (present.on && !present.raf) present.raf = requestAnimationFrame(placeSpot); }
+  function scrollToFocus(el) {
+    const head = document.querySelector('.site-head').getBoundingClientRect().bottom;
+    const room = present.bar.getBoundingClientRect().top - head;
+    const r = el.getBoundingClientRect();
+    const off = r.height + 24 < room ? (room - r.height) / 2 : 16;
+    window.scrollBy({ top: r.top - head - off, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  function renderBar() {
+    const s = PRESENT_STEPS[present.i], n = PRESENT_STEPS.length;
+    present.bar.innerHTML = `
+      <button type="button" class="pb-nav" data-pb="prev" aria-label="前へ"${present.i ? '' : ' disabled'}>${icon('prev')}</button>
+      <div class="pb-main">
+        <div class="pb-top">
+          <span class="pb-no">${present.i + 1} / ${n}</span>
+          <span class="pb-tools">
+            <button type="button" data-pb="list" aria-label="一覧" aria-expanded="false">${icon('list')}</button>
+            <button type="button" data-pb="spot" aria-label="フォーカス" aria-pressed="${present.spot}">${icon('focus')}</button>
+            <button type="button" data-pb="exit" aria-label="プレゼンを終了">${icon('close')}</button>
+          </span>
+        </div>
+        <b class="pb-title">${icon(s.ic)}<span>${esc(s.title)}</span></b>
+        <p class="pb-cap">${esc(s.cap)}</p>
+        <div class="pb-dots" aria-hidden="true">${PRESENT_STEPS.map((x, k) => `<i${k <= present.i ? ' class="on"' : ''}></i>`).join('')}</div>
+      </div>
+      <button type="button" class="pb-nav next" data-pb="next" aria-label="次へ"${present.i < n - 1 ? '' : ' disabled'}>${icon('arrow')}</button>`;
+  }
+  function toggleList(force) {
+    let list = present.bar.querySelector('.pb-list');
+    const open = force === undefined ? !list : force;
+    if (list) list.remove();
+    present.bar.querySelector('[data-pb="list"]').setAttribute('aria-expanded', String(open));
+    if (!open) return;
+    let grp = '';
+    list = document.createElement('ul');
+    list.className = 'pb-list';
+    list.innerHTML = PRESENT_STEPS.map((s, k) => {
+      const head = s.grp !== grp ? `<li class="grp">${esc(grp = s.grp)}</li>` : '';
+      return `${head}<li><button type="button" data-pb-go="${k}"${k === present.i ? ' aria-current="step"' : ''}><small>${k + 1}</small>${icon(s.ic)}${esc(s.title)}</button></li>`;
+    }).join('');
+    present.bar.appendChild(list);
+    const cur = list.querySelector('[aria-current]');
+    if (cur) cur.scrollIntoView({ block: 'nearest' });
+  }
+  function goStep(i) {
+    i = Math.max(0, Math.min(PRESENT_STEPS.length - 1, i));
+    present.i = i;
+    const seq = ++present.seq;
+    const s = PRESENT_STEPS[i];
+    if (s.prep) s.prep();
+    renderBar();
+    present.target = null;
+    present.box.hidden = true;
+    const show = () => {
+      if (seq !== present.seq) return;
+      const el = presentFocusEl(s);
+      present.target = el;
+      if (el) scrollToFocus(el);
+      queueSpot();
+    };
+    if (location.hash === s.hash || (s.hash === '#/' && !location.hash)) {
+      if (s.focus === 'quiz' || !presentFocusEl(s)) route();
+      setTimeout(show, 30);
+    } else {
+      window.addEventListener('hashchange', () => setTimeout(show, 30), { once: true });
+      location.hash = s.hash;
+    }
+  }
+  function startPresent(fromIntro) {
+    if (fromIntro || !Object.keys(profile.shows).length) { startWith('random'); }
+    present.on = true;
+    document.body.classList.add('presenting');
+    present.box = document.createElement('div');
+    present.box.className = 'spot';
+    present.box.hidden = true;
+    present.bar = document.createElement('div');
+    present.bar.className = 'pbar';
+    present.bar.setAttribute('role', 'region');
+    present.bar.setAttribute('aria-label', 'プレゼン操作');
+    document.body.append(present.box, present.bar);
+    present.bar.addEventListener('click', e => {
+      const go = e.target.closest('[data-pb-go]');
+      if (go) { toggleList(false); goStep(+go.dataset.pbGo); return; }
+      const b = e.target.closest('[data-pb]');
+      if (!b) return;
+      const a = b.dataset.pb;
+      if (a === 'prev') goStep(present.i - 1);
+      if (a === 'next') goStep(present.i + 1);
+      if (a === 'list') toggleList();
+      if (a === 'spot') { present.spot = !present.spot; b.setAttribute('aria-pressed', String(present.spot)); queueSpot(); }
+      if (a === 'exit') stopPresent();
+    });
+    goStep(0);
+  }
+  function stopPresent() {
+    if (!present.on) return;
+    present.on = false;
+    present.seq++;
+    present.bar.remove();
+    present.box.remove();
+    present.bar = present.box = present.target = null;
+    document.body.classList.remove('presenting');
+    if (/[?&]present\b/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash);
+  }
+  window.addEventListener('scroll', queueSpot, { passive: true });
+  window.addEventListener('resize', queueSpot);
+  // 画面の中身が変わったら（図鑑のタブ切替など）枠を合わせ直す
+  new MutationObserver(() => {
+    if (!present.on) return;
+    if (present.target && !present.target.isConnected) present.target = presentFocusEl(PRESENT_STEPS[present.i]);
+    queueSpot();
+  }).observe(app, { childList: true, subtree: true });
+  document.addEventListener('keydown', e => {
+    if (!present.on || introBox || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+    const k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown') { e.preventDefault(); goStep(present.i + 1); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); goStep(present.i - 1); }
+    else if (k === 'f' || k === 'F') { present.spot = !present.spot; const b = present.bar.querySelector('[data-pb="spot"]'); if (b) b.setAttribute('aria-pressed', String(present.spot)); queueSpot(); }
+    else if (k === 'Escape') { if (present.bar.querySelector('.pb-list')) toggleList(false); else stopPresent(); }
   });
 
   // ---------- router ----------
@@ -2746,8 +2969,9 @@ body.intro-open { overflow: hidden; }
   document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon)));
   updateHeader();
   route();
-  // 開くたび（再読み込みのたび）にデモの説明を出す
-  openIntro();
+  // 開くたび（再読み込みのたび）にデモの説明を出す。?present ならプレゼンモードで開く
+  if (/[?&]present\b/.test(location.search)) startPresent(false);
+  else openIntro();
 })();
 </script>
 </body>
