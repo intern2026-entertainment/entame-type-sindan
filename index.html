@@ -17,7 +17,8 @@
     "title": "エンタメタイプ診断",
     "lead": "楽しみ方を8タイプで診断。次に行くジャンルが見つかる。",
     "hashtag": "エンタメタイプ診断",
-    "duration": "9問・1分半"
+    "duration": "9問・1分半",
+    "feedbackUrl": "https://github.com/intern2026-entertainment/entame-type-sindan/issues/new"
   },
 
   "axes": [
@@ -983,6 +984,55 @@ body.embed [data-intro] { display: none; }
 html.embed { scrollbar-width: none; }
 html.embed::-webkit-scrollbar { display: none; }
 
+/* ---- 修正コメント ---- */
+.cm-fab { position: fixed; right: 16px; bottom: calc(16px + var(--tabbar-h, 0px) + env(safe-area-inset-bottom)); z-index: 60; display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; font: inherit; font-size: 13px; font-weight: 900; color: var(--bg); background: var(--text); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--brand-2); cursor: pointer; }
+.cm-fab .ic { width: 20px; height: 20px; }
+.cm-fab b { min-width: 20px; padding: 1px 5px; font-size: 12px; text-align: center; color: var(--text); background: var(--brand-2); }
+.cm-pin { position: absolute; z-index: 55; display: grid; place-items: center; width: 28px; height: 28px; margin: -28px 0 0 -4px; padding: 0; font: inherit; font-size: 12px; font-weight: 900; color: #1C1A22; background: var(--brand-2); border: 2px solid var(--line); border-radius: 50% 50% 50% 0; cursor: pointer; }
+.cm-pin.done { background: var(--bg-2); color: var(--muted); }
+.cm-pin.sel { outline: 3px solid var(--brand); outline-offset: 2px; }
+body.cm-picking #app, body.cm-picking #app * { cursor: crosshair !important; }
+.cm-hover { outline: 3px dashed var(--brand) !important; outline-offset: -3px; }
+.cm-hint { position: fixed; left: 50%; top: 72px; z-index: 70; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100% - 32px); padding: 8px 8px 8px 14px; font-size: 14px; font-weight: 900; color: var(--bg); background: var(--text); border: 2px solid var(--line); }
+.cm-hint .ic { width: 18px; height: 18px; }
+.cm-hint button { font: inherit; font-size: 12px; padding: 6px 10px; color: var(--text); background: var(--bg); border: 0; cursor: pointer; }
+.cm-sheet { position: fixed; right: 16px; bottom: calc(72px + var(--tabbar-h, 0px) + env(safe-area-inset-bottom)); z-index: 75; display: flex; flex-direction: column; width: min(400px, calc(100% - 32px)); max-height: min(70vh, 620px); color: var(--text); background: var(--bg); border: 2px solid var(--line); box-shadow: 6px 6px 0 var(--line); }
+.cm-head { display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 14px; border-bottom: 2px solid var(--line); }
+.cm-head h2 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 15px; font-weight: 900; }
+.cm-head h2 .ic { width: 18px; height: 18px; color: var(--brand); }
+.cm-head .x { margin-left: auto; }
+.cm-body { overflow-y: auto; padding: 12px 14px 14px; display: grid; gap: 12px; }
+.cm-sheet button.ib { display: inline-grid; place-items: center; width: 32px; height: 32px; padding: 0; font: inherit; color: inherit; background: var(--bg); border: 2px solid var(--line); cursor: pointer; }
+.cm-sheet .ib .ic { width: 18px; height: 18px; }
+.cm-where { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; font-weight: 800; color: var(--muted); }
+.cm-where .ic { flex: none; width: 14px; height: 14px; }
+.cm-kinds { display: flex; gap: 6px; }
+.cm-kinds button { padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 900; color: var(--text); background: var(--bg); border: 2px solid var(--line); cursor: pointer; }
+.cm-kinds button[aria-pressed="true"] { color: var(--bg); background: var(--text); }
+.cm-sheet textarea { width: 100%; min-height: 96px; padding: 10px; font: inherit; font-size: 16px; line-height: 1.5; color: var(--text); background: var(--bg); border: 2px solid var(--line); resize: vertical; }
+.cm-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.cm-acts button, .cm-acts a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; font: inherit; font-size: 13px; font-weight: 900; text-decoration: none; color: var(--text); background: var(--bg); border: 2px solid var(--line); cursor: pointer; }
+.cm-acts .ic { width: 16px; height: 16px; }
+.cm-acts .pri { color: #FFFFFF; background: var(--brand); }
+.cm-acts .end { margin-left: auto; }
+.cm-text { margin: 0; font-size: 15px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cm-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.cm-list .grp { padding: 8px 0 4px; font-size: 11px; font-weight: 900; letter-spacing: .12em; color: var(--muted); }
+.cm-list button { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 2px 10px; width: 100%; padding: 10px 0; text-align: left; font: inherit; color: var(--text); background: none; border: 0; border-top: 1px solid var(--hair); cursor: pointer; }
+.cm-list .no { grid-row: span 2; display: grid; place-items: center; width: 26px; height: 26px; font-size: 12px; font-weight: 900; color: #1C1A22; background: var(--brand-2); border: 2px solid var(--line); }
+.cm-list .done .no { color: var(--muted); background: var(--bg-2); }
+.cm-list .done .t { text-decoration: line-through; color: var(--muted); }
+.cm-list .t { font-size: 14px; line-height: 1.45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-list small { font-size: 11px; color: var(--muted); }
+.cm-empty { margin: 0; font-size: 13px; color: var(--muted); }
+.cm-tag { display: inline-block; margin-right: 6px; padding: 0 5px; font-size: 11px; font-weight: 900; color: var(--bg); background: var(--text); }
+body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.embed .cm-fab, body.embed .cm-pin { display: none; }
+@media (max-width: 599px) {
+  .cm-sheet { left: 0; right: 0; bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom)); width: 100%; max-height: 75dvh; border-width: 2px 0; box-shadow: 0 -6px 0 rgba(0, 0, 0, .12); }
+  .cm-fab { padding: 0 12px; }
+  .cm-hint { top: 64px; }
+}
+
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -1154,6 +1204,8 @@ html.embed::-webkit-scrollbar { display: none; }
     list: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h1M4 12h1M4 18h1" stroke-width="3"/>',
     focus: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><circle cx="12" cy="12" r="3"/>',
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
+    upload: '<path d="M12 15V4M7 9l5-5 5 5"/><path d="M5 20h14"/>',
+    pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
     home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>'
   };
   function icon(name, cls) {
@@ -3009,6 +3061,288 @@ html.embed::-webkit-scrollbar { display: none; }
     presentKey(e.key);
   });
 
+  // ---------- 修正コメント ----------
+  // デモへの修正コメントを、置いた場所（画面と区画）といっしょにこの端末に保存する。
+  // 共有はMarkdownのコピー／JSONの書き出しと読み込み／GitHubのIssue作成で行う
+  const CM_KEY = 'entame-type-comments-v1';
+  const CM_KINDS = ['修正', '提案', '質問'];
+  const PAGE_LABEL = { top: 'トップ', quiz: '質問', result: '診断結果', types: '8タイプ一覧', me: 'マイページ', missions: 'ミッション', genres: 'ジャンル図鑑', shop: '交換所', book: 'プロフ帳' };
+  const FOCUS_LABEL = {};
+  PRESENT_STEPS.forEach(st => { FOCUS_LABEL[st.focus] = st.title; });
+  Object.assign(FOCUS_LABEL, { quiz: '質問', share: 'シェア' });
+  const cm = { list: [], picking: false, sheet: null, hint: null, hover: null, pins: [], sel: null, raf: 0, kind: CM_KINDS[0] };
+  try { cm.list = JSON.parse(localStorage.getItem(CM_KEY)) || []; } catch (e) { cm.list = []; }
+  function cmSave() { try { localStorage.setItem(CM_KEY, JSON.stringify(cm.list)); } catch (e) { /* 保存できなくても画面上は使える */ } cmFab(); }
+  function cmRoute() { return location.hash.replace(/^#/, '') || '/'; }
+  function cmPage(r) { return PAGE_LABEL[r.split('/').filter(Boolean)[0] || 'top'] || r; }
+  function cmNo(c) { return cm.list.indexOf(c) + 1; }
+
+  // 置いた場所：data-focus の区画 → 区画（section）の順番 → 画面全体、に対する相対位置
+  function cmAnchorOf(el) {
+    const f = el.closest('#app [data-focus]');
+    if (f) return { focus: f.dataset.focus, el: f };
+    const secs = [...app.querySelectorAll('section')];
+    const sec = el.closest('#app section');
+    if (sec) return { sec: secs.indexOf(sec), el: sec };
+    return { el: app };
+  }
+  function cmResolve(c) {
+    if (c.focus) return app.querySelector('[data-focus="' + c.focus + '"]');
+    if (c.sec >= 0) return app.querySelectorAll('section')[c.sec] || null;
+    return app;
+  }
+  function cmArea(c, el) {
+    if (c.focus) return FOCUS_LABEL[c.focus] || c.focus;
+    const h = el && el.querySelector('h1, h2');
+    return h ? h.textContent.replace(/\s+/g, ' ').trim().slice(0, 24) : '';
+  }
+  function cmWhere(c) { const p = cmPage(c.route); return p + (c.area && c.area !== p ? '：' + c.area : ''); }
+
+  function cmFab() {
+    let fab = document.querySelector('.cm-fab');
+    if (!fab) {
+      fab = document.createElement('button');
+      fab.type = 'button';
+      fab.className = 'cm-fab';
+      fab.setAttribute('aria-label', '修正コメント');
+      fab.addEventListener('click', () => (cm.sheet && cm.sheet.dataset.view === 'list' ? cmClose() : cmOpenList()));
+      document.body.appendChild(fab);
+    }
+    const open = cm.list.filter(c => !c.done).length;
+    fab.innerHTML = `${icon('chat')}コメント<b>${open}</b>`;
+  }
+
+  function cmPlacePins() {
+    cm.raf = 0;
+    cm.pins.forEach(p => p.remove());
+    cm.pins = [];
+    if (cm.picking) return;
+    const r = cmRoute();
+    cm.list.forEach(c => {
+      if (c.route !== r) return;
+      const el = cmResolve(c);
+      if (!el) return;
+      const b = el.getBoundingClientRect();
+      if (!b.width || !b.height) return;
+      const pin = document.createElement('button');
+      pin.type = 'button';
+      pin.className = 'cm-pin' + (c.done ? ' done' : '') + (cm.sel === c.id ? ' sel' : '');
+      pin.textContent = cmNo(c);
+      pin.setAttribute('aria-label', 'コメント ' + cmNo(c));
+      pin.style.left = (b.left + scrollX + Math.min(c.fx, 0.96) * b.width) + 'px';
+      pin.style.top = (b.top + scrollY + Math.min(c.fy, 1) * b.height) + 'px';
+      pin.addEventListener('click', e => { e.stopPropagation(); cmOpenOne(c); });
+      document.body.appendChild(pin);
+      cm.pins.push(pin);
+    });
+  }
+  function cmQueue() { if (!cm.raf) cm.raf = requestAnimationFrame(cmPlacePins); }
+
+  function cmSheet(view, title, ic, body) {
+    cmClose(true);
+    const el = document.createElement('div');
+    el.className = 'cm-sheet';
+    el.dataset.view = view;
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-label', title);
+    el.innerHTML = `<div class="cm-head"><h2>${icon(ic)}${esc(title)}</h2><button type="button" class="ib x" data-cm="close" aria-label="閉じる">${icon('close')}</button></div><div class="cm-body">${body}</div>`;
+    el.querySelector('[data-cm="close"]').addEventListener('click', () => cmClose());
+    document.body.appendChild(el);
+    cm.sheet = el;
+    return el;
+  }
+  function cmClose(keepSel) {
+    if (cm.sheet) { cm.sheet.remove(); cm.sheet = null; }
+    if (!keepSel && cm.sel) { cm.sel = null; cmQueue(); }
+  }
+
+  function cmMarkdown() {
+    const open = cm.list.filter(c => !c.done).length;
+    const lines = [`# 修正コメント（${DATA.meta.title} デモ）`, '', `${cm.list.length}件（未対応 ${open}件）・${fmtDate(Date.now())} 書き出し`, ''];
+    cm.list.forEach((c, i) => {
+      lines.push(`## ${i + 1}. [${c.kind}] ${cmWhere(c)}${c.done ? '（対応済み）' : ''}`, '', c.text, '',
+        `- 画面：#${c.route}（幅${c.vw}px${c.vw < 600 ? '・スマホ' : '・PC'}）`, `- 日時：${fmtDate(c.ts)}`, '');
+    });
+    return lines.join('\n');
+  }
+  function fmtDate(ts) {
+    const d = new Date(ts), p = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function cmIssueUrl() {
+    let body = cmMarkdown().split('\n').slice(2).join('\n');
+    if (body.length > 6000) body = body.slice(0, 6000) + '\n\n（長いため途中まで。残りはJSONで共有）';
+    return DATA.meta.feedbackUrl + '?title=' + encodeURIComponent('デモの修正コメント（' + cm.list.filter(c => !c.done).length + '件）') + '&body=' + encodeURIComponent(body);
+  }
+
+  function cmOpenList() {
+    let grp = '';
+    const items = cm.list.map(c => {
+      const g = cmPage(c.route);
+      const head = g !== grp ? `<li class="grp">${esc(grp = g)}</li>` : '';
+      return `${head}<li class="${c.done ? 'done' : ''}"><button type="button" data-cm-go="${esc(c.id)}"><span class="no">${cmNo(c)}</span><span class="t"><span class="cm-tag">${esc(c.kind)}</span>${esc(c.text)}</span><small>${esc(c.area || g)}${c.done ? '・対応済み' : ''}</small></button></li>`;
+    }).join('');
+    const el = cmSheet('list', '修正コメント', 'chat', `
+      <div class="cm-acts"><button type="button" class="pri" data-cm="add">${icon('pin')}場所を選んで追加</button></div>
+      ${cm.list.length ? `<ul class="cm-list">${items}</ul>` : '<p class="cm-empty">まだコメントはありません。</p>'}
+      <div class="cm-acts">
+        <button type="button" data-cm="copy"${cm.list.length ? '' : ' disabled'}>${icon('copy')}コピー</button>
+        <a href="${esc(cm.list.length ? cmIssueUrl() : DATA.meta.feedbackUrl)}" target="_blank" rel="noopener" data-cm="issue">${icon('send')}Issueにする</a>
+        <button type="button" data-cm="export"${cm.list.length ? '' : ' disabled'}>${icon('download')}JSON保存</button>
+        <button type="button" data-cm="import">${icon('upload')}読み込み</button>
+        <input type="file" accept="application/json,.json" data-cm-file hidden>
+      </div>`);
+    el.querySelector('[data-cm="add"]').addEventListener('click', cmStartPick);
+    el.querySelectorAll('[data-cm-go]').forEach(b => b.addEventListener('click', () => {
+      const c = cm.list.find(x => x.id === b.dataset.cmGo);
+      if (!c) return;
+      const show = () => { cmOpenOne(c); const t = cmResolve(c); if (t) t.scrollIntoView({ block: 'center' }); cmQueue(); };
+      if (c.route === cmRoute()) show();
+      else { window.addEventListener('hashchange', () => setTimeout(show, 30), { once: true }); location.hash = '#' + c.route; }
+    }));
+    el.querySelector('[data-cm="copy"]').addEventListener('click', () => copyText(cmMarkdown()).then(ok => toast(ok ? 'Markdownでコピーしました' : 'コピーできませんでした', ok ? 'copy' : 'info')));
+    el.querySelector('[data-cm="export"]').addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify({ comments: cm.list }, null, 2)], { type: 'application/json' }));
+      a.download = 'demo-comments.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    });
+    const file = el.querySelector('[data-cm-file]');
+    el.querySelector('[data-cm="import"]').addEventListener('click', () => file.click());
+    file.addEventListener('change', () => {
+      const f = file.files[0];
+      if (!f) return;
+      f.text().then(t => {
+        const got = (JSON.parse(t).comments || []).filter(c => c && c.id && c.route && typeof c.text === 'string');
+        let n = 0;
+        got.forEach(c => { if (!cm.list.some(x => x.id === c.id)) { cm.list.push(c); n++; } });
+        cm.list.sort((a, b) => a.ts - b.ts);
+        cmSave();
+        cmQueue();
+        cmOpenList();
+        toast(n + '件を読み込みました', 'upload');
+      }).catch(() => toast('読み込めませんでした', 'info'));
+    });
+  }
+
+  function cmForm(c, where, onSave) {
+    cm.kind = c ? c.kind : CM_KINDS[0];
+    const el = cmSheet('form', c ? 'コメント ' + cmNo(c) + 'を編集' : 'コメントを追加', 'pen', `
+      <p class="cm-where">${icon('pin')}${esc(where)}</p>
+      <div class="cm-kinds" role="group" aria-label="種類">${CM_KINDS.map(k => `<button type="button" data-cm-kind="${k}" aria-pressed="${k === cm.kind}">${k}</button>`).join('')}</div>
+      <textarea data-cm-text aria-label="コメント" placeholder="気になったところ、直してほしいところ">${c ? esc(c.text) : ''}</textarea>
+      <div class="cm-acts"><button type="button" class="pri" data-cm="save">${icon('check')}保存</button><button type="button" data-cm="cancel">キャンセル</button></div>`);
+    el.querySelectorAll('[data-cm-kind]').forEach(b => b.addEventListener('click', () => {
+      cm.kind = b.dataset.cmKind;
+      el.querySelectorAll('[data-cm-kind]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    }));
+    const ta = el.querySelector('[data-cm-text]');
+    el.querySelector('[data-cm="save"]').addEventListener('click', () => {
+      const text = ta.value.trim();
+      if (!text) { ta.focus(); return; }
+      onSave(text, cm.kind);
+    });
+    el.querySelector('[data-cm="cancel"]').addEventListener('click', () => (c ? cmOpenOne(c) : cmClose()));
+    ta.focus({ preventScroll: true });
+  }
+
+  function cmOpenOne(c) {
+    cm.sel = c.id;
+    cmQueue();
+    const el = cmSheet('one', 'コメント ' + cmNo(c), 'chat', `
+      <p class="cm-where">${icon('pin')}${esc(cmWhere(c))}・${esc(fmtDate(c.ts))}</p>
+      <p class="cm-text"><span class="cm-tag">${esc(c.kind)}</span>${esc(c.text)}</p>
+      <div class="cm-acts">
+        <button type="button" data-cm="done">${icon(c.done ? 'refresh' : 'check')}${c.done ? '未対応に戻す' : '対応済みにする'}</button>
+        <button type="button" data-cm="edit">${icon('pen')}編集</button>
+        <button type="button" class="end" data-cm="del">${icon('trash')}削除</button>
+      </div>
+      <div class="cm-acts"><button type="button" data-cm="list">${icon('list')}一覧</button></div>`);
+    el.querySelector('[data-cm="done"]').addEventListener('click', () => { c.done = !c.done; cmSave(); cmOpenOne(c); });
+    el.querySelector('[data-cm="edit"]').addEventListener('click', () => cmForm(c, cmWhere(c), (text, kind) => { c.text = text; c.kind = kind; cmSave(); cmOpenOne(c); }));
+    el.querySelector('[data-cm="del"]').addEventListener('click', () => {
+      if (!confirm('コメント ' + cmNo(c) + ' を削除しますか？')) return;
+      cm.list = cm.list.filter(x => x !== c);
+      cmSave();
+      cmClose();
+      cmQueue();
+    });
+    el.querySelector('[data-cm="list"]').addEventListener('click', cmOpenList);
+  }
+
+  function cmStartPick() {
+    cmClose();
+    cm.picking = true;
+    document.body.classList.add('cm-picking');
+    cm.hint = document.createElement('div');
+    cm.hint.className = 'cm-hint';
+    cm.hint.innerHTML = `${icon('pin')}<span>コメントする場所をタップ</span><button type="button" data-cm="cancel-pick">やめる</button>`;
+    cm.hint.querySelector('button').addEventListener('click', cmStopPick);
+    document.body.appendChild(cm.hint);
+    cmQueue();
+  }
+  function cmStopPick() {
+    cm.picking = false;
+    document.body.classList.remove('cm-picking');
+    if (cm.hint) { cm.hint.remove(); cm.hint = null; }
+    if (cm.hover) { cm.hover.classList.remove('cm-hover'); cm.hover = null; }
+    cmQueue();
+  }
+  // 場所選び中は、画面のボタンやリンクを押しても反応させない
+  document.addEventListener('click', e => {
+    if (!cm.picking) return;
+    if (e.target.closest('.cm-hint')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!e.target.closest('#app')) return;
+    const a = cmAnchorOf(e.target);
+    const b = a.el.getBoundingClientRect();
+    const draft = {
+      id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      route: cmRoute(), focus: a.focus || '', sec: a.sec === undefined ? -1 : a.sec,
+      fx: Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)), fy: Math.max(0, Math.min(1, (e.clientY - b.top) / b.height)),
+      vw: innerWidth
+    };
+    draft.area = cmArea(draft, a.el);
+    cmStopPick();
+    cmForm(null, cmWhere(draft), (text, kind) => {
+      draft.text = text;
+      draft.kind = kind;
+      draft.done = false;
+      draft.ts = Date.now();
+      cm.list.push(draft);
+      cmSave();
+      cmOpenOne(draft);
+      toast('コメントを保存しました', 'chat');
+    });
+  }, true);
+  document.addEventListener('mouseover', e => {
+    if (!cm.picking) return;
+    const t = e.target.closest('#app') ? cmAnchorOf(e.target).el : null;
+    if (t === cm.hover) return;
+    if (cm.hover) cm.hover.classList.remove('cm-hover');
+    cm.hover = t && t !== app ? t : null;
+    if (cm.hover) cm.hover.classList.add('cm-hover');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (cm.picking) cmStopPick();
+    else if (cm.sheet && !e.target.closest('textarea')) cmClose();
+  });
+  window.addEventListener('resize', cmQueue);
+  window.addEventListener('hashchange', () => { cm.sel = null; if (cm.sheet && cm.sheet.dataset.view !== 'list') cmClose(); cmQueue(); });
+  new MutationObserver(cmQueue).observe(app, { childList: true, subtree: true, attributes: true, attributeFilter: ['open', 'class'] });
+  // 他のタブで書いたコメントも反映する
+  window.addEventListener('storage', e => {
+    if (e.key !== CM_KEY) return;
+    try { cm.list = JSON.parse(e.newValue) || []; } catch (err) { cm.list = []; }
+    cmFab();
+    cmQueue();
+  });
+
   // ---------- router ----------
   function route() {
     const h = location.hash.replace(/^#/, '') || '/';
@@ -3034,6 +3368,7 @@ html.embed::-webkit-scrollbar { display: none; }
   route();
   // 開くたび（再読み込みのたび）にデモの説明を出す。?present ならプレゼンモードで開く
   if (EMBED) { document.documentElement.classList.add('embed'); document.body.classList.add('embed'); }
+  cmFab();
   if (/[?&]present\b/.test(location.search)) startPresent(false);
   else openIntro();
 })();
