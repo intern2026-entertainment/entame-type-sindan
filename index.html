@@ -1038,8 +1038,17 @@ body.cm-picking #app { touch-action: none; user-select: none; -webkit-user-selec
 .cm-list small { font-size: 11px; color: var(--muted); }
 .cm-empty { margin: 0; font-size: 13px; color: var(--muted); }
 .cm-tag { display: inline-block; margin-right: 6px; padding: 0 5px; font-size: 11px; font-weight: 900; color: var(--bg); background: var(--text); }
-body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.embed .cm-fab, body.embed .cm-pin { display: none; }
+body.presenting .cm-fab, body.intro-open .cm-fab, body.embed .cm-fab { display: none; }
+/* プレゼン中：コメントは操作バーから。暗くした画面より上に出す */
+body.presenting .cm-sheet, body.presenting .cm-hint { z-index: 97; }
+body.presenting .cm-sheet { bottom: calc(var(--pbar-h, 110px) + 28px); }
+body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { display: none; }
+.pb-tools [data-pb="cm"] { position: relative; }
+.pb-cnt { position: absolute; top: -8px; right: -8px; min-width: 18px; padding: 1px 4px; font-size: 10px; font-style: normal; font-weight: 900; line-height: 14px; text-align: center; color: #1C1A22; background: var(--brand-2); border: 2px solid var(--line); }
+.cm-switch { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; cursor: pointer; }
+.cm-switch input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); }
 @media (max-width: 599px) {
+  body.presenting .cm-sheet { bottom: var(--pbar-h, 110px); }
   .cm-sheet { left: 0; right: 0; bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom)); width: 100%; max-height: 75dvh; border-width: 2px 0; box-shadow: 0 -6px 0 rgba(0, 0, 0, .12); }
   .cm-fab { padding: 0 12px; }
   .cm-hint { top: 64px; }
@@ -2911,6 +2920,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   }
   function renderBar() {
     const s = PRESENT_STEPS[present.i], n = PRESENT_STEPS.length;
+    requestAnimationFrame(() => { if (present.bar) document.body.style.setProperty('--pbar-h', present.bar.offsetHeight + 'px'); });
     present.bar.innerHTML = `
       <button type="button" class="pb-nav" data-pb="prev" aria-label="前へ"${present.i ? '' : ' disabled'}>${icon('prev')}</button>
       <div class="pb-main">
@@ -2918,6 +2928,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
           <span class="pb-no">${present.i + 1} / ${n}</span>
           <span class="pb-tools">
             <button type="button" data-pb="list" aria-label="一覧" aria-expanded="false">${icon('list')}</button>
+            <button type="button" data-pb="cm" aria-label="修正コメント">${icon('chat')}${cmOpenCount() ? `<i class="pb-cnt">${cmOpenCount()}</i>` : ''}</button>
             <button type="button" data-pb="spot" aria-label="フォーカス" aria-pressed="${present.spot}">${icon('focus')}</button>
             <button type="button" data-pb="exit" aria-label="プレゼンを終了">${icon('close')}</button>
           </span>
@@ -2991,6 +3002,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
       if (a === 'prev') goStep(present.i - 1);
       if (a === 'next') goStep(present.i + 1);
       if (a === 'list') toggleList();
+      if (a === 'cm') { toggleList(false); if (cm.sheet && cm.sheet.dataset.view === 'list') cmClose(); else cmOpenList(); }
       if (a === 'spot') { present.spot = !present.spot; b.setAttribute('aria-pressed', String(present.spot)); queueSpot(); }
       if (a === 'exit') stopPresent();
     });
@@ -3054,6 +3066,8 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   }).observe(app, { childList: true, subtree: true });
   function presentKey(k) {
     if (!present.on) return;
+    // コメントを書いている・描いているあいだは、プレゼンのキー操作をしない
+    if (cm.picking || (cm.sheet && k === 'Escape')) return;
     if (k === 'ArrowRight' || k === 'PageDown') goStep(present.i + 1);
     else if (k === 'ArrowLeft' || k === 'PageUp') goStep(present.i - 1);
     else if (k === 'f' || k === 'F') { present.spot = !present.spot; const b = present.bar.querySelector('[data-pb="spot"]'); if (b) b.setAttribute('aria-pressed', String(present.spot)); queueSpot(); }
@@ -3084,6 +3098,15 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   Object.assign(FOCUS_LABEL, { quiz: '質問', share: 'シェア' });
   const cm = { list: [], picking: false, sheet: null, hint: null, hover: null, pins: [], sel: null, raf: 0, kind: CM_KINDS[0] };
   try { cm.list = JSON.parse(localStorage.getItem(CM_KEY)) || []; } catch (e) { cm.list = []; }
+  // プレゼン中にピンと線を出すか（準備中は出し、本番では消す、の切り替え用）
+  const CM_PINS_KEY = 'entame-type-comments-pins';
+  try { cm.showPins = localStorage.getItem(CM_PINS_KEY) !== 'off'; } catch (e) { cm.showPins = true; }
+  function cmOpenCount() { return cm.list.filter(c => !c.done).length; }
+  function cmSetPins(on) {
+    cm.showPins = on;
+    try { localStorage.setItem(CM_PINS_KEY, on ? 'on' : 'off'); } catch (e) { /* 保存できなくても切り替えは効く */ }
+    document.body.classList.toggle('cm-pins-off', !on);
+  }
   function cmSave() { try { localStorage.setItem(CM_KEY, JSON.stringify(cm.list)); } catch (e) { /* 保存できなくても画面上は使える */ } cmFab(); }
   function cmRoute() { return location.hash.replace(/^#/, '') || '/'; }
   function cmPage(r) { return PAGE_LABEL[r.split('/').filter(Boolean)[0] || 'top'] || r; }
@@ -3124,6 +3147,8 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     }
     const open = cm.list.filter(c => !c.done).length;
     fab.innerHTML = `${icon('chat')}コメント<b>${open}</b>`;
+    const pb = document.querySelector('.pbar [data-pb="cm"]');
+    if (pb) pb.innerHTML = icon('chat') + (open ? `<i class="pb-cnt">${open}</i>` : '');
   }
 
   function cmPlacePins() {
@@ -3220,6 +3245,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     }).join('');
     const el = cmSheet('list', '修正コメント', 'chat', `
       <div class="cm-acts"><button type="button" class="pri" data-cm="add">${icon('pen')}描く・場所を選んで追加</button></div>
+      ${present.on ? `<label class="cm-switch"><input type="checkbox" data-cm-pins${cm.showPins ? ' checked' : ''}>プレゼン中もピンと線を表示</label>` : ''}
       ${cm.list.length ? `<ul class="cm-list">${items}</ul>` : '<p class="cm-empty">まだコメントはありません。</p>'}
       <div class="cm-acts">
         <button type="button" data-cm="copy"${cm.list.length ? '' : ' disabled'}>${icon('copy')}コピー</button>
@@ -3229,6 +3255,8 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
         <input type="file" accept="application/json,.json" data-cm-file hidden>
       </div>`);
     el.querySelector('[data-cm="add"]').addEventListener('click', cmStartPick);
+    const pinSw = el.querySelector('[data-cm-pins]');
+    if (pinSw) pinSw.addEventListener('change', () => cmSetPins(pinSw.checked));
     el.querySelectorAll('[data-cm-go]').forEach(b => b.addEventListener('click', () => {
       const c = cm.list.find(x => x.id === b.dataset.cmGo);
       if (!c) return;
@@ -3492,6 +3520,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   // 開くたび（再読み込みのたび）にデモの説明を出す。?present ならプレゼンモードで開く
   if (EMBED) { document.documentElement.classList.add('embed'); document.body.classList.add('embed'); }
   cmFab();
+  document.body.classList.toggle('cm-pins-off', !cm.showPins);
   if (/[?&]present\b/.test(location.search)) startPresent(false);
   else openIntro();
 })();
