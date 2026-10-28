@@ -993,6 +993,18 @@ html.embed::-webkit-scrollbar { display: none; }
 .cm-pin.sel { outline: 3px solid var(--brand); outline-offset: 2px; }
 body.cm-picking #app, body.cm-picking #app * { cursor: crosshair !important; }
 .cm-hover { outline: 3px dashed var(--brand) !important; outline-offset: -3px; }
+body.cm-picking .cm-fab { display: none; }
+body.cm-picking #app { touch-action: none; user-select: none; -webkit-user-select: none; }
+.cm-ink { position: absolute; z-index: 54; overflow: visible; pointer-events: none; }
+.cm-ink polyline { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.cm-ink .halo { stroke: #FFFFFF; stroke-width: 8; opacity: .85; }
+.cm-ink .line { stroke: #E03131; stroke-width: 4; }
+.cm-ink.done .line { stroke: #868E96; }
+.cm-ink.sel .line { stroke: #F76707; }
+.cm-hint button:disabled { opacity: .4; cursor: default; }
+.cm-hint .pri { color: #FFFFFF; background: var(--brand); }
+.cm-draw-tag { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; font-size: 11px; font-weight: 900; color: #E03131; }
+.cm-draw-tag .ic { width: 13px; height: 13px; }
 .cm-hint { position: fixed; left: 50%; top: 72px; z-index: 70; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100% - 32px); padding: 8px 8px 8px 14px; font-size: 14px; font-weight: 900; color: var(--bg); background: var(--text); border: 2px solid var(--line); }
 .cm-hint .ic { width: 18px; height: 18px; }
 .cm-hint button { font: inherit; font-size: 12px; padding: 6px 10px; color: var(--text); background: var(--bg); border: 0; cursor: pointer; }
@@ -3091,6 +3103,8 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     if (c.sec >= 0) return app.querySelectorAll('section')[c.sec] || null;
     return app;
   }
+  // 位置の基準は区画の中身（中央寄せの .inner）。画面幅が変わっても指した物からずれにくい
+  function cmBox(el) { return (el && el.querySelector(':scope > .inner')) || el; }
   function cmArea(c, el) {
     if (c.focus) return FOCUS_LABEL[c.focus] || c.focus;
     const h = el && el.querySelector('h1, h2');
@@ -3118,12 +3132,20 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     cm.pins = [];
     if (cm.picking) return;
     const r = cmRoute();
-    cm.list.forEach(c => {
+    cm.list.concat(cm.draft ? [cm.draft] : []).forEach(c => {
       if (c.route !== r) return;
       const el = cmResolve(c);
       if (!el) return;
-      const b = el.getBoundingClientRect();
+      const b = cmBox(el).getBoundingClientRect();
       if (!b.width || !b.height) return;
+      if (c.paths && c.paths.length) {
+        const ink = cmInkSVG(c.paths, b.left + scrollX, b.top + scrollY, b.width, b.height);
+        ink.classList.toggle('done', !!c.done);
+        ink.classList.toggle('sel', cm.sel === c.id);
+        document.body.appendChild(ink);
+        cm.pins.push(ink);
+      }
+      if (c === cm.draft) return;
       const pin = document.createElement('button');
       pin.type = 'button';
       pin.className = 'cm-pin' + (c.done ? ' done' : '') + (cm.sel === c.id ? ' sel' : '');
@@ -3137,6 +3159,18 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     });
   }
   function cmQueue() { if (!cm.raf) cm.raf = requestAnimationFrame(cmPlacePins); }
+  // 線は区画に対する比率（0〜1、はみ出しあり）で持ち、区画の大きさに合わせて伸び縮みさせる
+  function cmInkSVG(paths, x, y, w, h) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'cm-ink');
+    svg.setAttribute('viewBox', '0 0 1000 1000');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    Object.assign(svg.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+    const pts = p => p.map(q => (q[0] * 1000).toFixed(1) + ',' + (q[1] * 1000).toFixed(1)).join(' ');
+    svg.innerHTML = paths.map(p => `<polyline class="halo" points="${pts(p)}"/>`).join('') + paths.map(p => `<polyline class="line" points="${pts(p)}"/>`).join('');
+    return svg;
+  }
 
   function cmSheet(view, title, ic, body) {
     cmClose(true);
@@ -3153,6 +3187,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   }
   function cmClose(keepSel) {
     if (cm.sheet) { cm.sheet.remove(); cm.sheet = null; }
+    if (cm.draft) { cm.draft = null; cmQueue(); }
     if (!keepSel && cm.sel) { cm.sel = null; cmQueue(); }
   }
 
@@ -3161,6 +3196,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     const lines = [`# 修正コメント（${DATA.meta.title} デモ）`, '', `${cm.list.length}件（未対応 ${open}件）・${fmtDate(Date.now())} 書き出し`, ''];
     cm.list.forEach((c, i) => {
       lines.push(`## ${i + 1}. [${c.kind}] ${cmWhere(c)}${c.done ? '（対応済み）' : ''}`, '', c.text, '',
+        ...(c.paths && c.paths.length ? ['- 手描きの線あり（デモ画面で表示）'] : []),
         `- 画面：#${c.route}（幅${c.vw}px${c.vw < 600 ? '・スマホ' : '・PC'}）`, `- 日時：${fmtDate(c.ts)}`, '');
     });
     return lines.join('\n');
@@ -3180,10 +3216,10 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     const items = cm.list.map(c => {
       const g = cmPage(c.route);
       const head = g !== grp ? `<li class="grp">${esc(grp = g)}</li>` : '';
-      return `${head}<li class="${c.done ? 'done' : ''}"><button type="button" data-cm-go="${esc(c.id)}"><span class="no">${cmNo(c)}</span><span class="t"><span class="cm-tag">${esc(c.kind)}</span>${esc(c.text)}</span><small>${esc(c.area || g)}${c.done ? '・対応済み' : ''}</small></button></li>`;
+      return `${head}<li class="${c.done ? 'done' : ''}"><button type="button" data-cm-go="${esc(c.id)}"><span class="no">${cmNo(c)}</span><span class="t"><span class="cm-tag">${esc(c.kind)}</span>${esc(c.text)}</span><small>${esc(c.area || g)}${c.paths && c.paths.length ? '・手描き' : ''}${c.done ? '・対応済み' : ''}</small></button></li>`;
     }).join('');
     const el = cmSheet('list', '修正コメント', 'chat', `
-      <div class="cm-acts"><button type="button" class="pri" data-cm="add">${icon('pin')}場所を選んで追加</button></div>
+      <div class="cm-acts"><button type="button" class="pri" data-cm="add">${icon('pen')}描く・場所を選んで追加</button></div>
       ${cm.list.length ? `<ul class="cm-list">${items}</ul>` : '<p class="cm-empty">まだコメントはありません。</p>'}
       <div class="cm-acts">
         <button type="button" data-cm="copy"${cm.list.length ? '' : ' disabled'}>${icon('copy')}コピー</button>
@@ -3253,7 +3289,7 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
     cm.sel = c.id;
     cmQueue();
     const el = cmSheet('one', 'コメント ' + cmNo(c), 'chat', `
-      <p class="cm-where">${icon('pin')}${esc(cmWhere(c))}・${esc(fmtDate(c.ts))}</p>
+      <p class="cm-where">${icon('pin')}${esc(cmWhere(c))}・${esc(fmtDate(c.ts))}${c.paths && c.paths.length ? `<span class="cm-draw-tag">${icon('pen')}手描き</span>` : ''}</p>
       <p class="cm-text"><span class="cm-tag">${esc(c.kind)}</span>${esc(c.text)}</p>
       <div class="cm-acts">
         <button type="button" data-cm="done">${icon(c.done ? 'refresh' : 'check')}${c.done ? '未対応に戻す' : '対応済みにする'}</button>
@@ -3276,39 +3312,67 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
   function cmStartPick() {
     cmClose();
     cm.picking = true;
+    cm.strokes = [];
+    cm.anchor = null;
     document.body.classList.add('cm-picking');
     cm.hint = document.createElement('div');
     cm.hint.className = 'cm-hint';
-    cm.hint.innerHTML = `${icon('pin')}<span>コメントする場所をタップ</span><button type="button" data-cm="cancel-pick">やめる</button>`;
-    cm.hint.querySelector('button').addEventListener('click', cmStopPick);
     document.body.appendChild(cm.hint);
+    cmHint();
     cmQueue();
+  }
+  function cmHint() {
+    const n = cm.strokes.length;
+    cm.hint.innerHTML = `${icon('pen')}<span>${n ? '描けたら「次へ」' : 'なぞって描く・タップでピン'}</span>
+      <button type="button" data-cm-pick="undo"${n ? '' : ' disabled'}>戻す</button>
+      <button type="button" class="pri" data-cm-pick="next"${n ? '' : ' disabled'}>次へ</button>
+      <button type="button" data-cm-pick="cancel">やめる</button>`;
   }
   function cmStopPick() {
     cm.picking = false;
+    cm.strokes = [];
+    cm.anchor = null;
+    cm.drawing = null;
+    if (cm.live) { cm.live.remove(); cm.live = null; }
     document.body.classList.remove('cm-picking');
     if (cm.hint) { cm.hint.remove(); cm.hint = null; }
     if (cm.hover) { cm.hover.classList.remove('cm-hover'); cm.hover = null; }
     cmQueue();
   }
-  // 場所選び中は、画面のボタンやリンクを押しても反応させない
-  document.addEventListener('click', e => {
-    if (!cm.picking) return;
-    if (e.target.closest('.cm-hint')) return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (!e.target.closest('#app')) return;
-    const a = cmAnchorOf(e.target);
-    const b = a.el.getBoundingClientRect();
+  // 描いている途中の線（ページ座標）
+  function cmLive() {
+    if (!cm.live) {
+      cm.live = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      cm.live.setAttribute('class', 'cm-ink');
+      cm.live.setAttribute('aria-hidden', 'true');
+      Object.assign(cm.live.style, { left: '0px', top: '0px' });
+      document.body.appendChild(cm.live);
+    }
+    const de = document.documentElement;
+    cm.live.setAttribute('width', de.scrollWidth);
+    cm.live.setAttribute('height', de.scrollHeight);
+    const all = cm.strokes.concat(cm.drawing ? [cm.drawing.pts] : []);
+    const pts = p => p.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' ');
+    cm.live.innerHTML = all.map(p => `<polyline class="halo" points="${pts(p)}"/>`).join('') + all.map(p => `<polyline class="line" points="${pts(p)}"/>`).join('');
+  }
+  // 描いた線（またはタップした点）から下書きを作り、本文の入力へ
+  function cmFinishPick(tap) {
+    const a = cm.anchor;
+    const b = cmBox(a.el).getBoundingClientRect();
+    const ox = b.left + scrollX, oy = b.top + scrollY;
+    const nx = x => +((x - ox) / b.width).toFixed(4), ny = y => +((y - oy) / b.height).toFixed(4);
+    const first = tap || cm.strokes[0][0];
     const draft = {
       id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       route: cmRoute(), focus: a.focus || '', sec: a.sec === undefined ? -1 : a.sec,
-      fx: Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)), fy: Math.max(0, Math.min(1, (e.clientY - b.top) / b.height)),
+      fx: Math.max(0, Math.min(1, nx(first[0]))), fy: Math.max(0, Math.min(1, ny(first[1]))),
       vw: innerWidth
     };
+    if (!tap) draft.paths = cm.strokes.map(p => p.map(q => [nx(q[0]), ny(q[1])]));
     draft.area = cmArea(draft, a.el);
     cmStopPick();
     cmForm(null, cmWhere(draft), (text, kind) => {
+      cm.draft = null;
       draft.text = text;
       draft.kind = kind;
       draft.done = false;
@@ -3318,6 +3382,65 @@ body.presenting .cm-fab, body.presenting .cm-pin, body.intro-open .cm-fab, body.
       cmOpenOne(draft);
       toast('コメントを保存しました', 'chat');
     });
+    if (draft.paths) { cm.draft = draft; cmQueue(); }
+  }
+  document.addEventListener('pointerdown', e => {
+    if (!cm.picking || e.button > 0) return;
+    if (e.target.closest('.cm-hint')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!e.target.closest('#app')) return;
+    // 指を離した通知が届かなかった線は、ここで確定させる
+    if (cm.drawing) cmPointerEnd({ pointerId: cm.drawing.id });
+    if (!cm.picking) return;
+    if (!cm.anchor) cm.anchor = cmAnchorOf(e.target);
+    const x = e.clientX + scrollX, y = e.clientY + scrollY;
+    cm.drawing = { id: e.pointerId, pts: [[x, y]], far: 0 };
+    cmLive();
+  }, true);
+  document.addEventListener('pointermove', e => {
+    const d = cm.drawing;
+    if (!cm.picking || !d || e.pointerId !== d.id) return;
+    e.preventDefault();
+    const x = e.clientX + scrollX, y = e.clientY + scrollY;
+    const last = d.pts[d.pts.length - 1];
+    if (Math.hypot(x - last[0], y - last[1]) < 2) return;
+    d.pts.push([x, y]);
+    d.far = Math.max(d.far, Math.hypot(x - d.pts[0][0], y - d.pts[0][1]));
+    cmLive();
+  }, true);
+  function cmPointerEnd(e) {
+    const d = cm.drawing;
+    if (!cm.picking || !d || e.pointerId !== d.id) return;
+    cm.drawing = null;
+    if (d.far >= 8) {
+      // 長い線は点を間引いて保存する
+      const step = Math.max(1, Math.floor(d.pts.length / 120));
+      cm.strokes.push(d.pts.filter((p, i) => i % step === 0 || i === d.pts.length - 1));
+      cmLive();
+      cmHint();
+    } else if (!cm.strokes.length) {
+      cmFinishPick(d.pts[0]);
+    } else {
+      cmLive();
+    }
+  }
+  document.addEventListener('pointerup', cmPointerEnd, true);
+  document.addEventListener('pointercancel', cmPointerEnd, true);
+  // 場所選び中は、画面のボタンやリンクを押しても反応させない
+  document.addEventListener('click', e => {
+    if (!cm.picking) return;
+    const pb = e.target.closest('[data-cm-pick]');
+    if (pb) {
+      const a = pb.dataset.cmPick;
+      if (a === 'undo') { cm.strokes.pop(); if (!cm.strokes.length) cm.anchor = null; cmLive(); cmHint(); }
+      if (a === 'next' && cm.strokes.length) cmFinishPick(null);
+      if (a === 'cancel') cmStopPick();
+      return;
+    }
+    if (e.target.closest('.cm-hint')) return;
+    e.preventDefault();
+    e.stopPropagation();
   }, true);
   document.addEventListener('mouseover', e => {
     if (!cm.picking) return;
