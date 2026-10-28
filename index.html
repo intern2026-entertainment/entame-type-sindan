@@ -263,13 +263,13 @@
   "typeOrder": ["LIE", "LSE", "LSF", "LIF", "WIF", "WIE", "WSE", "WSF"],
 
   "genreCatalog": [
-    { "category": "音楽", "genres": ["邦楽", "洋楽", "フェスティバル", "ジャズ", "ディナーショー"] },
-    { "category": "演劇", "genres": ["演劇", "ミュージカル・ショー", "バレエ・ダンス", "パフォーマンス", "歌舞伎・古典芸能", "寄席・お笑い"] },
-    { "category": "スポーツ", "genres": ["野球", "サッカー", "ラグビー", "バスケットボール", "バレーボール", "ソフトボール", "プロレス", "格闘技", "ボクシング", "相撲", "フィギュアスケート", "モータースポーツ", "ゴルフ"] },
-    { "category": "クラシック", "genres": ["オーケストラ", "器楽・室内楽", "オペラ・声楽", "合唱", "吹奏楽"] },
-    { "category": "イベント・アート", "genres": ["アート", "子ども向け・ファミリー", "サーカス", "祭り・花火大会", "学園祭"] },
-    { "category": "映画", "genres": ["舞台挨拶", "ライブビューイング"] },
-    { "category": "アニメ", "genres": ["アニメ・声優・ゲーム", "2.5次元舞台"] }
+    { "category": "音楽", "url": "https://t.pia.jp/music/", "genres": ["邦楽", "洋楽", "フェスティバル", "ジャズ", "ディナーショー"] },
+    { "category": "演劇", "url": "https://t.pia.jp/stage/", "genres": ["演劇", "ミュージカル・ショー", "バレエ・ダンス", "パフォーマンス", "歌舞伎・古典芸能", "寄席・お笑い"] },
+    { "category": "スポーツ", "url": "https://t.pia.jp/sports/", "genres": ["野球", "サッカー", "ラグビー", "バスケットボール", "バレーボール", "ソフトボール", "プロレス", "格闘技", "ボクシング", "相撲", "フィギュアスケート", "モータースポーツ", "ゴルフ"] },
+    { "category": "クラシック", "url": "https://t.pia.jp/classic/", "genres": ["オーケストラ", "器楽・室内楽", "オペラ・声楽", "合唱", "吹奏楽"] },
+    { "category": "イベント・アート", "url": "https://t.pia.jp/event/", "genres": ["アート", "子ども向け・ファミリー", "サーカス", "祭り・花火大会", "学園祭"] },
+    { "category": "映画", "url": "https://t.pia.jp/cinema/", "genres": ["舞台挨拶", "ライブビューイング"] },
+    { "category": "アニメ", "url": "https://t.pia.jp/anime/", "genres": ["アニメ・声優・ゲーム", "2.5次元舞台"] }
   ],
 
   "game": {
@@ -787,7 +787,9 @@ img, svg { max-width: 100%; }
 .cat-panel-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
 .cat-panel-h .r-h { margin: 0; }
 .cat-prog { flex: none; font-size: 13px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
-.event .ev-act { grid-column: 1 / -1; margin-top: 8px; }
+.event .ev-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.act.ticket { text-decoration: none; color: #FFFFFF; background: var(--brand); }
+.act.ticket .ic:last-child { width: 14px; height: 14px; }
 
 /* ---- Profile book ---- */
 .book-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
@@ -1128,6 +1130,8 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   const CATALOG = DATA.genreCatalog || [];
   const GENRE_CAT = {};
   CATALOG.forEach(c => c.genres.forEach(g => { GENRE_CAT[g] = c.category; }));
+  // ジャンル → チケットぴあの大ジャンルのページ
+  function ticketUrl(g) { const c = CATALOG.find(x => x.category === GENRE_CAT[g]); return c && c.url ? c.url : ''; }
 
   // 回答はメモリ上だけに保持（保存・送信はしない）
   const state = { answers: [], index: 0, result: null, locked: false };
@@ -1628,7 +1632,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
                 <h3>${esc(e.title)}</h3>
                 <span class="price">${esc(e.price)}</span>
                 <span class="meta">${esc(e.date)}　${esc(e.venue)}</span>
-                <div class="ev-act"><button type="button" class="act" data-went="${esc(code)}-${k}">行った！</button></div>
+                <div class="ev-act">${ticketUrl(e.genre) ? `<a class="act ticket" href="${esc(ticketUrl(e.genre))}" target="_blank" rel="noopener noreferrer">${icon('ticket')}チケットを探す${icon('link')}</a>` : ''}<button type="button" class="act" data-went="${esc(code)}-${k}">行った！</button></div>
               </article>`).join('')}
           </div>
           <p class="dummy-note">※ サンプル</p>
@@ -1653,7 +1657,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     setTheme(t.color);
     const tag = DATA.meta.hashtag;
     const text = shareText(code);
-    const pageUrl = /^https?:/.test(location.protocol) ? location.href.split('#')[0] : '';
+    const pageUrl = /^https?:/.test(location.protocol) ? location.origin + location.pathname : '';
     const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&hashtags=' + encodeURIComponent(tag) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
 
     app.innerHTML = `
@@ -2043,7 +2047,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     const exp = Object.keys(profile.genres).filter(g => profile.genres[g].exp > 0).length;
     const explore = exploreTitles();
     const tag = DATA.meta.hashtag;
-    const pageUrl = /^https?:/.test(location.protocol) ? location.href.split('#')[0] : '';
+    const pageUrl = /^https?:/.test(location.protocol) ? location.origin + location.pathname : '';
     const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(profileText()) + '&hashtags=' + encodeURIComponent(tag) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
     const history = profile.earned.map(x => Object.assign({ sign: 1 }, x)).concat(profile.spent.map(x => Object.assign({ sign: -1 }, x)))
       .sort((a, b) => b.ts - a.ts).slice(0, 10);
