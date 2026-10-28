@@ -977,6 +977,7 @@ body.presenting .toasts { z-index: 96; bottom: calc(var(--pbar-h, 110px) + var(-
 .finger { position: fixed; z-index: 96; left: 0; top: 0; width: 0; height: 0; pointer-events: none; transition: left .45s cubic-bezier(.3, .7, .3, 1), top .45s cubic-bezier(.3, .7, .3, 1); }
 .finger svg { position: absolute; left: -21px; top: -6px; width: 48px; max-width: none; height: 48px; fill: #FFFFFF; stroke: #1C1A22; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, .35)); transform-origin: 21px 6px; }
 .f-ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border: 4px solid var(--brand-2); border-radius: 50%; opacity: 0; }
+.finger .f-line { fill: none; }
 .finger.loop.go svg { animation: fingerPress 1.3s ease-in-out .2s infinite; }
 .finger.loop.go .f-ring { animation: fingerRing 1.3s ease-out .2s infinite; }
 .finger.tap.go svg { animation: fingerPress .7s ease-in-out .3s 1; }
@@ -1475,7 +1476,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
         state.answers[i] = btn.dataset.value;
         app.querySelector('.progress > i').style.width = ((i + 1) / total) * 100 + '%';
         setTimeout(() => {
-          if (present.on && i + 1 < total) { fingerHide(); quizFastForward(i + 1); return; }
+          if (present.on && i + 1 < total) { if (!state.ff) { fingerHide(); quizFastForward(i + 1); } return; }
           if (i + 1 < total) {
             state.index = i + 1;
             viewQuiz();
@@ -1503,14 +1504,16 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
       if (k >= 0) code[k] = v;
     });
     let j = from;
+    state.ff = true;
     const badge = document.createElement('div');
     badge.className = 'ff-badge';
     badge.setAttribute('role', 'status');
     document.body.appendChild(badge);
     const tick = () => {
-      if (!present.on || location.hash !== '#/quiz') { badge.remove(); return; }
+      if (!present.on || location.hash !== '#/quiz') { badge.remove(); state.ff = false; return; }
       if (j >= QUESTIONS.length) {
         badge.remove();
+        state.ff = false;
         state.result = computeResult(state.answers);
         const k = PRESENT_STEPS.findIndex(st => st.focus === 'type');
         if (k >= 0) goStep(k); else location.hash = '#/result';
@@ -2994,7 +2997,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     window.scrollBy({ top: r.top - head - off, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
   // 指マーク：loop＝ここを押せる（くり返しタップ）、tap＝今ここを押した（1回）
-  const FINGER_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V4.5a1.5 1.5 0 0 1 3 0V10M12 9.5a1.5 1.5 0 0 1 3 0V11M15 10.5a1.5 1.5 0 0 1 3 0V12M18 11.5a1.5 1.5 0 0 1 3 0V15c0 4-2.5 7-6.5 7h-1c-2.5 0-4-1-5.5-3l-3-4.2a1.6 1.6 0 0 1 2.4-2.1L9 14.5z"/></svg>';
+  const FINGER_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14.5V4.5a1.5 1.5 0 0 1 3 0v5a1.5 1.5 0 0 1 3 0v1a1.5 1.5 0 0 1 3 0v1a1.5 1.5 0 0 1 3 0V15c0 4-2.5 7-6.5 7h-1c-2.5 0-4-1-5.5-3l-3-4.2a1.6 1.6 0 0 1 2.4-2.1z"/><path class="f-line" d="M12 9.5V12.5M15 10.5V13M18 11.5V13.5"/></svg>';
   function fingerAt(el, mode) {
     if (!present.finger) {
       present.finger = document.createElement('div');
@@ -3077,6 +3080,11 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     i = Math.max(0, Math.min(PRESENT_STEPS.length - 1, i));
     const forward = i === present.i + 1;
     const s = PRESENT_STEPS[i];
+    // 質問の画面で「次へ」を押したら、残りの質問を早送りで答えてから結果へ（早送り中の「次へ」は無視）
+    if (forward && PRESENT_STEPS[present.i].focus === 'quiz' && location.hash === '#/quiz') {
+      if (state.ff) return;
+      if (!isComplete()) { fingerHide(); quizFastForward(firstUnanswered()); return; }
+    }
     // 次の画面へ進むときは、実際に押すボタンやタブを指で押してから切り替える
     const via = forward && s.via && !(opts && opts.noVia) && (location.hash || '#/') !== s.hash ? document.querySelector(s.via) : null;
     if (via && via.getBoundingClientRect().width) {
