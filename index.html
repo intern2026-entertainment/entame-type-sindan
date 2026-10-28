@@ -972,17 +972,32 @@ body.intro-open { overflow: hidden; }
 .pb-list .ic { width: 18px; height: 18px; }
 .pb-list .grp { padding: 10px 10px 4px; font-size: 11px; font-weight: 900; letter-spacing: .12em; color: var(--muted); }
 body.presenting { padding-bottom: 140px; }
-body.presenting .tabbar { display: none; }
-body.presenting .toasts { z-index: 96; bottom: 150px; }
+body.presenting .tabbar { bottom: var(--pbar-h, 110px); padding-bottom: 0; }
+body.presenting .toasts { z-index: 96; bottom: calc(var(--pbar-h, 110px) + var(--tabbar-h, 0px) + 12px); }
+.finger { position: fixed; z-index: 96; left: 0; top: 0; width: 0; height: 0; pointer-events: none; transition: left .45s cubic-bezier(.3, .7, .3, 1), top .45s cubic-bezier(.3, .7, .3, 1); }
+.finger svg { position: absolute; left: -21px; top: -6px; width: 48px; max-width: none; height: 48px; fill: #FFFFFF; stroke: #1C1A22; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, .35)); transform-origin: 21px 6px; }
+.f-ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border: 4px solid var(--brand-2); border-radius: 50%; opacity: 0; }
+.finger.loop.go svg { animation: fingerPress 1.3s ease-in-out .2s infinite; }
+.finger.loop.go .f-ring { animation: fingerRing 1.3s ease-out .2s infinite; }
+.finger.tap.go svg { animation: fingerPress .7s ease-in-out .3s 1; }
+.finger.tap.go .f-ring { animation: fingerRing .7s ease-out .3s 1; }
+@keyframes fingerPress { 0%, 100% { transform: translate(10px, 14px) scale(1); } 40% { transform: translate(0, 0) scale(.88); } 60% { transform: translate(0, 0) scale(.88); } }
+@keyframes fingerRing { 0%, 35% { opacity: 0; transform: scale(.4); } 45% { opacity: 1; transform: scale(.6); } 100% { opacity: 0; transform: scale(1.6); } }
+.tap-ripple { position: fixed; z-index: 96; width: 40px; height: 40px; margin: -20px 0 0 -20px; border: 4px solid var(--brand-2); border-radius: 50%; pointer-events: none; animation: fingerRing .6s ease-out both; animation-delay: -.25s; }
+.ff-badge { position: fixed; left: 16px; right: 16px; top: 76px; z-index: 96; display: flex; align-items: center; gap: 8px; width: fit-content; margin: 0 auto; padding: 8px 14px; color: #FFFFFF; background: var(--brand); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--line); animation: fadeIn .2s ease both; }
+.ff-badge .ic { width: 22px; height: 22px; animation: ffBlink .6s steps(2) infinite; }
+.ff-badge b { font-size: 16px; font-weight: 900; }
+.ff-badge span { font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+@keyframes ffBlink { 50% { opacity: .35; } }
 body.presenting .demo-chip { background: var(--text); color: var(--bg); }
 @media (max-width: 599px) {
   .pbar { left: 0; bottom: 0; width: 100%; transform: none; gap: 8px; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); border-width: 2px 0 0; box-shadow: none; }
   .pb-nav { width: 44px; height: 44px; }
   .pb-title { font-size: 15px; }
   .pb-cap { font-size: 12px; }
-  body.presenting { padding-bottom: 130px; }
+  body.presenting { padding-bottom: calc(var(--pbar-h, 110px) + var(--tabbar-h, 0px) + 20px); }
 }
-@media (prefers-reduced-motion: reduce) { .spot { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .spot, .finger { transition: none; } }
 /* PCではスマホ幅の画面を中央に出す */
 body.staging { overflow: hidden; padding: 0; }
 body.staging > :not(.stage) { display: none !important; }
@@ -1236,6 +1251,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
     upload: '<path d="M12 15V4M7 9l5-5 5 5"/><path d="M5 20h14"/>',
     pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    ff: '<path d="M3 6l8 6-8 6z"/><path d="M12 6l8 6-8 6z"/>',
     home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>'
   };
   function icon(name, cls) {
@@ -1459,7 +1475,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
         state.answers[i] = btn.dataset.value;
         app.querySelector('.progress > i').style.width = ((i + 1) / total) * 100 + '%';
         setTimeout(() => {
-          if (present.on && i + 1 < total) { quizFastForward(i + 1); return; }
+          if (present.on && i + 1 < total) { fingerHide(); quizFastForward(i + 1); return; }
           if (i + 1 < total) {
             state.index = i + 1;
             viewQuiz();
@@ -1487,9 +1503,14 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
       if (k >= 0) code[k] = v;
     });
     let j = from;
+    const badge = document.createElement('div');
+    badge.className = 'ff-badge';
+    badge.setAttribute('role', 'status');
+    document.body.appendChild(badge);
     const tick = () => {
-      if (!present.on || location.hash !== '#/quiz') return;
+      if (!present.on || location.hash !== '#/quiz') { badge.remove(); return; }
       if (j >= QUESTIONS.length) {
+        badge.remove();
         state.result = computeResult(state.answers);
         const k = PRESENT_STEPS.findIndex(st => st.focus === 'type');
         if (k >= 0) goStep(k); else location.hash = '#/result';
@@ -1502,10 +1523,11 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
       state.locked = true;
       state.answers[j] = v;
       const btn = app.querySelector('.choice[data-value="' + v + '"]');
-      if (btn) btn.classList.add('picked');
+      if (btn) { btn.classList.add('picked'); fingerAt(btn, 'tap'); }
       app.querySelector('.progress > i').style.width = ((j + 1) / QUESTIONS.length) * 100 + '%';
+      badge.innerHTML = `${icon('ff')}<b>早送り</b><span>自動で回答中 Q${j + 1} / ${QUESTIONS.length}</span>`;
       j++;
-      setTimeout(tick, 170);
+      setTimeout(tick, 380);
     };
     tick();
   }
@@ -2907,22 +2929,22 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   // ---------- プレゼンモード ----------
   // ?present で開くと説明を出さずにこのモードから始まる。← → / PageUp PageDown で移動、F でフォーカス切替、Esc で終了
   const PRESENT_STEPS = [
-    { grp: '診断', ic: 'home', title: 'トップ', cap: '9問・1分半で、楽しみ方を8タイプに', hash: '#/', focus: 'hero' },
-    { grp: '診断', ic: 'clock', title: '質問', cap: '2択を9問。1問選ぶと残りは早送り', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz() },
+    { grp: '診断', ic: 'home', title: 'トップ', cap: '9問・1分半で、楽しみ方を8タイプに', hash: '#/', focus: 'hero', tap: '.hero-cta [data-start]' },
+    { grp: '診断', ic: 'clock', title: '質問', cap: '1問選ぶと、残りは早送りで自動回答', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz(), via: '.hero-cta [data-start]', tap: '.choice' },
     { grp: '診断結果', ic: 'star', title: 'タイプ', cap: 'タイプ名とキャラクター', hash: '#/result', focus: 'type', prep: ensureResult },
     { grp: '診断結果', ic: 'compass', title: '3軸の傾き', cap: '回答の比率をそのまま表示', hash: '#/result', focus: 'balance', prep: ensureResult },
-    { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult },
-    { grp: '診断結果', ic: 'ticket', title: 'おすすめ公演', cap: '「行った！」で体験として記録', hash: '#/result', focus: 'events', prep: ensureResult },
-    { grp: '診断結果', ic: 'share', title: 'シェア', cap: 'コピーとXへの投稿', hash: '#/result', focus: 'share', prep: ensureResult },
-    { grp: 'マイページ', ic: 'user', title: 'プロフィール', cap: 'タイプ・称号・ポイント', hash: '#/me', focus: 'profile' },
+    { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult, tap: '[data-focus="next"] [data-act="interest"]' },
+    { grp: '診断結果', ic: 'ticket', title: 'おすすめ公演', cap: '「行った！」で体験として記録', hash: '#/result', focus: 'events', prep: ensureResult, tap: '[data-went]:not([disabled])' },
+    { grp: '診断結果', ic: 'share', title: 'シェア', cap: 'コピーとXへの投稿', hash: '#/result', focus: 'share', prep: ensureResult, tap: '[data-focus="share"] a.btn.x' },
+    { grp: 'マイページ', ic: 'user', title: 'プロフィール', cap: 'タイプ・称号・ポイント', hash: '#/me', focus: 'profile', via: '.tabbar [data-tab="me"]' },
     { grp: 'マイページ', ic: 'compass', title: '開拓タイプ', cap: '体験したジャンルの数で称号が変わる', hash: '#/me', focus: 'explore' },
     { grp: 'マイページ', ic: 'medal', title: '体験実績', cap: '条件を満たすとバッジを獲得', hash: '#/me', focus: 'badges' },
-    { grp: 'マイページ', ic: 'flag', title: 'ミッション', cap: '達成するとポイント', hash: '#/missions', focus: 'missions' },
-    { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres' },
-    { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop' },
-    { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book' }
+    { grp: 'マイページ', ic: 'flag', title: 'ミッション', cap: '達成するとポイント', hash: '#/missions', focus: 'missions', via: '.tabbar [data-tab="missions"]' },
+    { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres', via: '.tabbar [data-tab="genres"]', tap: '.cat-tab:not([aria-selected="true"])' },
+    { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop', via: '.tabbar [data-tab="shop"]', tap: '[data-buy]:not([disabled])' },
+    { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book', via: '.tabbar [data-tab="book"]', tap: '[data-mode="deco"]' }
   ];
-  const present = { on: false, i: 0, spot: true, bar: null, box: null, raf: 0, target: null, seq: 0 };
+  const present = { on: false, i: 0, spot: true, bar: null, box: null, raf: 0, target: null, seq: 0, finger: null, fTarget: null };
   // ?present&embed はPCで開いたスマホ枠の中身。枠の外（親）とは postMessage でやりとりする
   const EMBED = /[?&]embed\b/.test(location.search) && window.parent !== window;
   const PRESENT_KEYS = ['ArrowRight', 'PageDown', 'ArrowLeft', 'PageUp', 'f', 'F', 'Escape'];
@@ -2940,14 +2962,23 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     if (step.focus === 'missions') return app.querySelector('[data-focus^="mission-"]');
     return app.querySelector('[data-focus="' + step.focus + '"]');
   }
+  // 画面の中身が見える下端（操作バーと、出ていればタブバーの上）
+  function presentBottom() {
+    let b = present.bar.getBoundingClientRect().top;
+    const tab = document.querySelector('.tabbar');
+    if (tab && getComputedStyle(tab).display !== 'none') b = Math.min(b, tab.getBoundingClientRect().top);
+    return b;
+  }
   function placeSpot() {
     present.raf = 0;
     if (!present.on) return;
+    placeFinger();
     const el = present.target;
     if (!present.spot || !el || !el.isConnected) { present.box.hidden = true; return; }
     const r = el.getBoundingClientRect();
-    const top = document.querySelector('.site-head').getBoundingClientRect().bottom;
-    const bottom = present.bar.getBoundingClientRect().top;
+    const inApp = app.contains(el);
+    const top = inApp ? document.querySelector('.site-head').getBoundingClientRect().bottom : 0;
+    const bottom = inApp ? presentBottom() : present.bar.getBoundingClientRect().top + 6;
     const pad = 6;
     const y1 = Math.max(r.top - pad, top + 4), y2 = Math.min(r.bottom + pad, bottom - 8);
     const x1 = Math.max(r.left - pad, 4), x2 = Math.min(r.right + pad, innerWidth - 4);
@@ -2957,11 +2988,53 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   function queueSpot() { if (present.on && !present.raf) present.raf = requestAnimationFrame(placeSpot); }
   function scrollToFocus(el) {
     const head = document.querySelector('.site-head').getBoundingClientRect().bottom;
-    const room = present.bar.getBoundingClientRect().top - head;
+    const room = presentBottom() - head;
     const r = el.getBoundingClientRect();
     const off = r.height + 24 < room ? (room - r.height) / 2 : 16;
     window.scrollBy({ top: r.top - head - off, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
+  // 指マーク：loop＝ここを押せる（くり返しタップ）、tap＝今ここを押した（1回）
+  const FINGER_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V4.5a1.5 1.5 0 0 1 3 0V10M12 9.5a1.5 1.5 0 0 1 3 0V11M15 10.5a1.5 1.5 0 0 1 3 0V12M18 11.5a1.5 1.5 0 0 1 3 0V15c0 4-2.5 7-6.5 7h-1c-2.5 0-4-1-5.5-3l-3-4.2a1.6 1.6 0 0 1 2.4-2.1L9 14.5z"/></svg>';
+  function fingerAt(el, mode) {
+    if (!present.finger) {
+      present.finger = document.createElement('div');
+      present.finger.className = 'finger';
+      present.finger.innerHTML = '<i class="f-ring"></i>' + FINGER_SVG;
+      document.body.appendChild(present.finger);
+    }
+    present.fTarget = el;
+    present.finger.className = 'finger ' + mode;
+    void present.finger.offsetWidth;
+    present.finger.classList.add('go');
+    placeFinger();
+  }
+  function fingerHide() {
+    present.fTarget = null;
+    if (present.finger) present.finger.hidden = true;
+  }
+  function placeFinger() {
+    const f = present.finger, el = present.fTarget;
+    if (!f) return;
+    if (!el || !el.isConnected) { f.hidden = true; return; }
+    const r = el.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const off = app.contains(el) && (y < document.querySelector('.site-head').getBoundingClientRect().bottom || y > presentBottom());
+    f.hidden = off || !r.width;
+    f.style.left = x + 'px';
+    f.style.top = y + 'px';
+  }
+  // 押したところに波紋を出す（見ている人に、どこを押したか分かるように）
+  document.addEventListener('pointerdown', e => {
+    if (!present.on || e.target.closest('.pbar')) return;
+    const r = document.createElement('i');
+    r.className = 'tap-ripple';
+    r.style.left = e.clientX + 'px';
+    r.style.top = e.clientY + 'px';
+    document.body.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+    if (present.fTarget && present.finger && present.finger.classList.contains('loop') && present.fTarget.contains(e.target)) fingerHide();
+  }, true);
+
   function renderBar() {
     const s = PRESENT_STEPS[present.i], n = PRESENT_STEPS.length;
     requestAnimationFrame(() => { if (present.bar) document.body.style.setProperty('--pbar-h', present.bar.offsetHeight + 'px'); });
@@ -3000,13 +3073,28 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     const cur = list.querySelector('[aria-current]');
     if (cur) cur.scrollIntoView({ block: 'nearest' });
   }
-  function goStep(i) {
+  function goStep(i, opts) {
     i = Math.max(0, Math.min(PRESENT_STEPS.length - 1, i));
+    const forward = i === present.i + 1;
+    const s = PRESENT_STEPS[i];
+    // 次の画面へ進むときは、実際に押すボタンやタブを指で押してから切り替える
+    const via = forward && s.via && !(opts && opts.noVia) && (location.hash || '#/') !== s.hash ? document.querySelector(s.via) : null;
+    if (via && via.getBoundingClientRect().width) {
+      const seq0 = ++present.seq;
+      present.i = i;
+      renderBar();
+      present.target = via;
+      if (app.contains(via)) via.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      queueSpot();
+      fingerAt(via, 'tap');
+      setTimeout(() => { if (seq0 === present.seq) { present.i = i - 1; goStep(i, { noVia: true }); } }, 900);
+      return;
+    }
     present.i = i;
     const seq = ++present.seq;
-    const s = PRESENT_STEPS[i];
     if (s.prep) s.prep();
     renderBar();
+    fingerHide();
     present.target = null;
     present.box.hidden = true;
     const show = () => {
@@ -3015,6 +3103,11 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
       present.target = el;
       if (el) scrollToFocus(el);
       queueSpot();
+      if (s.tap) setTimeout(() => {
+        if (seq !== present.seq) return;
+        const t = app.querySelector(s.tap);
+        if (t) fingerAt(t, 'loop');
+      }, 500);
     };
     if (location.hash === s.hash || (s.hash === '#/' && !location.hash)) {
       if (s.focus === 'quiz' || !presentFocusEl(s)) route();
@@ -3058,7 +3151,8 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     present.seq++;
     present.bar.remove();
     present.box.remove();
-    present.bar = present.box = present.target = null;
+    if (present.finger) present.finger.remove();
+    present.bar = present.box = present.target = present.finger = present.fTarget = null;
     document.body.classList.remove('presenting');
     if (EMBED) { window.parent.postMessage({ entamePresent: 'exit' }, '*'); return; }
     if (/[?&]present\b/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash);
