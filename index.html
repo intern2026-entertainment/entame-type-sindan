@@ -656,6 +656,15 @@ img, svg { max-width: 100%; }
 .dummy-note { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
 
 .share-row { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+.post-pv { margin: 0 0 18px; padding: 14px 16px 10px; background: var(--bg); border: 2px solid var(--line); }
+.pv-head { display: flex; align-items: center; gap: 10px; }
+.pv-av { display: grid; place-items: center; width: 40px; height: 40px; overflow: hidden; background: var(--bg-2); border: 2px solid var(--line); border-radius: 50%; }
+.pv-av svg { width: 34px; height: 34px; }
+.pv-head b { font-size: 15px; }
+.pv-head small { font-size: 13px; color: var(--muted); }
+.pv-text { margin: 10px 0 0; font-size: 15px; line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+.pv-tag, .pv-url { color: #1D9BF0; }
+.post-pv figcaption { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--hair); font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
 .share-row .btn { padding: 12px 8px; font-size: 15px; }
 .share-row .btn.x { background: #0F0F0F; color: #FFFFFF; }
 .copied { font-size: 13px; text-align: center; min-height: 1.5em; margin: 10px 0 0; font-weight: 800; }
@@ -1450,6 +1459,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
         state.answers[i] = btn.dataset.value;
         app.querySelector('.progress > i').style.width = ((i + 1) / total) * 100 + '%';
         setTimeout(() => {
+          if (present.on && i + 1 < total) { quizFastForward(i + 1); return; }
           if (i + 1 < total) {
             state.index = i + 1;
             viewQuiz();
@@ -1467,6 +1477,37 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     app.querySelector('[data-back]').addEventListener('click', () => {
       if (state.index > 0) { state.index -= 1; viewQuiz(); }
     });
+  }
+
+  // プレゼン用：残りの質問を、選んだ答えを生かしたタイプになるように自動で答えて早送りする
+  function quizFastForward(from) {
+    const code = (profile.type || pick(TYPE_ORDER)).split('');
+    state.answers.forEach(v => {
+      const k = AXES.findIndex(a => a.sides.some(sd => sd.code === v));
+      if (k >= 0) code[k] = v;
+    });
+    let j = from;
+    const tick = () => {
+      if (!present.on || location.hash !== '#/quiz') return;
+      if (j >= QUESTIONS.length) {
+        state.result = computeResult(state.answers);
+        const k = PRESENT_STEPS.findIndex(st => st.focus === 'type');
+        if (k >= 0) goStep(k); else location.hash = '#/result';
+        return;
+      }
+      const q = QUESTIONS[j];
+      const v = code.includes(q.a.value) ? q.a.value : q.b.value;
+      state.index = j;
+      viewQuiz();
+      state.locked = true;
+      state.answers[j] = v;
+      const btn = app.querySelector('.choice[data-value="' + v + '"]');
+      if (btn) btn.classList.add('picked');
+      app.querySelector('.progress > i').style.width = ((j + 1) / QUESTIONS.length) * 100 + '%';
+      j++;
+      setTimeout(tick, 170);
+    };
+    tick();
   }
 
   function isComplete() {
@@ -1596,6 +1637,11 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
         <section class="r-sec" data-focus="share">
           <div class="inner narrow">
             <h2 class="r-h"><span class="kicker">${icon('share')}SHARE</span>結果をシェア</h2>
+            <figure class="post-pv" aria-label="ポストのプレビュー">
+              <div class="pv-head"><span class="pv-av">${charSVG(code, { noHalo: true })}</span><b>あなた</b><small>今</small></div>
+              <p class="pv-text">${esc(text)}<br><span class="pv-tag">#${esc(tag)}</span>${pageUrl ? `<br><span class="pv-url">${esc(pageUrl.replace(/^https?:\/\//, ''))}</span>` : ''}</p>
+              <figcaption>ポストのプレビュー</figcaption>
+            </figure>
             <div class="share-row">
               <button type="button" class="btn ghost no-arrow" data-copy>${icon('copy')}結果をコピー</button>
               <a class="btn x no-arrow" href="${esc(intent)}" target="_blank" rel="noopener noreferrer">${icon('share')}Xでポスト</a>
@@ -2862,8 +2908,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   // ?present で開くと説明を出さずにこのモードから始まる。← → / PageUp PageDown で移動、F でフォーカス切替、Esc で終了
   const PRESENT_STEPS = [
     { grp: '診断', ic: 'home', title: 'トップ', cap: '9問・1分半で、楽しみ方を8タイプに', hash: '#/', focus: 'hero' },
-    { grp: '診断', ic: 'compass', title: '3つの軸', cap: '場・人・対象の組み合わせでタイプが決まる', hash: '#/', focus: 'axes' },
-    { grp: '診断', ic: 'clock', title: '質問', cap: '2択を9問。選ぶと次へ進む', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz() },
+    { grp: '診断', ic: 'clock', title: '質問', cap: '2択を9問。1問選ぶと残りは早送り', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz() },
     { grp: '診断結果', ic: 'star', title: 'タイプ', cap: 'タイプ名とキャラクター', hash: '#/result', focus: 'type', prep: ensureResult },
     { grp: '診断結果', ic: 'compass', title: '3軸の傾き', cap: '回答の比率をそのまま表示', hash: '#/result', focus: 'balance', prep: ensureResult },
     { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult },
@@ -2872,7 +2917,6 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     { grp: 'マイページ', ic: 'user', title: 'プロフィール', cap: 'タイプ・称号・ポイント', hash: '#/me', focus: 'profile' },
     { grp: 'マイページ', ic: 'compass', title: '開拓タイプ', cap: '体験したジャンルの数で称号が変わる', hash: '#/me', focus: 'explore' },
     { grp: 'マイページ', ic: 'medal', title: '体験実績', cap: '条件を満たすとバッジを獲得', hash: '#/me', focus: 'badges' },
-    { grp: 'マイページ', ic: 'heart', title: '推しカラー', cap: 'バッジやシールの色を変えられる', hash: '#/me', focus: 'oshi' },
     { grp: 'マイページ', ic: 'flag', title: 'ミッション', cap: '達成するとポイント', hash: '#/missions', focus: 'missions' },
     { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres' },
     { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop' },
@@ -3095,7 +3139,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   const PAGE_LABEL = { top: 'トップ', quiz: '質問', result: '診断結果', types: '8タイプ一覧', me: 'マイページ', missions: 'ミッション', genres: 'ジャンル図鑑', shop: '交換所', book: 'プロフ帳' };
   const FOCUS_LABEL = {};
   PRESENT_STEPS.forEach(st => { FOCUS_LABEL[st.focus] = st.title; });
-  Object.assign(FOCUS_LABEL, { quiz: '質問', share: 'シェア' });
+  Object.assign(FOCUS_LABEL, { quiz: '質問', share: 'シェア', axes: '3つの軸', oshi: '推しカラー' });
   const cm = { list: [], picking: false, sheet: null, hint: null, hover: null, pins: [], sel: null, raf: 0, kind: CM_KINDS[0] };
   try { cm.list = JSON.parse(localStorage.getItem(CM_KEY)) || []; } catch (e) { cm.list = []; }
   // プレゼン中にピンと線を出すか（準備中は出し、本番では消す、の切り替え用）
