@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>エンタメタイプ診断</title>
+<title>エンタメ成長記録</title>
 <meta name="description" content="9問・1分半で、あなたの「楽しみ方」を8タイプで診断。いつものジャンルとは違う、でも同じように楽しめるジャンルが見つかります。">
 
 <!--
@@ -14,9 +14,10 @@
 <script id="quiz-data" type="application/json">
 {
   "meta": {
-    "title": "エンタメタイプ診断",
+    "title": "エンタメ成長記録",
     "lead": "楽しみ方を8タイプで診断。次に行くジャンルが見つかる。",
-    "hashtag": "エンタメタイプ診断",
+    "hashtag": "エンタメ成長記録",
+    "diagnosisHashtag": "エンタメタイプ診断",
     "duration": "9問・1分半",
     "feedbackUrl": "https://github.com/intern2026-entertainment/entame-type-sindan/issues/new"
   },
@@ -1088,7 +1089,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
 <header class="site-head">
   <div class="inner">
     <div class="logo-wrap">
-      <a class="logo" href="#/"><span class="logo-mark" aria-hidden="true"></span>エンタメタイプ診断</a>
+      <a class="logo" href="#/"><span class="logo-mark" aria-hidden="true"></span>エンタメ成長記録</a>
       <button type="button" class="demo-chip" data-intro aria-label="デモの説明を開く">DEMO</button>
     </div>
     <nav class="head-nav" aria-label="メニュー">
@@ -1655,10 +1656,11 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     const t = TYPES[code];
     if (!t) { console.warn('[診断データ] タイプ ' + code + ' が定義されていません'); location.replace('#/'); return; }
     setTheme(t.color);
-    const tag = DATA.meta.hashtag;
+    // 診断結果は、サービス名と診断のハッシュタグの両方を付ける
+    const tags = [DATA.meta.hashtag, DATA.meta.diagnosisHashtag].filter(Boolean);
     const text = shareText(code);
     const pageUrl = /^https?:/.test(location.protocol) ? location.origin + location.pathname : '';
-    const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&hashtags=' + encodeURIComponent(tag) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
+    const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&hashtags=' + encodeURIComponent(tags.join(',')) + (pageUrl ? '&url=' + encodeURIComponent(pageUrl) : '');
 
     app.innerHTML = `
       <div class="fade-in" data-result="${esc(code)}">
@@ -1668,7 +1670,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
             <h2 class="r-h"><span class="kicker">${icon('share')}SHARE</span>結果をシェア</h2>
             <figure class="post-pv" aria-label="ポストのプレビュー">
               <div class="pv-head"><span class="pv-av">${charSVG(code, { noHalo: true })}</span><b>あなた</b><small>今</small></div>
-              <p class="pv-text">${esc(text)}<br><span class="pv-tag">#${esc(tag)}</span>${pageUrl ? `<br><span class="pv-url">${esc(pageUrl.replace(/^https?:\/\//, ''))}</span>` : ''}</p>
+              <p class="pv-text">${esc(text)}<br><span class="pv-tag">${tags.map(x => '#' + esc(x)).join(' ')}</span>${pageUrl ? `<br><span class="pv-url">${esc(pageUrl.replace(/^https?:\/\//, ''))}</span>` : ''}</p>
               <figcaption>ポストのプレビュー</figcaption>
             </figure>
             <div class="share-row">
@@ -1686,7 +1688,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
       </div>`;
 
     app.querySelector('[data-copy]').addEventListener('click', () => {
-      copyText(text + '\n#' + tag + (pageUrl ? '\n' + pageUrl : '')).then(ok => {
+      copyText(text + '\n' + tags.map(x => '#' + x).join(' ') + (pageUrl ? '\n' + pageUrl : '')).then(ok => {
         app.querySelector('[data-copied]').textContent = ok ? 'コピーしました！' : 'コピーできませんでした';
         if (ok) track('share');
       });
@@ -2888,7 +2890,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     introBox.innerHTML = `
       <div class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
         <span class="demo-tag">${icon('info')}DEMO</span>
-        <h2 id="intro-title">エンタメタイプ診断<br>デモ版</h2>
+        <h2 id="intro-title">${esc(DATA.meta.title)}<br>デモ版</h2>
         <p class="intro-lead">楽しみ方の診断と、新しいジャンルとの出会いを記録する機能を試せます。</p>
         <ul class="intro-feats">
           ${feats.map(f => `<li style="--c:${f[1]}"><span class="fi">${icon(f[0])}</span><b>${f[2]}</b><span class="d">${f[3]}</span></li>`).join('')}
