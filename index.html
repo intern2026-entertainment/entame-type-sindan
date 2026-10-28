@@ -2930,22 +2930,24 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   });
 
   // ---------- プレゼンモード ----------
+  // 指マークは「実際のユーザーがそこを押すと、次に見せる画面になる」所にだけ出す。
+  // via＝次のステップへ進むときに押す所、tap＝このステップで押すと次のステップになる所
   // ?present で開くと説明を出さずにこのモードから始まる。← → / PageUp PageDown で移動、F でフォーカス切替、Esc で終了
   const PRESENT_STEPS = [
     { grp: '診断', ic: 'home', title: 'トップ', cap: '9問・1分半で、楽しみ方を8タイプに', hash: '#/', focus: 'hero', tap: '.hero-cta [data-start]' },
     { grp: '診断', ic: 'clock', title: '質問', cap: '1問選ぶと、残りは早送りで自動回答', hash: '#/quiz', focus: 'quiz', prep: () => resetQuiz(), via: '.hero-cta [data-start]', tap: '.choice' },
     { grp: '診断結果', ic: 'star', title: 'タイプ', cap: 'タイプ名とキャラクター', hash: '#/result', focus: 'type', prep: ensureResult },
     { grp: '診断結果', ic: 'compass', title: '3軸の傾き', cap: '回答の比率をそのまま表示', hash: '#/result', focus: 'balance', prep: ensureResult },
-    { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult, tap: '[data-focus="next"] [data-act="interest"]' },
-    { grp: '診断結果', ic: 'ticket', title: 'おすすめ公演', cap: '「行った！」で体験として記録', hash: '#/result', focus: 'events', prep: ensureResult, tap: '[data-went]:not([disabled])' },
-    { grp: '診断結果', ic: 'share', title: 'シェア', cap: 'コピーとXへの投稿', hash: '#/result', focus: 'share', prep: ensureResult, tap: '[data-focus="share"] a.btn.x' },
+    { grp: '診断結果', ic: 'arrow', title: '次のジャンル', cap: '同じ楽しみ方ができる、別のジャンル', hash: '#/result', focus: 'next', prep: ensureResult },
+    { grp: '診断結果', ic: 'ticket', title: 'おすすめ公演', cap: '「行った！」で体験として記録', hash: '#/result', focus: 'events', prep: ensureResult },
+    { grp: '診断結果', ic: 'share', title: 'シェア', cap: 'コピーとXへの投稿', hash: '#/result', focus: 'share', prep: ensureResult },
     { grp: 'マイページ', ic: 'user', title: 'プロフィール', cap: 'タイプ・称号・ポイント', hash: '#/me', focus: 'profile', via: '.tabbar [data-tab="me"]' },
     { grp: 'マイページ', ic: 'compass', title: '開拓タイプ', cap: '体験したジャンルの数で称号が変わる', hash: '#/me', focus: 'explore' },
     { grp: 'マイページ', ic: 'medal', title: '体験実績', cap: '条件を満たすとバッジを獲得', hash: '#/me', focus: 'badges' },
     { grp: 'マイページ', ic: 'flag', title: 'ミッション', cap: '達成するとポイント', hash: '#/missions', focus: 'missions', via: '.tabbar [data-tab="missions"]' },
-    { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres', via: '.tabbar [data-tab="genres"]', tap: '.cat-tab:not([aria-selected="true"])' },
-    { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop', via: '.tabbar [data-tab="shop"]', tap: '[data-buy]:not([disabled])' },
-    { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book', via: '.tabbar [data-tab="book"]', tap: '[data-mode="deco"]' }
+    { grp: 'マイページ', ic: 'grid', title: 'ジャンル図鑑', cap: '大ジャンルごとの開拓状況', hash: '#/genres', focus: 'genres', via: '.tabbar [data-tab="genres"]' },
+    { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop', via: '.tabbar [data-tab="shop"]' },
+    { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book', via: '.tabbar [data-tab="book"]' }
   ];
   const present = { on: false, i: 0, spot: true, bar: null, box: null, raf: 0, target: null, seq: 0, finger: null, fTarget: null };
   // ?present&embed はPCで開いたスマホ枠の中身。枠の外（親）とは postMessage でやりとりする
