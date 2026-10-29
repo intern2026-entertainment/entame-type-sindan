@@ -2905,14 +2905,12 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
           ${saved ? choice('continue', 'resume', '前回の続き', `${balance()}pt・公演${shows}件`, true) : ''}
           ${choice('fresh', 'play', 'はじめから', saved ? '記録を消して、何もない状態から' : '何もない状態から', !saved)}
           ${choice('random', 'shuffle', '途中から（ランダム）', '何公演か行った状態から', false)}
-          ${choice('present', 'screen', 'プレゼンで見せる', '途中からの状態で、機能を順に案内', false)}
         </div>
       </div>`;
     document.body.appendChild(introBox);
     document.body.classList.add('intro-open');
     ['.site-head', '#app', '.site-foot', '.tabbar', '.toasts'].forEach(sel => { const el = document.querySelector(sel); if (el) el.inert = true; });
     introBox.querySelectorAll('[data-start-mode]').forEach(b => b.addEventListener('click', () => {
-      if (b.dataset.startMode === 'present') { closeIntro(); startPresent(true); return; }
       startWith(b.dataset.startMode);
       closeIntro();
       route();
