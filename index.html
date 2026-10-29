@@ -19,6 +19,7 @@
     "hashtag": "エンタメ成長記録",
     "diagnosisHashtag": "エンタメタイプ診断",
     "duration": "9問・1分半",
+    "demoType": "LIE",
     "feedbackUrl": "https://github.com/intern2026-entertainment/entame-type-sindan/issues/new"
   },
 
@@ -1502,12 +1503,10 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   }
 
   // プレゼン用：残りの質問を、選んだ答えを生かしたタイプになるように自動で答えて早送りする
+  // プレゼン用：残りの質問を自動で答えて早送りする。結果は meta.demoType（熱狂型）になる。
+  // 各軸3問のうち、手で答えるのは最初の1問だけなので、残り2問で多数決が決まる
   function quizFastForward(from) {
-    const code = (profile.type || pick(TYPE_ORDER)).split('');
-    state.answers.forEach(v => {
-      const k = AXES.findIndex(a => a.sides.some(sd => sd.code === v));
-      if (k >= 0) code[k] = v;
-    });
+    const code = DEMO_TYPE.split('');
     let j = from;
     state.ff = true;
     const badge = document.createElement('div');
@@ -2800,7 +2799,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   }
 
   // 「途中から」：今の四半期のあいだに何公演か行った、という状態を通常のルールで再現する
-  function randomProfile() {
+  function randomProfile(type) {
     profile = blankProfile();
     const now = Date.now();
     const d = new Date();
@@ -2808,7 +2807,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     const from = Math.min(qStart, now - 7 * 86400000);
     const at = () => from + Math.random() * (now - from - 3600000);
 
-    profile.type = pick(TYPE_ORDER);
+    profile.type = type || pick(TYPE_ORDER);
     const allEvents = [];
     TYPE_ORDER.forEach(c => TYPES[c].events.forEach((e, k) => allEvents.push(c + '-' + k)));
     const genres = shuffled(Object.keys(GENRE_CAT));
@@ -2856,9 +2855,9 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     checkProgress([], now);
   }
 
-  function startWith(mode) {
+  function startWith(mode, type) {
     if (mode === 'fresh') profile = blankProfile();
-    if (mode === 'random') randomProfile();
+    if (mode === 'random') randomProfile(type);
     if (mode !== 'continue') {
       resetQuiz();
       bookSel = null;
@@ -2953,6 +2952,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     { grp: 'マイページ', ic: 'gift', title: '交換所', cap: 'ポイントでシール・称号と交換', hash: '#/shop', focus: 'shop', via: '.tabbar [data-tab="shop"]' },
     { grp: 'マイページ', ic: 'book', title: 'プロフ帳', cap: 'ロゴやシールを貼って、PNGで保存', hash: '#/book', focus: 'book', via: '.tabbar [data-tab="book"]' }
   ];
+  const DEMO_TYPE = TYPES[DATA.meta.demoType] ? DATA.meta.demoType : TYPE_ORDER[0];
   const present = { on: false, i: 0, spot: true, bar: null, box: null, raf: 0, target: null, seq: 0, finger: null, fTarget: null };
   // ?present&embed はPCで開いたスマホ枠の中身。枠の外（親）とは postMessage でやりとりする
   const EMBED = /[?&]embed\b/.test(location.search) && window.parent !== window;
@@ -2962,7 +2962,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
   // 結果画面を出すために、回答がなければプロフィールのタイプで9問を埋める
   function ensureResult() {
     if (state.result && isComplete()) return;
-    const code = profile.type || pick(TYPE_ORDER);
+    const code = present.on ? DEMO_TYPE : profile.type || pick(TYPE_ORDER);
     state.answers = QUESTIONS.map(q => code.includes(q.a.value) ? q.a.value : q.b.value);
     state.index = QUESTIONS.length - 1;
     state.result = computeResult(state.answers);
@@ -3132,7 +3132,7 @@ body.presenting.cm-pins-off .cm-pin, body.presenting.cm-pins-off .cm-ink { displ
     }
   }
   function startPresent(fromIntro) {
-    if (fromIntro || !Object.keys(profile.shows).length) { startWith('random'); }
+    if (fromIntro || !Object.keys(profile.shows).length) { startWith('random', DEMO_TYPE); }
     if (!EMBED && innerWidth >= 600) { openStage(); return; }
     present.on = true;
     document.body.classList.add('presenting');
